@@ -34,7 +34,7 @@ jobs:
       - name: Create application.yml
         run: |
           mkdir -p src/main/resources
-          cat > src/main/resources/application.yml <<'EOF'
+          cat > src/main/resources/application.yml << EOF
           ${{ secrets.APPLICATION_YML }}
           EOF
 
@@ -42,10 +42,10 @@ jobs:
         run: |
           mkdir -p src/main/resources
           mkdir -p src/test/resources
-          cat > src/main/resources/application-dev.yml <<'EOF'
+          cat > src/main/resources/application-dev.yml << EOF
           ${{ secrets.APPLICATION_DEV_YML }}
           EOF
-          cat > src/test/resources/application-dev.yml <<'EOF'
+          cat > src/test/resources/application-dev.yml << EOF
           ${{ secrets.APPLICATION_DEV_YML }}
           EOF
 
@@ -60,6 +60,15 @@ jobs:
           cat > src/test/resources/application-secret.yml <<'EOF'
           ${{ secrets.APPLICATION_SECRET_YML }}
           EOF
+
+      - name: DEBUG yml 확인
+        run: |
+          echo "===== application.yml ====="
+          cat src/main/resources/application.yml
+          echo "===== application-dev.yml ====="
+          cat src/main/resources/application-dev.yml
+          echo "===== application-secret.yml ====="
+          cat src/main/resources/application-secret.yml
 
       # Gradle 캐시 설정
       - name: Cache Gradle packages
