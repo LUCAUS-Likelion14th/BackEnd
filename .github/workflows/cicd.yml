@@ -34,15 +34,52 @@ jobs:
       - name: Create application.yml
         run: |
           mkdir -p src/main/resources
-          printf "%s\n" "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+          cat > src/main/resources/application.yml << 'EOF'
+          ${{ secrets.APPLICATION_YML }}
+          EOF
+      - name: Create application-local.yml
+        run: |
+          mkdir -p src/main/resources
+          mkdir -p src/test/resources
+          cat > src/main/resources/application-local.yml <<'EOF'
+          ${{ secrets.APPLICATION_LOCAL_YML }}
+          EOF
+          cat > src/test/resources/application-local.yml <<'EOF'
+          ${{ secrets.APPLICATION_LOCAL_YML }}
+          EOF
+      - name: Create application-dev.yml
+        run: |
+          mkdir -p src/main/resources
+          mkdir -p src/test/resources
+          cat > src/main/resources/application-dev.yml <<'EOF'
+          ${{ secrets.APPLICATION_DEV_YML }}
+          EOF
+          cat > src/test/resources/application-dev.yml <<'EOF'
+          ${{ secrets.APPLICATION_DEV_YML }}
+          EOF
 
       # application-secret.yml github actions에서 secret으로 관리하며 원격에 생성
       - name: Create application-secret.yml
         run: |
           mkdir -p src/main/resources
           mkdir -p src/test/resources
-          printf "%s\n" "${{ secrets.APPLICATION_SECRET_YML }}" > src/main/resources/application-secret.yml
-          printf "%s\n" "${{ secrets.APPLICATION_SECRET_YML }}" > src/test/resources/application-secret.yml
+          cat > src/main/resources/application-secret.yml <<'EOF'
+          ${{ secrets.APPLICATION_SECRET_YML }}
+          EOF
+          cat > src/test/resources/application-secret.yml <<'EOF'
+          ${{ secrets.APPLICATION_SECRET_YML }}
+          EOF
+
+      - name: DEBUG yml 확인
+        run: |
+          echo "===== application.yml ====="
+          cat src/main/resources/application.yml
+          echo "===== application-local.yml ====="
+          cat src/main/resources/application-local.yml
+          echo "===== application-dev.yml ====="
+          cat src/main/resources/application-dev.yml
+          echo "===== application-secret.yml ====="
+          cat src/main/resources/application-secret.yml
 
       # Gradle 캐시 설정
       - name: Cache Gradle packages
