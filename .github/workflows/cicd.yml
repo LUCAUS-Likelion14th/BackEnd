@@ -98,4 +98,4 @@ jobs:
 
       # Gradle로 빌드 및 테스트
       - name: Build with Gradle
-        run: ./gradlew build --stacktrace
+        run: ./gradlew build --stacktrace -Dspring.profiles.active=local
