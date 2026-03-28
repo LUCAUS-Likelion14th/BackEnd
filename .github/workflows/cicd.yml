@@ -34,27 +34,27 @@ jobs:
       - name: Create application.yml
         run: |
           mkdir -p src/main/resources
-          cat > src/main/resources/application.yml << EOF
+          cat > src/main/resources/application.yml << 'EOF'
           ${{ secrets.APPLICATION_YML }}
           EOF
       - name: Create application-local.yml
         run: |
           mkdir -p src/main/resources
           mkdir -p src/test/resources
-          cat > src/main/resources/application-local.yml <<EOF
+          cat > src/main/resources/application-local.yml <<'EOF'
           ${{ secrets.APPLICATION_LOCAL_YML }}
           EOF
-          cat > src/test/resources/application-local.yml <<EOF
+          cat > src/test/resources/application-local.yml <<'EOF'
           ${{ secrets.APPLICATION_LOCAL_YML }}
           EOF
       - name: Create application-dev.yml
         run: |
           mkdir -p src/main/resources
           mkdir -p src/test/resources
-          cat > src/main/resources/application-dev.yml << EOF
+          cat > src/main/resources/application-dev.yml <<'EOF'
           ${{ secrets.APPLICATION_DEV_YML }}
           EOF
-          cat > src/test/resources/application-dev.yml << EOF
+          cat > src/test/resources/application-dev.yml <<'EOF'
           ${{ secrets.APPLICATION_DEV_YML }}
           EOF
 
@@ -74,6 +74,8 @@ jobs:
         run: |
           echo "===== application.yml ====="
           cat src/main/resources/application.yml
+          echo "===== application-local.yml ====="
+          cat src/main/resources/application-local.yml
           echo "===== application-dev.yml ====="
           cat src/main/resources/application-dev.yml
           echo "===== application-secret.yml ====="
