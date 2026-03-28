@@ -36,6 +36,14 @@ jobs:
           mkdir -p src/main/resources
           printf "%s\n" "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
 
+      # application-secret.yml github actions에서 secret으로 관리하며 원격에 생성
+      - name: Create application-secret.yml
+        run: |
+          mkdir -p src/main/resources
+          mkdir -p src/test/resources
+          printf "%s\n" "${{ secrets.APPLICATION_SECRET_YML }}" > src/main/resources/application-secret.yml
+          printf "%s\n" "${{ secrets.APPLICATION_SECRET_YML }}" > src/test/resources/application-secret.yml
+
       # Gradle 캐시 설정
       - name: Cache Gradle packages
         uses: actions/cache@v4
