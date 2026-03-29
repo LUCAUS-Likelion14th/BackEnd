@@ -23,7 +23,7 @@ public class Booth extends BaseTimeEntity {
     @Column(nullable = false)
     private int locationId; // 장소 아이디
     @OneToOne
-    @JoinColumn(name = "setting_id")
+    @JoinColumn(name = "setting_id", nullable = true)
     private Setting setting;
     // 운영정보 아이디 fk
     @Column(nullable = false)
