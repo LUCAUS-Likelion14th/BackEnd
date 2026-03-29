@@ -24,7 +24,7 @@ public class Booth extends BaseTimeEntity {
     private int locationId; // 장소 아이디
     @OneToOne
     @JoinColumn(name = "setting_id")
-    private Setting settingId;
+    private Setting setting;
     // 운영정보 아이디 fk
     @Column(nullable = false)
     private String name;
@@ -42,7 +42,7 @@ public class Booth extends BaseTimeEntity {
     private String instagram; // 인스타 링크
 
     // 부스가 삭제될 때 연결 데이터도 함께 지워지도록 설정
-    @OneToMany(mappedBy = "boothId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoothCategory> categories = new ArrayList<>();
 
 }
