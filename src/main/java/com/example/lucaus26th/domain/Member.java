@@ -1,6 +1,7 @@
 package com.example.lucaus26th.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,8 +21,12 @@ public class Member {
 
     private Integer studentID;
 
-    public Member(String email, String name, Integer studentID) {
+    @Builder
+    public Member(String email) {
         this.email = email;
+    }
+
+    public void updateMember(String name, Integer studentID) {
         this.name = name;
         this.studentID = studentID;
     }
