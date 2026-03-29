@@ -25,16 +25,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String email = oAuth2User.getAttribute("email");
-        String name = oAuth2User.getAttribute("name");
 
         if (email == null) {
             throw new OAuth2AuthenticationException("구글 이메일 정보를 가져올 수 없습니다.");
         }
 
         Member member = memberRepository.findByEmail(email)
-                .orElseGet(() -> memberRepository.save(
-                        new Member(email, name, null)
-                ));
+                .orElseGet(() -> Member.builder()
+                        .email(email)
+                        .build());
+
+        if (member.getId()==null){
+            memberRepository.save(member);
+        }
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
