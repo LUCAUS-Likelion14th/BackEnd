@@ -1,4 +1,4 @@
-package com.example.lucaus26th.jwt;
+package com.example.lucaus26th.enums;
 
 public enum JwtValidationType {
     VALID_JWT,

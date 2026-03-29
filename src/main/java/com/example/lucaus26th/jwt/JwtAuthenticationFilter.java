@@ -2,6 +2,7 @@ package com.example.lucaus26th.jwt;
 
 
 import com.example.lucaus26th.config.MemberAuthentication;
+import com.example.lucaus26th.enums.JwtValidationType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.example.lucaus26th.jwt.JwtValidationType.VALID_JWT;
+import static com.example.lucaus26th.enums.JwtValidationType.VALID_JWT;
 
 @Component
 @Slf4j
