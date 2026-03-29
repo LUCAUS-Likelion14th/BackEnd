@@ -4,6 +4,8 @@ import com.example.lucaus26th.domain.BaseTimeEntity;
 import com.example.lucaus26th.domain.Setting;
 import com.example.lucaus26th.enums.BoothLocation;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,15 +16,16 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Booth extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
-    private int locationId; // 장소 아이디
-    @OneToOne
+    private Long locationId; // 장소 아이디
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "setting_id")
     private Setting setting;
     // 운영정보 아이디 fk
@@ -33,7 +36,7 @@ public class Booth extends BaseTimeEntity {
     @Column(nullable = false)
     private BoothLocation location;
     @Column(nullable = false)
-    private long likeCount;
+    private Long likeCount;
     @Column(nullable = false)
     private String info;
 
@@ -45,4 +48,21 @@ public class Booth extends BaseTimeEntity {
     @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoothCategory> categories = new ArrayList<>();
 
+
+    @Builder
+    public Booth(Long locationId, String name, String owner, BoothLocation location, String info, String image, String locationImage, String instagram) {
+        this.locationId = locationId;
+        this.name = name;
+        this.owner = owner;
+        this.location = location;
+        this.likeCount = 0L;
+        this.info = info;
+        this.image = image;
+        this.locationImage = locationImage;
+        this.instagram = instagram;
+    }
+
+    public void setSetting(Setting setting) {
+        this.setting = setting;
+    }
 }
