@@ -11,6 +11,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Setting {
 
@@ -49,7 +50,8 @@ public class Setting {
         this.fri = fri;
     }
     private void validateTimeFormat(String time){
-        if (time == null || !time.matches("\\d{2}:\\d{2} - \\d{2}:\\d{2}")){
+        if (time == null) return; // 운영 안함으로 처리
+        if (!time.matches("\\d{2}:\\d{2} - \\d{2}:\\d{2}")){
             throw new IllegalArgumentException("형식 오류 (HH:MM - HH:MM): " + time);
         }
     }
