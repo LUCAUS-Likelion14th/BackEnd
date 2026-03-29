@@ -35,7 +35,11 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                .orElseGet(() -> memberRepository.save(
+                        Member.builder()
+                                .email(email)
+                                .build()
+                ));
 
         String accessToken = jwtTokenProvider.generateAccessToken(member.getId());
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());

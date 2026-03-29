@@ -39,16 +39,21 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
 
                 // 인가 설정
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(
+//                                "/",
+//                                "/join",
+//                                "/login",
+//                                "/oauth2/**",
+//                                "/login/oauth2/**",
+//                                "/h2-console/**"
+//                        ).permitAll()
+//                        .anyRequest().authenticated()
+//                )
+
+                // 일단 임시로 모든 api 허용
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/",
-                                "/join",
-                                "/login",
-                                "/oauth2/**",
-                                "/login/oauth2/**",
-                                "/h2-console/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
 
                 // 소셜 로그인
