@@ -7,6 +7,7 @@ import com.example.lucaus26th.domain.booth.BoothCategory;
 import com.example.lucaus26th.domain.booth.BoothLike;
 import com.example.lucaus26th.domain.booth.Category;
 import com.example.lucaus26th.dto.request.BoothRequestDto;
+import com.example.lucaus26th.dto.request.BoothUpdateRequestDto;
 import com.example.lucaus26th.repository.MemberRepository;
 import com.example.lucaus26th.repository.booth.BoothCategoryRepository;
 import com.example.lucaus26th.repository.booth.BoothLikeRepository;
@@ -73,6 +74,54 @@ public class BoothService {
         }
 
         return booth.getId();
+    }
+
+    public void updateBooth(Long boothId,/* Long memberId*/ BoothUpdateRequestDto request) {
+        // 나중에 관리자 체크 하기
+        // adminValidater.validate(memberId);
+
+        Booth booth = boothRepository.findById(boothId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 : " + boothId));
+
+        booth.update(request);
+
+        // setting 수정 (근데 뭔가 좀 분리하고 싶네)
+        if (request.getSetting() != null){
+            BoothUpdateRequestDto.SettingRequest sr = request.getSetting();
+            Setting setting = booth.getSetting();
+            if (setting == null) {
+                // setting이 없으면 새로 생성
+                Setting newSetting = Setting.builder()
+                        .mon(sr.getMon())
+                        .tue(sr.getTue())
+                        .wed(sr.getWed())
+                        .thu(sr.getThu())
+                        .fri(sr.getFri())
+                        .build();
+                booth.setSetting(newSetting);
+            } else {
+                // 있으면 기존 setting 수정
+                setting.setMon(sr.getMon());
+                setting.setTue(sr.getTue());
+                setting.setWed(sr.getWed());
+                setting.setThu(sr.getThu());
+                setting.setFri(sr.getFri());
+            }
+        }
+
+    }
+
+    public void deleteBooth(Long boothId) {
+        // 권한 검사할것
+
+        Booth booth = boothRepository.findById(boothId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다. :" + boothId));
+
+        // BoothLike 먼저 삭제
+        boothLikeRepository.deleteAllByBooth(booth);
+        // Booth 삭제 (카테고리는 이미 cascade로 자동삭제됨)
+        boothRepository.delete(booth);
+
     }
 
     // Booth 좋아요 관련 기능

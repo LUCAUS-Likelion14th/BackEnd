@@ -2,6 +2,7 @@ package com.example.lucaus26th.domain.booth;
 
 import com.example.lucaus26th.domain.BaseTimeEntity;
 import com.example.lucaus26th.domain.Setting;
+import com.example.lucaus26th.dto.request.BoothUpdateRequestDto;
 import com.example.lucaus26th.enums.BoothLocation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -67,10 +68,22 @@ public class Booth extends BaseTimeEntity {
         this.setting = setting;
     }
 
+    public void update(BoothUpdateRequestDto request){
+        if (request.getLocationId() != null) this.locationId = request.getLocationId();
+        if (request.getName() != null) this.name = request.getName();
+        if (request.getOwner() != null) this.owner = request.getOwner();
+        if (request.getInfo() != null) this.info = request.getInfo();
+        if (request.getLocation() != null) this.location = request.getLocation();
+        if (request.getImage() != null) this.image = request.getImage();
+        if (request.getLocationImage() != null) this.locationImage = request.getLocationImage();
+        if (request.getInstagram() != null) this.instagram = request.getInstagram();
+    }
+
+
+    // 좋아요 관련
     public void increaseLikeCount(){
         this.likeCount++;
     }
-
     public void decreaseLikeCount(){
         this.likeCount--;
     }

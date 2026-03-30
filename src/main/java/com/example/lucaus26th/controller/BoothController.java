@@ -2,6 +2,7 @@ package com.example.lucaus26th.controller;
 
 
 import com.example.lucaus26th.dto.request.BoothRequestDto;
+import com.example.lucaus26th.dto.request.BoothUpdateRequestDto;
 import com.example.lucaus26th.service.BoothService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,18 @@ public class BoothController {
         Long boothId = boothService.createBooth(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(boothId);
     }
+    @PatchMapping("/{boothId}/")
+    public ResponseEntity<Long> updateBooth(@PathVariable Long boothId, @RequestBody BoothUpdateRequestDto request){
+        boothService.updateBooth(boothId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(boothId);
+    }
+    @DeleteMapping("/{boothId}/")
+    public ResponseEntity<Void> deleteBooth(@PathVariable Long boothId){
+        boothService.deleteBooth(boothId);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 
+    // 좋아요 관련
     @PostMapping("/{boothId}/like/")
     public ResponseEntity<Void> createBoothLike(@PathVariable Long boothId){
         // user 정보 꺼냄

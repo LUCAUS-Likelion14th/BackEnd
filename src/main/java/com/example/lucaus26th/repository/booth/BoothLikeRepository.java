@@ -11,4 +11,6 @@ public interface BoothLikeRepository extends JpaRepository<BoothLike,Long> {
     // 좋아요 존재 확인
     boolean existsByBoothAndMember(Booth booth, Member member);
     Optional<BoothLike> findByBoothAndMember(Booth booth, Member member);
+
+    void deleteAllByBooth(Booth booth);
 }
