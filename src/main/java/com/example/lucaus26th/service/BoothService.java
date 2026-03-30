@@ -1,13 +1,17 @@
 package com.example.lucaus26th.service;
 
+import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.domain.Setting;
 import com.example.lucaus26th.domain.booth.Booth;
 import com.example.lucaus26th.domain.booth.BoothCategory;
+import com.example.lucaus26th.domain.booth.BoothLike;
 import com.example.lucaus26th.domain.booth.Category;
 import com.example.lucaus26th.dto.request.BoothRequestDto;
-import com.example.lucaus26th.repository.BoothCategoryRepository;
-import com.example.lucaus26th.repository.BoothRepository;
-import com.example.lucaus26th.repository.CategoryRepository;
+import com.example.lucaus26th.repository.MemberRepository;
+import com.example.lucaus26th.repository.booth.BoothCategoryRepository;
+import com.example.lucaus26th.repository.booth.BoothLikeRepository;
+import com.example.lucaus26th.repository.booth.BoothRepository;
+import com.example.lucaus26th.repository.booth.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +23,10 @@ public class BoothService {
     private final BoothRepository boothRepository;
     private final CategoryRepository categoryRepository;
     private final BoothCategoryRepository boothCategoryRepository;
+    private final MemberRepository memberRepository;
+    private final BoothLikeRepository boothLikeRepository;
 
+    // Booth CRUD 기능
     public Long createBooth(BoothRequestDto request) {
 
         // Setting 생성 (요청에 Setting 있을 시)
@@ -68,4 +75,38 @@ public class BoothService {
         return booth.getId();
     }
 
+    // Booth 좋아요 관련 기능
+    public void createBoothLike(Long boothId, Long memberId){
+
+        Booth booth = boothRepository.findById(boothId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 :" + boothId));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다. :" + memberId));
+
+        // 중복 좋아요 체크
+        if (boothLikeRepository.existsByBoothAndMember(booth,member)){
+            throw new IllegalStateException("이미 좋아요를 눌렀습니다."); // 이런거 다 400 같이 처리하고싶은데.
+        }
+        // BoothLike 생성 및 저장
+        boothLikeRepository.save(BoothLike.builder()
+                .booth(booth)
+                .member(member)
+                .build()
+        );
+        // likeCount += 1
+        booth.increaseLikeCount();
+    }
+
+    public void deleteBoothLike(Long boothId, Long memberId){
+        Booth booth = boothRepository.findById(boothId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다." + boothId));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다." + memberId));
+
+        BoothLike boothLike = boothLikeRepository.findByBoothAndMember(booth, member)
+                .orElseThrow(() -> new IllegalStateException("좋아요를 누르지 않았습니다."));
+
+        boothLikeRepository.delete(boothLike);
+        booth.decreaseLikeCount();;
+    }
 }

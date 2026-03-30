@@ -63,7 +63,16 @@ public class Booth extends BaseTimeEntity {
         this.instagram = instagram;
     }
 
-    public void setSetting(Setting setting) {
+    public void setSetting(Setting setting){
         this.setting = setting;
     }
+
+    public void increaseLikeCount(){
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount(){
+        this.likeCount--;
+    }
+
 }
