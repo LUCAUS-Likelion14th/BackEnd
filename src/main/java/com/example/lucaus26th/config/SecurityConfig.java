@@ -5,6 +5,7 @@ import com.example.lucaus26th.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -53,6 +54,10 @@ public class SecurityConfig {
 
                 // 일단 임시로 모든 api 허용
                 .authorizeHttpRequests(auth -> auth
+                        // 부스 좋아요는 로그인 필요
+                        .requestMatchers(HttpMethod.POST, "/booth/*/like/").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/booth/*/like/").authenticated()
+                        // 나머지는 전부 허용 (꼭 맨 마지막에 둘것)
                         .anyRequest().permitAll()
                 )
 
