@@ -30,7 +30,7 @@ public class BoothController {
     @DeleteMapping("/{boothId}/")
     public ResponseEntity<Void> deleteBooth(@PathVariable Long boothId){
         boothService.deleteBooth(boothId);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.noContent().build();
     }
 
     // 좋아요 관련
@@ -46,6 +46,6 @@ public class BoothController {
     public ResponseEntity<Void> deleteBoothLike(@PathVariable Long boothId){
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         boothService.deleteBoothLike(boothId, memberId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
 }

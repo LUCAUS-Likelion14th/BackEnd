@@ -10,7 +10,7 @@ public class BoothResponseDto {
 
     @Getter
     public static class List { // 전체조회
-
+        
     }
 
     @Getter

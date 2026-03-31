@@ -1,5 +1,6 @@
 package com.example.lucaus26th.domain;
 
+import com.example.lucaus26th.dto.request.SettingRequestDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -53,6 +54,24 @@ public class Setting {
         if (time == null) return; // 운영 안함으로 처리
         if (!time.matches("\\d{2}:\\d{2} - \\d{2}:\\d{2}")){
             throw new IllegalArgumentException("형식 오류 (HH:MM - HH:MM): " + time);
+        }
+    }
+
+    public void update(SettingRequestDto request){
+        if(request.getMon() != null){
+            this.mon = request.getMon();
+        }
+        if(request.getTue() != null){
+            this.tue = request.getTue();
+        }
+        if(request.getWed() != null){
+            this.wed = request.getWed();
+        }
+        if(request.getThu() != null){
+            this.thu = request.getThu();
+        }
+        if(request.getFri() != null){
+            this.fri = request.getFri();
         }
     }
 }
