@@ -79,13 +79,33 @@ public class Booth extends BaseTimeEntity {
         if (request.getInstagram() != null) this.instagram = request.getInstagram();
     }
 
-
     // 좋아요 관련
     public void increaseLikeCount(){
         this.likeCount++;
     }
     public void decreaseLikeCount(){
         this.likeCount--;
+    }
+
+    // 상세 조회 관련
+    public List<String> getCategoryNames(){
+        return categories.stream()
+                .map(boothCategory -> boothCategory.getCategory().getName())
+                .toList();
+    }
+    public List<String> getDates(){
+        List<String> dates = new ArrayList<>();
+        String mon =setting.getMon();
+        String tue = setting.getTue();
+        String wed = setting.getWed();
+        String thu = setting.getThu();
+        String fri = setting.getFri();
+        if (mon != null) dates.add("월요일 : " + mon);
+        if (tue != null) dates.add("화요일 : " + tue);
+        if (wed != null) dates.add("수요일 : " + wed);
+        if (thu != null) dates.add("목요일 : " + thu);
+        if (fri != null) dates.add("금요일 : " + fri);
+        return dates;
     }
 
 }

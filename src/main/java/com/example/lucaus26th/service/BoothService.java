@@ -8,11 +8,13 @@ import com.example.lucaus26th.domain.booth.BoothLike;
 import com.example.lucaus26th.domain.booth.Category;
 import com.example.lucaus26th.dto.request.BoothRequestDto;
 import com.example.lucaus26th.dto.request.BoothUpdateRequestDto;
+import com.example.lucaus26th.dto.response.BoothResponseDto;
 import com.example.lucaus26th.repository.MemberRepository;
 import com.example.lucaus26th.repository.booth.BoothCategoryRepository;
 import com.example.lucaus26th.repository.booth.BoothLikeRepository;
 import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.booth.CategoryRepository;
+import com.example.lucaus26th.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +77,19 @@ public class BoothService {
 
         return booth.getId();
     }
+
+    // 상세조회
+    public BoothResponseDto.Detail getBoothDetail(Long boothId, CustomUserDetails userDetails) {
+        Booth booth = boothRepository.findById(boothId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 :" + boothId));
+        if (userDetails == null){
+            // 비로그인
+            return BoothResponseDto.Detail.fromEntity(booth, false);
+        }
+        Member member = userDetails.getMember();
+        return BoothResponseDto.Detail.fromEntity(booth, boothLikeRepository.existsByBoothAndMember(booth,member));
+    }
+    // 전체조회
 
     public void updateBooth(Long boothId,/* Long memberId*/ BoothUpdateRequestDto request) {
         // 나중에 관리자 체크 하기
