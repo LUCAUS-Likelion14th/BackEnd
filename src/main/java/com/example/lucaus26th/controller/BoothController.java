@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/booth/")
+@RequestMapping("/booth")
 @RequiredArgsConstructor
 public class BoothController {
 
@@ -22,19 +22,19 @@ public class BoothController {
         Long boothId = boothService.createBooth(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(boothId);
     }
-    @PatchMapping("/{boothId}/")
+    @PatchMapping("/{boothId}")
     public ResponseEntity<Long> updateBooth(@PathVariable Long boothId, @RequestBody BoothUpdateRequestDto request){
         boothService.updateBooth(boothId, request);
         return ResponseEntity.status(HttpStatus.OK).body(boothId);
     }
-    @DeleteMapping("/{boothId}/")
+    @DeleteMapping("/{boothId}")
     public ResponseEntity<Void> deleteBooth(@PathVariable Long boothId){
         boothService.deleteBooth(boothId);
         return ResponseEntity.noContent().build();
     }
 
     // 좋아요 관련
-    @PostMapping("/{boothId}/like/")
+    @PostMapping("/{boothId}/like")
     public ResponseEntity<Void> createBoothLike(@PathVariable Long boothId){
         // user 정보 꺼냄
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -42,7 +42,7 @@ public class BoothController {
         boothService.createBoothLike(boothId, memberId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @DeleteMapping("/{boothId}/like/")
+    @DeleteMapping("/{boothId}/like")
     public ResponseEntity<Void> deleteBoothLike(@PathVariable Long boothId){
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         boothService.deleteBoothLike(boothId, memberId);
