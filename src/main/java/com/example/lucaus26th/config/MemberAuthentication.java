@@ -1,5 +1,6 @@
 package com.example.lucaus26th.config;
 
+import com.example.lucaus26th.security.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -12,5 +13,8 @@ public class MemberAuthentication extends UsernamePasswordAuthenticationToken {
 
     public static MemberAuthentication createMemberAuthentication(Long memberId) {
         return new MemberAuthentication(memberId, null, null);
+    }
+    public static MemberAuthentication createMemberAuthentication(CustomUserDetails userDetails) {
+        return new MemberAuthentication(userDetails, null, userDetails.getAuthorities());
     }
 }

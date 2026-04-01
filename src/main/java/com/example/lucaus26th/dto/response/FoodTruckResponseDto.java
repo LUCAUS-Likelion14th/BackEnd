@@ -1,5 +1,6 @@
 package com.example.lucaus26th.dto.response;
 
+import com.example.lucaus26th.domain.food.FoodTruck;
 import lombok.Builder;
 import lombok.Getter;
 @Getter
@@ -13,4 +14,17 @@ public class FoodTruckResponseDto {
     private String image;
     private String bestMenu;
     private Long likeCount;
+
+    public static FoodTruckResponseDto from(FoodTruck foodTruck) {
+        return FoodTruckResponseDto.builder()
+                .id(foodTruck.getId())
+                .settingId(foodTruck.getSetting() != null ? foodTruck.getSetting().getId() : null)
+                .name(foodTruck.getName())
+                .locationId(foodTruck.getLocationId())
+                .location(foodTruck.getLocation())
+                .image(foodTruck.getImage())
+                .bestMenu(foodTruck.getBestMenu())
+                .likeCount(foodTruck.getLike_count())
+                .build();
+    }
 }

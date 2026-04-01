@@ -4,6 +4,7 @@ import com.example.lucaus26th.domain.BaseTimeEntity;
 import com.example.lucaus26th.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,7 @@ public class BoothLike extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "booth_id")
@@ -24,4 +25,10 @@ public class BoothLike extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    public BoothLike(Booth booth, Member member) {
+        this.booth = booth;
+        this.member = member;
+    }
 }

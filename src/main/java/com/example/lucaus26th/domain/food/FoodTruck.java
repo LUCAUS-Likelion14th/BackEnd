@@ -25,24 +25,34 @@ public class FoodTruck {
     private String name;
 
     @Column(nullable = false)
-    private Long location_id;
+    private Long locationId;
 
     @Column(nullable = false)
     private String location;
 
     private String image;
-    private String best_menu;
-    private Long like_count;
+    private String bestMenu;
+    private Long likeCount;
 
-    public FoodTruck(Setting setting, String name, Long location_id, String location,
-                     String image, String best_menu, Long like_count) {
+    public FoodTruck(Setting setting, String name, Long locationId, String location,
+                     String image, String bestMenu, Long likeCount) {
         this.setting = setting;
         this.name = name;
-        this.location_id = location_id;
+        this.locationId = locationId;
         this.location = location;
         this.image = image;
-        this.best_menu = best_menu;
-        this.like_count = like_count;
+        this.bestMenu = bestMenu;
+        this.likeCount = likeCount;
+    }
+
+    public void update(Setting setting, String name, Long locationId, String location,
+                       String image, String bestMenu) {
+        this.setting = setting;
+        this.name = name;
+        this.locationId = locationId;
+        this.location = location;
+        this.image = image;
+        this.bestMenu = bestMenu;
     }
 
     @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)

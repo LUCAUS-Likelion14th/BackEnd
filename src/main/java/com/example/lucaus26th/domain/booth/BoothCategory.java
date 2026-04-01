@@ -1,10 +1,7 @@
 package com.example.lucaus26th.domain.booth;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -14,7 +11,7 @@ public class BoothCategory {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
 
     @ManyToOne
@@ -24,5 +21,11 @@ public class BoothCategory {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Builder  // ← 추가
+    public BoothCategory(Booth booth, Category category) {
+        this.booth = booth;
+        this.category = category;
+    }
 
 }
