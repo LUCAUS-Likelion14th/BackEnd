@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+/*
 @RestController
 @RequestMapping("/setting")
 @RequiredArgsConstructor
@@ -33,4 +33,4 @@ public class SettingController {
         settingService.deleteSetting(settingId);
         return ResponseEntity.noContent().build();
     }
-}
+}*/

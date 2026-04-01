@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,19 +34,6 @@ public class BoothService {
     // Booth CRUD 기능
     public Long createBooth(BoothRequestDto request) {
 
-        // Setting 생성 (요청에 Setting 있을 시)
-        Setting setting = null;
-        if(request.getSetting() != null){
-            BoothRequestDto.SettingRequest sr = request.getSetting();
-            setting = Setting.builder()
-                    .mon(sr.getMon())
-                    .tue(sr.getTue())
-                    .wed(sr.getWed())
-                    .thu(sr.getThu())
-                    .fri(sr.getFri())
-                    .build();
-            // Setting은 Booth의 cascade로 자동 저장되므로 별도 save 불필요
-        }
 
         // Booth 생성
         Booth booth = Booth.builder()
@@ -57,9 +46,6 @@ public class BoothService {
                 .locationImage(request.getLocationImage())
                 .instagram(request.getInstagram())
                 .build();
-        if(setting != null){
-            booth.setSetting(setting);
-        }
 
         boothRepository.save(booth);
 
@@ -76,6 +62,22 @@ public class BoothService {
         }
 
         return booth.getId();
+    }
+
+    // 전체조회
+    public List<BoothResponseDto.Lists> getBooth(CustomUserDetails userDetails) {
+        List<Booth> booths = boothRepository.findAll();
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
+        return booths.stream()
+                .map(booth -> {
+                    boolean isLiked = false;
+                    if (userDetails != null) {
+                        isLiked = boothLikeRepository.existsByBoothAndMember(booth,member);
+                    }
+                    return BoothResponseDto.Lists.fromEntity(booth, isLiked);
+                })
+                .toList();
     }
 
     // 상세조회
@@ -100,29 +102,7 @@ public class BoothService {
 
         booth.update(request);
 
-        // setting 수정 (근데 뭔가 좀 분리하고 싶네)
-        if (request.getSetting() != null){
-            BoothUpdateRequestDto.SettingRequest sr = request.getSetting();
-            Setting setting = booth.getSetting();
-            if (setting == null) {
-                // setting이 없으면 새로 생성
-                Setting newSetting = Setting.builder()
-                        .mon(sr.getMon())
-                        .tue(sr.getTue())
-                        .wed(sr.getWed())
-                        .thu(sr.getThu())
-                        .fri(sr.getFri())
-                        .build();
-                booth.setSetting(newSetting);
-            } else {
-                // 있으면 기존 setting 수정
-                setting.setMon(sr.getMon());
-                setting.setTue(sr.getTue());
-                setting.setWed(sr.getWed());
-                setting.setThu(sr.getThu());
-                setting.setFri(sr.getFri());
-            }
-        }
+
 
     }
 

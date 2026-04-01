@@ -15,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/booth")
 @RequiredArgsConstructor
@@ -27,6 +29,11 @@ public class BoothController {
     public ResponseEntity<Long> createBooth(@RequestBody  BoothRequestDto request){
         Long boothId = boothService.createBooth(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(boothId);
+    }
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getBooth(@AuthenticationPrincipal CustomUserDetails userDetails){
+        List<BoothResponseDto.Lists> response = boothService.getBooth(userDetails);
+        return ResponseEntity.ok(ApiResponse.of(response));
     }
     @GetMapping("/{boothId}")
     public ResponseEntity<ApiResponse<BoothResponseDto.Detail>> getBoothDetail(@PathVariable Long boothId, @AuthenticationPrincipal CustomUserDetails userDetails){
