@@ -2,6 +2,7 @@ package com.example.lucaus26th.controller;
 
 import com.example.lucaus26th.domain.StageCategory;
 import com.example.lucaus26th.dto.response.PerformerSimpleResponseDTO;
+import com.example.lucaus26th.dto.response.StageInfoResponseDTO;
 import com.example.lucaus26th.dto.response.StageResponseDTO;
 import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.service.StageService;
@@ -11,10 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,5 +51,14 @@ public class StageController {
             LocalDate date
     ){
         return ResponseEntity.ok(ApiResponse.success(stageService.getStageList(date)));
+    }
+
+    // 공연 정보 상세 조회
+    @GetMapping("/{stageId}")
+    @Operation(summary = "공연 상세 조회", description = "stage_id에 해당하는 공연의 상세 정보를 조회합니다.")
+    public ResponseEntity<ApiResponse<StageInfoResponseDTO>> getStageDetail(
+            @PathVariable Long stageId
+    ){
+        return ResponseEntity.ok(ApiResponse.success(stageService.getStageInfo(stageId)));
     }
 }

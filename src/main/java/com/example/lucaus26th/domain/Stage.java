@@ -37,7 +37,7 @@ public class Stage {
     private String logo;
 
     @OneToMany(mappedBy = "stage")
-    public List<Song> songs;
+    private List<Song> songs;
 
     @OneToOne(mappedBy = "stage", cascade = CascadeType.ALL)
     private StageInfo stageInfo;

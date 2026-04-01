@@ -1,7 +1,9 @@
 package com.example.lucaus26th.service;
 
+import com.example.lucaus26th.domain.Stage;
 import com.example.lucaus26th.domain.StageCategory;
 import com.example.lucaus26th.dto.response.PerformerSimpleResponseDTO;
+import com.example.lucaus26th.dto.response.StageInfoResponseDTO;
 import com.example.lucaus26th.dto.response.StageResponseDTO;
 import com.example.lucaus26th.repository.StageRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +33,12 @@ public class StageService {
         return stageRepository.findByDateOrderByStartAtAsc(date).stream()
                 .map(StageResponseDTO::from)
                 .toList();
+    }
+
+    // 공연 정보 상세 조회
+    public StageInfoResponseDTO getStageInfo(Long stageId) {
+        Stage stage = stageRepository.findById(stageId)
+                .orElseThrow(() -> new IllegalArgumentException("Stage not found"));
+        return StageInfoResponseDTO.from(stage);
     }
 }

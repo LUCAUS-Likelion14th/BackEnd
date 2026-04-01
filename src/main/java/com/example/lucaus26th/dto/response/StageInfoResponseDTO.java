@@ -1,0 +1,56 @@
+package com.example.lucaus26th.dto.response;
+
+import com.example.lucaus26th.domain.Stage;
+import com.example.lucaus26th.domain.StageInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Getter
+@Builder
+public class StageInfoResponseDTO {
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
+    @JsonProperty("stage_id")
+    private Long stageId;
+
+    private String time;
+
+    @JsonProperty("stage_info")
+    private String stageInfo;
+
+    private String performer;
+
+    @JsonProperty("performer_image")
+    private String performerImage;
+
+    private String instagram;
+    private String youtube;
+
+    private List<SongResponseDTO> songs;
+
+    public static StageInfoResponseDTO from(Stage stage) {
+        StageInfo info = stage.getStageInfo();
+
+        String formattedStartAt = stage.getStartAt().format(TIME_FORMATTER);
+        String formattedEndAt = stage.getEndAt().format(TIME_FORMATTER);
+
+        return StageInfoResponseDTO.builder()
+                .stageId(stage.getId())
+                .time(formattedStartAt + " - " + formattedEndAt)
+                .stageInfo(info.getInfo())
+                .performer(stage.getPerformer())
+                .performerImage(info.getPerformerImage())
+                .instagram(info.getInstagram())
+                .youtube(info.getYoutube())
+                .songs(stage.getSongs().stream()
+                        .map(SongResponseDTO::from)
+                        .toList())
+                .build();
+    }
+}
