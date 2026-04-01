@@ -1,6 +1,5 @@
 package com.example.lucaus26th.domain.food;
 
-
 import com.example.lucaus26th.domain.Setting;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,7 +16,7 @@ public class FoodTruck {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "setting_id")
     private Setting setting;
 
@@ -45,9 +44,8 @@ public class FoodTruck {
         this.likeCount = likeCount;
     }
 
-    public void update(Setting setting, String name, Long locationId, String location,
+    public void update(String name, Long locationId, String location,
                        String image, String bestMenu) {
-        this.setting = setting;
         this.name = name;
         this.locationId = locationId;
         this.location = location;
@@ -55,10 +53,13 @@ public class FoodTruck {
         this.bestMenu = bestMenu;
     }
 
+    public void setSetting(Setting setting) {
+        this.setting = setting;
+    }
+
     @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menus = new ArrayList<>();
 
     @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FoodLike> foodLikes = new ArrayList<>();
-
 }

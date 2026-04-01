@@ -50,5 +50,21 @@ public class FoodTruckController {
         return ResponseEntity.ok(foodTruckService.getAllFoodTrucks(memberId));
     }
 
+    @GetMapping("/{foodTruckId}")
+    public ResponseEntity<FoodTruckResponseDto> getFoodTruck(
+            @PathVariable Long foodTruckId,
+            Authentication authentication
+    ) {
+        Long memberId = null;
+
+        // 로그인 여부 판단
+        if (authentication != null && authentication.getPrincipal() instanceof Long) {
+            memberId = (Long) authentication.getPrincipal();
+        }
+
+        return ResponseEntity.ok(
+                foodTruckService.getFoodTruck(foodTruckId, memberId)
+        );
+    }
 
 }

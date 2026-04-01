@@ -6,7 +6,7 @@ import com.example.lucaus26th.dto.request.FoodTruckRequestDto;
 import com.example.lucaus26th.dto.response.FoodTruckResponseDto;
 import com.example.lucaus26th.repository.FoodLikeRepository;
 import com.example.lucaus26th.repository.FoodTruckRepository;
-import com.example.lucaus26th.repository.SettingRepository;
+import com.example.lucaus26th.repository.booth.SettingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,42 +26,66 @@ public class FoodTruckService {
     public Long createFoodTruck(FoodTruckRequestDto request) {
         Setting setting = null;
 
-        if (request.getSettingId() != null) {
-            setting = settingRepository.findById(request.getSettingId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 setting입니다."));
+        if (request.getSetting() != null) {
+            FoodTruckRequestDto.SettingRequest sr = request.getSetting();
+
+            setting = Setting.builder()
+                    .mon(sr.getMon())
+                    .tue(sr.getTue())
+                    .wed(sr.getWed())
+                    .thu(sr.getThu())
+                    .fri(sr.getFri())
+                    .build();
         }
+
         FoodTruck foodTruck = new FoodTruck(
-            setting,
-            request.getName(),
-            request.getLocationId(),
-            request.getLocation(),
-            request.getImage(),
-            request.getBestMenu(),
-            0L
+                setting,
+                request.getName(),
+                request.getLocationId(),
+                request.getLocation(),
+                request.getImage(),
+                request.getBestMenu(),
+                0L
         );
 
         FoodTruck savedFoodTruck = foodTruckRepository.save(foodTruck);
         return savedFoodTruck.getId();
-        }
+    }
 
     public Long updateFoodTruck(Long foodTruckId, FoodTruckRequestDto request) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
 
-        Setting setting = foodTruck.getSetting();
-        if (request.getSettingId() != null) {
-            setting = settingRepository.findById(request.getSettingId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 setting입니다."));
-        }
-
         foodTruck.update(
-                setting,
                 request.getName(),
                 request.getLocationId(),
                 request.getLocation(),
                 request.getImage(),
                 request.getBestMenu()
         );
+
+        if (request.getSetting() != null) {
+            FoodTruckRequestDto.SettingRequest sr = request.getSetting();
+
+            if (foodTruck.getSetting() == null) {
+                Setting newSetting = Setting.builder()
+                        .mon(sr.getMon())
+                        .tue(sr.getTue())
+                        .wed(sr.getWed())
+                        .thu(sr.getThu())
+                        .fri(sr.getFri())
+                        .build();
+
+                foodTruck.setSetting(newSetting);
+            } else {
+                Setting setting = foodTruck.getSetting();
+                setting.setMon(sr.getMon());
+                setting.setTue(sr.getTue());
+                setting.setWed(sr.getWed());
+                setting.setThu(sr.getThu());
+                setting.setFri(sr.getFri());
+            }
+        }
 
         return foodTruck.getId();
     }
@@ -92,6 +116,18 @@ public class FoodTruckService {
                     return FoodTruckResponseDto.from(foodTruck, isLiked);
                 })
                 .toList();
+    }
+
+    public FoodTruckResponseDto getFoodTruck(Long foodTruckId, Long memberId) {
+        FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
+
+        boolean isLiked = false;
+        if (memberId != null) {
+            isLiked = foodLikeRepository.existsByFoodTruckIdAndMemberId(foodTruckId, memberId);
+        }
+
+        return FoodTruckResponseDto.from(foodTruck, isLiked);
     }
 
 }

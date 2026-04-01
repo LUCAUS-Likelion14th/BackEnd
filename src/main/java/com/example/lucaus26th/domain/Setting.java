@@ -57,21 +57,7 @@ public class Setting {
         }
     }
 
-    public void update(SettingRequestDto request){
-        if(request.getMon() != null){
-            this.mon = request.getMon();
-        }
-        if(request.getTue() != null){
-            this.tue = request.getTue();
-        }
-        if(request.getWed() != null){
-            this.wed = request.getWed();
-        }
-        if(request.getThu() != null){
-            this.thu = request.getThu();
-        }
-        if(request.getFri() != null){
-            this.fri = request.getFri();
-        }
+    public void update(SettingRequestDto request) {
+
     }
 }
