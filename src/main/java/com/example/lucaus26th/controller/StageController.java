@@ -27,7 +27,7 @@ public class StageController {
 
     // 날짜별 공연 조회(상단)
     @GetMapping
-    @Operation(summary = "날짜별 공연자 조회(상단)", description = "날짜, 카테고리별 공연자 간단 정보를 조회합니다.")
+    @Operation(summary = "공연 라인업 조회", description = "날짜, 카테고리별 공연자 간단 정보를 조회합니다.")
     public ResponseEntity<ApiResponse<List<PerformerSimpleResponseDTO>>> getPerformerList(
             @Parameter(description = "공연 날짜 (yyyy-MM-dd)", example = "2026-05-14")
             @RequestParam
