@@ -2,6 +2,7 @@ package com.example.lucaus26th.controller;
 
 import com.example.lucaus26th.domain.StageCategory;
 import com.example.lucaus26th.dto.response.PerformerSimpleResponseDTO;
+import com.example.lucaus26th.dto.response.StageResponseDTO;
 import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.service.StageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,5 +41,17 @@ public class StageController {
             StageCategory category
     ){
         return ResponseEntity.ok(ApiResponse.success(stageService.getPerformerList(date, category)));
+    }
+
+    // 타임테이블 조회
+    @GetMapping("/timetable")
+    @Operation(summary = "공연 타임테이블 전체조회", description = "공연 페이지 하단 타임테이블을 조회합니다.")
+    public ResponseEntity<ApiResponse<List<StageResponseDTO>>> getStageList(
+            @Parameter(description = "공연 날짜", example = "2026-05-18")
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate date
+    ){
+        return ResponseEntity.ok(ApiResponse.success(stageService.getStageList(date)));
     }
 }
