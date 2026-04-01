@@ -1,6 +1,5 @@
 package com.example.lucaus26th.domain.food;
 
-import com.example.lucaus26th.domain.Setting;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +15,6 @@ public class FoodTruck {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "setting_id")
-    private Setting setting;
-
     @Column(nullable = false)
     private String name;
 
@@ -33,9 +28,19 @@ public class FoodTruck {
     private String bestMenu;
     private Long likeCount;
 
-    public FoodTruck(Setting setting, String name, Long locationId, String location,
+    @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FoodTruckSetting> settings = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Menu> menus = new ArrayList<>();
+
+    @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FoodLike> foodLikes = new ArrayList<>();
+
+
+    public FoodTruck(String name, Long locationId, String location,
                      String image, String bestMenu, Long likeCount) {
-        this.setting = setting;
         this.name = name;
         this.locationId = locationId;
         this.location = location;
@@ -53,13 +58,13 @@ public class FoodTruck {
         this.bestMenu = bestMenu;
     }
 
-    public void setSetting(Setting setting) {
-        this.setting = setting;
+    public void addSetting(FoodTruckSetting setting) {
+        settings.add(setting);
+        setting.setFoodTruck(this);
     }
 
-    @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Menu> menus = new ArrayList<>();
-
-    @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FoodLike> foodLikes = new ArrayList<>();
+    public void increaseLikeCount() {
+        if (this.likeCount == null) this.likeCount = 0L;
+        this.likeCount++;
+    }
 }

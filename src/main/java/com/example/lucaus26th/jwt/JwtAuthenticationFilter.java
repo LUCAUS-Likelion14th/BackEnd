@@ -4,7 +4,7 @@ package com.example.lucaus26th.jwt;
 import com.example.lucaus26th.config.MemberAuthentication;
 import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.enums.JwtValidationType;
-import com.example.lucaus26th.repository.MemberRepository;
+import com.example.lucaus26th.repository.food.MemberRepository;
 import com.example.lucaus26th.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

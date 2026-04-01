@@ -9,7 +9,7 @@ import com.example.lucaus26th.domain.booth.Category;
 import com.example.lucaus26th.dto.request.BoothRequestDto;
 import com.example.lucaus26th.dto.request.BoothUpdateRequestDto;
 import com.example.lucaus26th.dto.response.BoothResponseDto;
-import com.example.lucaus26th.repository.MemberRepository;
+import com.example.lucaus26th.repository.food.MemberRepository;
 import com.example.lucaus26th.repository.booth.BoothCategoryRepository;
 import com.example.lucaus26th.repository.booth.BoothLikeRepository;
 import com.example.lucaus26th.repository.booth.BoothRepository;

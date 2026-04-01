@@ -57,6 +57,8 @@ public class SecurityConfig {
                         // 부스 좋아요는 로그인 필요
                         .requestMatchers(HttpMethod.POST, "/booth/*/like/").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/booth/*/like/").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/foodTruck/*/like").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/foodTruck/*/like").authenticated()
                         // 나머지는 전부 허용 (꼭 맨 마지막에 둘것)
                         .anyRequest().permitAll()
                 )

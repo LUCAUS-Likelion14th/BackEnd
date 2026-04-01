@@ -22,4 +22,9 @@ public class FoodLike {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public FoodLike(FoodTruck foodTruck, Member member) {
+        this.foodTruck = foodTruck;
+        this.member = member;
+    }
 }

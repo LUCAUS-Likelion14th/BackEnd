@@ -11,15 +11,4 @@ public class FoodTruckRequestDto {
     private String location;
     private String image;
     private String bestMenu;
-    private SettingRequest setting;
-
-    @Getter
-    @NoArgsConstructor
-    public static class SettingRequest {
-        private String mon;
-        private String tue;
-        private String wed;
-        private String thu;
-        private String fri;
-    }
 }

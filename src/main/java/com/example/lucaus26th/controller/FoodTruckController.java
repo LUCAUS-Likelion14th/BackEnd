@@ -3,6 +3,7 @@ package com.example.lucaus26th.controller;
 import com.example.lucaus26th.domain.food.FoodTruck;
 import com.example.lucaus26th.dto.request.FoodTruckRequestDto;
 import com.example.lucaus26th.dto.response.FoodTruckResponseDto;
+import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.FoodTruckService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,34 +38,35 @@ public class FoodTruckController {
         return ResponseEntity.ok("푸드트럭 삭제 성공: " + foodTruckId);
     }
 
-    @GetMapping
-    public ResponseEntity<List<FoodTruckResponseDto>> getAllFoodTrucks(Authentication authentication) {
-
+    @PostMapping("/{foodTruckId}/like")
+    public ResponseEntity<String> createFoodLike(@PathVariable Long foodTruckId, Authentication authentication) {
         Long memberId = null;
 
-        if (authentication != null && authentication.isAuthenticated()
-                && authentication.getPrincipal() instanceof Long) {
-            memberId = (Long) authentication.getPrincipal();
+        if (authentication.getPrincipal() instanceof CustomUserDetails user) {
+            memberId = user.getId();
         }
 
-        return ResponseEntity.ok(foodTruckService.getAllFoodTrucks(memberId));
+        if (memberId == null) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
+        foodTruckService.createFoodLike(foodTruckId, memberId);
+        return ResponseEntity.ok("푸드트럭 좋아요 성공");
     }
 
-    @GetMapping("/{foodTruckId}")
-    public ResponseEntity<FoodTruckResponseDto> getFoodTruck(
+    @DeleteMapping("/{foodTruckId}/like")
+    public ResponseEntity<String> deleteFoodLike(
             @PathVariable Long foodTruckId,
             Authentication authentication
     ) {
-        Long memberId = null;
-
-        // 로그인 여부 판단
-        if (authentication != null && authentication.getPrincipal() instanceof Long) {
-            memberId = (Long) authentication.getPrincipal();
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails user)) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
         }
 
-        return ResponseEntity.ok(
-                foodTruckService.getFoodTruck(foodTruckId, memberId)
-        );
-    }
+        Long memberId = user.getId();
 
+        foodTruckService.deleteFoodLike(foodTruckId, memberId);
+
+        return ResponseEntity.ok("푸드트럭 좋아요 취소 성공");
+    }
 }

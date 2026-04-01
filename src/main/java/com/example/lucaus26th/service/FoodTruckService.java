@@ -1,12 +1,15 @@
 package com.example.lucaus26th.service;
 
+import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.domain.Setting;
+import com.example.lucaus26th.domain.food.FoodLike;
 import com.example.lucaus26th.domain.food.FoodTruck;
 import com.example.lucaus26th.dto.request.FoodTruckRequestDto;
 import com.example.lucaus26th.dto.response.FoodTruckResponseDto;
-import com.example.lucaus26th.repository.FoodLikeRepository;
-import com.example.lucaus26th.repository.FoodTruckRepository;
+import com.example.lucaus26th.repository.food.FoodLikeRepository;
+import com.example.lucaus26th.repository.food.FoodTruckRepository;
 import com.example.lucaus26th.repository.booth.SettingRepository;
+import com.example.lucaus26th.repository.food.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,24 +25,10 @@ public class FoodTruckService {
     private final FoodTruckRepository foodTruckRepository;
     private final FoodLikeRepository foodLikeRepository;
     private final SettingRepository settingRepository;
+    private final MemberRepository memberRepository;
 
     public Long createFoodTruck(FoodTruckRequestDto request) {
-        Setting setting = null;
-
-        if (request.getSetting() != null) {
-            FoodTruckRequestDto.SettingRequest sr = request.getSetting();
-
-            setting = Setting.builder()
-                    .mon(sr.getMon())
-                    .tue(sr.getTue())
-                    .wed(sr.getWed())
-                    .thu(sr.getThu())
-                    .fri(sr.getFri())
-                    .build();
-        }
-
         FoodTruck foodTruck = new FoodTruck(
-                setting,
                 request.getName(),
                 request.getLocationId(),
                 request.getLocation(),
@@ -64,29 +53,6 @@ public class FoodTruckService {
                 request.getBestMenu()
         );
 
-        if (request.getSetting() != null) {
-            FoodTruckRequestDto.SettingRequest sr = request.getSetting();
-
-            if (foodTruck.getSetting() == null) {
-                Setting newSetting = Setting.builder()
-                        .mon(sr.getMon())
-                        .tue(sr.getTue())
-                        .wed(sr.getWed())
-                        .thu(sr.getThu())
-                        .fri(sr.getFri())
-                        .build();
-
-                foodTruck.setSetting(newSetting);
-            } else {
-                Setting setting = foodTruck.getSetting();
-                setting.setMon(sr.getMon());
-                setting.setTue(sr.getTue());
-                setting.setWed(sr.getWed());
-                setting.setThu(sr.getThu());
-                setting.setFri(sr.getFri());
-            }
-        }
-
         return foodTruck.getId();
     }
 
@@ -97,37 +63,28 @@ public class FoodTruckService {
         foodTruckRepository.delete(foodTruck);
     }
 
-    public List<FoodTruckResponseDto> getAllFoodTrucks(Long memberId) {
-        List<FoodTruck> foodTrucks = foodTruckRepository.findAll();
+    public void createFoodLike(Long foodTruckId, Long memberId) {
 
-        Set<Long> likedSet;
-
-        if (memberId != null) {
-            likedSet = new HashSet<>(
-                    foodLikeRepository.findFoodTruckIdsByMemberId(memberId)
-            );
-        } else {
-            likedSet = new HashSet<>();
-        }
-
-        return foodTrucks.stream()
-                .map(foodTruck -> {
-                    boolean isLiked = likedSet.contains(foodTruck.getId());
-                    return FoodTruckResponseDto.from(foodTruck, isLiked);
-                })
-                .toList();
-    }
-
-    public FoodTruckResponseDto getFoodTruck(Long foodTruckId, Long memberId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
 
-        boolean isLiked = false;
-        if (memberId != null) {
-            isLiked = foodLikeRepository.existsByFoodTruckIdAndMemberId(foodTruckId, memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        if (foodLikeRepository.existsByFoodTruckIdAndMemberId(foodTruckId, memberId)) {
+            throw new IllegalStateException("이미 좋아요를 누른 푸드트럭입니다.");
         }
 
-        return FoodTruckResponseDto.from(foodTruck, isLiked);
+        FoodLike foodLike = new FoodLike(foodTruck, member);
+        foodLikeRepository.save(foodLike);
+
+        foodTruck.increaseLikeCount();
     }
+
+    @Transactional
+    public void deleteFoodLike(Long foodTruckId, Long memberId) {
+        foodLikeRepository.deleteByFoodTruckIdAndMemberId(memberId, foodTruckId);
+    }
+
 
 }
