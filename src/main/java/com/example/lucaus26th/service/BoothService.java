@@ -16,9 +16,14 @@ import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.booth.CategoryRepository;
 import com.example.lucaus26th.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.MonthDay;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -63,13 +68,34 @@ public class BoothService {
 
         return booth.getId();
     }
+    // 조회 관련 쿼리 함수
+    private boolean locationFilter(Booth booth, String location) {
+        if (location == null) return true;
+        return booth.getLocation().name().equals(location);
+    }
+
+    private boolean categoryFilter(Booth booth, String category) {
+        if (category == null) return true;
+        return booth.getCategoryNames().contains(category);
+    }
+
+    private boolean dateFilter(Booth booth, String date) {
+        if (date == null) return true;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMdd");
+        MonthDay monthDay = MonthDay.parse(date, formatter);
+        return booth.getSettings().stream()
+                .anyMatch(s -> MonthDay.from(s.getDate()).equals(monthDay));
+    }
 
     // 전체조회
-    public List<BoothResponseDto.Lists> getBooth(CustomUserDetails userDetails) {
+    public Page<BoothResponseDto.Lists> getBooth(String date, String location, String category, Pageable pageable, CustomUserDetails userDetails) {
         List<Booth> booths = boothRepository.findAll();
         Member member = (userDetails != null) ? userDetails.getMember() : null;
 
-        return booths.stream()
+        List<BoothResponseDto.Lists> boothList = booths.stream()
+                .filter(booth -> locationFilter(booth, location))
+                .filter(booth -> categoryFilter(booth, category))
+                .filter(booth -> dateFilter(booth, date))
                 .map(booth -> {
                     boolean isLiked = false;
                     if (userDetails != null) {
@@ -78,7 +104,13 @@ public class BoothService {
                     return BoothResponseDto.Lists.fromEntity(booth, isLiked);
                 })
                 .toList();
+
+        // List → Page 변환
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), boothList.size());
+        return new PageImpl<>(boothList.subList(start,end), pageable, boothList.size());
     }
+
 
     // 상세조회
     public BoothResponseDto.Detail getBoothDetail(Long boothId, CustomUserDetails userDetails) {
