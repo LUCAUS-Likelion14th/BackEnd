@@ -1,6 +1,6 @@
-package com.example.lucaus26th.repository;
+package com.example.lucaus26th.repository.stage;
 
-import com.example.lucaus26th.domain.Song;
+import com.example.lucaus26th.domain.stage.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

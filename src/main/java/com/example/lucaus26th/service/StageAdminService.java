@@ -1,15 +1,15 @@
 package com.example.lucaus26th.service;
 
-import com.example.lucaus26th.domain.Song;
-import com.example.lucaus26th.domain.Stage;
-import com.example.lucaus26th.domain.StageInfo;
-import com.example.lucaus26th.dto.request.SongRequestDTO;
-import com.example.lucaus26th.dto.request.StageRequestDTO;
-import com.example.lucaus26th.dto.response.SongResponseDTO;
-import com.example.lucaus26th.dto.response.StageResponseDTO;
-import com.example.lucaus26th.repository.SongRepository;
-import com.example.lucaus26th.repository.StageInfoRepository;
-import com.example.lucaus26th.repository.StageRepository;
+import com.example.lucaus26th.domain.stage.Song;
+import com.example.lucaus26th.domain.stage.Stage;
+import com.example.lucaus26th.domain.stage.StageInfo;
+import com.example.lucaus26th.dto.request.stage.SongRequestDTO;
+import com.example.lucaus26th.dto.request.stage.StageRequestDTO;
+import com.example.lucaus26th.dto.response.stage.SongResponseDTO;
+import com.example.lucaus26th.dto.response.stage.StageResponseDTO;
+import com.example.lucaus26th.repository.stage.SongRepository;
+import com.example.lucaus26th.repository.stage.StageInfoRepository;
+import com.example.lucaus26th.repository.stage.StageRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

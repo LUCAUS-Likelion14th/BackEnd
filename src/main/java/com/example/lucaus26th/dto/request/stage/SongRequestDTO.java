@@ -1,4 +1,4 @@
-package com.example.lucaus26th.dto.request;
+package com.example.lucaus26th.dto.request.stage;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

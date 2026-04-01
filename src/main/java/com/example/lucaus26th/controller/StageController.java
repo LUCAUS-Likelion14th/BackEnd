@@ -1,9 +1,9 @@
 package com.example.lucaus26th.controller;
 
-import com.example.lucaus26th.domain.StageCategory;
-import com.example.lucaus26th.dto.response.PerformerSimpleResponseDTO;
-import com.example.lucaus26th.dto.response.StageInfoResponseDTO;
-import com.example.lucaus26th.dto.response.StageResponseDTO;
+import com.example.lucaus26th.domain.stage.StageCategory;
+import com.example.lucaus26th.dto.response.stage.PerformerSimpleResponseDTO;
+import com.example.lucaus26th.dto.response.stage.StageInfoResponseDTO;
+import com.example.lucaus26th.dto.response.stage.StageResponseDTO;
 import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.service.StageService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,4 +1,4 @@
-package com.example.lucaus26th.domain;
+package com.example.lucaus26th.domain.stage;
 
 import jakarta.persistence.*;
 import lombok.Getter;

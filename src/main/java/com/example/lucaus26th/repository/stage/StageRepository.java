@@ -1,11 +1,9 @@
-package com.example.lucaus26th.repository;
+package com.example.lucaus26th.repository.stage;
 
-import com.example.lucaus26th.domain.Stage;
-import com.example.lucaus26th.domain.StageCategory;
-import com.example.lucaus26th.dto.response.StageResponseDTO;
+import com.example.lucaus26th.domain.stage.Stage;
+import com.example.lucaus26th.domain.stage.StageCategory;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;

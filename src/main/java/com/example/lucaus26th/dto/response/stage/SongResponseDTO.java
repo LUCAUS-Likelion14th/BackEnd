@@ -1,13 +1,10 @@
-package com.example.lucaus26th.dto.response;
+package com.example.lucaus26th.dto.response.stage;
 
-import com.example.lucaus26th.domain.Song;
-import com.example.lucaus26th.domain.Stage;
+import com.example.lucaus26th.domain.stage.Song;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 @Builder

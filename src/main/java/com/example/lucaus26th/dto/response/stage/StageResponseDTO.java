@@ -1,15 +1,12 @@
-package com.example.lucaus26th.dto.response;
+package com.example.lucaus26th.dto.response.stage;
 
-import com.example.lucaus26th.domain.Stage;
+import com.example.lucaus26th.domain.stage.Stage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.cglib.core.Local;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 

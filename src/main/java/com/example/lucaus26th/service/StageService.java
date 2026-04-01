@@ -1,13 +1,12 @@
 package com.example.lucaus26th.service;
 
-import com.example.lucaus26th.domain.Stage;
-import com.example.lucaus26th.domain.StageCategory;
-import com.example.lucaus26th.dto.response.PerformerSimpleResponseDTO;
-import com.example.lucaus26th.dto.response.StageInfoResponseDTO;
-import com.example.lucaus26th.dto.response.StageResponseDTO;
-import com.example.lucaus26th.repository.StageRepository;
+import com.example.lucaus26th.domain.stage.Stage;
+import com.example.lucaus26th.domain.stage.StageCategory;
+import com.example.lucaus26th.dto.response.stage.PerformerSimpleResponseDTO;
+import com.example.lucaus26th.dto.response.stage.StageInfoResponseDTO;
+import com.example.lucaus26th.dto.response.stage.StageResponseDTO;
+import com.example.lucaus26th.repository.stage.StageRepository;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
