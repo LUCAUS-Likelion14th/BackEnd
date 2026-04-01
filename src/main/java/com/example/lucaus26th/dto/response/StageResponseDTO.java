@@ -2,6 +2,7 @@ package com.example.lucaus26th.dto.response;
 
 import com.example.lucaus26th.domain.Stage;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.cglib.core.Local;
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
+@JsonPropertyOrder({ "stage_id", "start_at", "end_at", "time", "status", "performer_logo", "performer", "category" })
 public class StageResponseDTO {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");

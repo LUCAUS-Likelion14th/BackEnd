@@ -38,7 +38,8 @@ public class Stage {
     @Column(name = "logo")
     private String logo;
 
-    @OneToMany(mappedBy = "stage")
+    @OneToMany(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("playOrder ASC")
     private List<Song> songs = new ArrayList<>();
 
     @OneToOne(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -103,10 +104,16 @@ public class Stage {
 
     public void connectStageInfo(StageInfo stageInfo) {
         this.stageInfo = stageInfo;
+        if(stageInfo != null) {
+            stageInfo.assignStage(this);
+        }
     }
 
     public void disconnectStageInfo() {
-        this.stageInfo = null;
+        if(this.stageInfo != null){
+            this.stageInfo.removeStage();
+            this.stageInfo = null;
+        }
     }
 
     //필수정보 다 포함되는지 검사
@@ -128,6 +135,17 @@ public class Stage {
         if (startAt != null && endAt != null && !startAt.isBefore(endAt)) {
             throw new IllegalArgumentException("공연 시작 시간은 종료 시간보다 빨라야 합니다.");
         }
+    }
+
+    //곡 추가
+    public void addSong(Song song) {
+        this.songs.add(song);
+        song.assignStage(this);
+    }
+
+    //곡 삭제
+    public void removeSong(Song song) {
+        this.songs.remove(song);
     }
 
 }

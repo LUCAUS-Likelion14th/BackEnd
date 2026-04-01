@@ -14,11 +14,32 @@ public class Song {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "stage_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "stage_id", nullable = false)
     private Stage stage;
 
     @Column(nullable = false)
+    private Integer playOrder;
+
+    @Column(nullable = false)
     private String title;
+
+    private Song(String title, Integer playOrder) {
+        this.title = title;
+        this.playOrder = playOrder;
+    }
+
+    public void assignStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public static Song create(String title, Integer playOrder) {
+        return new Song(title, playOrder);
+    }
+
+    public void updateSong(String title, Integer playOrder) {
+        this.title = title;
+        this.playOrder = playOrder;
+    }
 
 }

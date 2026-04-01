@@ -1,9 +1,13 @@
 package com.example.lucaus26th.service;
 
+import com.example.lucaus26th.domain.Song;
 import com.example.lucaus26th.domain.Stage;
 import com.example.lucaus26th.domain.StageInfo;
+import com.example.lucaus26th.dto.request.SongRequestDTO;
 import com.example.lucaus26th.dto.request.StageRequestDTO;
+import com.example.lucaus26th.dto.response.SongResponseDTO;
 import com.example.lucaus26th.dto.response.StageResponseDTO;
+import com.example.lucaus26th.repository.SongRepository;
 import com.example.lucaus26th.repository.StageInfoRepository;
 import com.example.lucaus26th.repository.StageRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +22,7 @@ public class StageAdminService {
 
     private final StageRepository stageRepository;
     private final StageInfoRepository stageInfoRepository;
+    private final SongRepository songRepository;
 
     // 공연 생성
     @Transactional
@@ -35,14 +40,13 @@ public class StageAdminService {
 
         if(request.hasStageInfoField()){
             StageInfo stageInfo = StageInfo.create(
-                    savedStage,
                     request.getInstagram(),
                     request.getYoutube(),
                     request.getPerformerImage(),
                     request.getInfo()
             );
-            stageInfoRepository.save(stageInfo);
             savedStage.connectStageInfo(stageInfo);
+            stageInfoRepository.save(stageInfo);
         }
         return StageResponseDTO.from(savedStage);
     }
@@ -66,7 +70,6 @@ public class StageAdminService {
         if(request.hasStageInfoField()){
             if(stageInfo == null){
                 stageInfo = StageInfo.create(
-                        stage,
                         request.getInstagram(),
                         request.getYoutube(),
                         request.getPerformerImage(),
@@ -102,5 +105,30 @@ public class StageAdminService {
         Stage stage = stageInfo.getStage();
         stage.disconnectStageInfo();
         stageInfoRepository.delete(stageInfo);
+    }
+
+    @Transactional
+    public SongResponseDTO createSong(Long stageId, SongRequestDTO request) {
+        Stage stage = stageRepository.findById(stageId)
+                .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
+        Song song = Song.create(request.getTitle(), request.getPlayOrder());
+        Song savedSong = songRepository.save(song);
+        stage.addSong(savedSong);
+        return SongResponseDTO.from(savedSong);
+    }
+
+    @Transactional
+    public SongResponseDTO updateSong(Long stageId, Long songId, SongRequestDTO request) {
+        Song song = songRepository.findByIdAndStageId(songId, stageId)
+                .orElseThrow(() -> new EntityNotFoundException("no song found with id: " + songId));
+        song.updateSong(request.getTitle(), request.getPlayOrder());
+        return SongResponseDTO.from(song);
+    }
+
+    @Transactional
+    public void deleteSong(Long stageId, Long songId) {
+        Song song = songRepository.findByIdAndStageId(songId, stageId)
+                .orElseThrow(() -> new EntityNotFoundException("no song found with id: " + songId));
+        songRepository.delete(song);
     }
 }

@@ -2,11 +2,13 @@ package com.example.lucaus26th.dto.response;
 
 import com.example.lucaus26th.domain.Stage;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
+@JsonPropertyOrder({ "stage_id", "performer", "logo" })
 public class PerformerSimpleResponseDTO {
     @JsonProperty("stage_id")
     private Long stageId;

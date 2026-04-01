@@ -3,6 +3,7 @@ package com.example.lucaus26th.dto.response;
 import com.example.lucaus26th.domain.Stage;
 import com.example.lucaus26th.domain.StageInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Builder
+@JsonPropertyOrder({ "stage_id", "time", "stage_info", "performer", "performer_image", "instagram", "youtube", "songs" })
 public class StageInfoResponseDTO {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");

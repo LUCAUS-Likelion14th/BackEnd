@@ -1,6 +1,8 @@
 package com.example.lucaus26th.controller;
 
+import com.example.lucaus26th.dto.request.SongRequestDTO;
 import com.example.lucaus26th.dto.request.StageRequestDTO;
+import com.example.lucaus26th.dto.response.SongResponseDTO;
 import com.example.lucaus26th.dto.response.StageResponseDTO;
 import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.service.StageAdminService;
@@ -10,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+
+// TODO: admin 계정 권한 추가
 @RestController
-@RequestMapping("/stage/admin")
+@RequestMapping("/admin/stage")
 @RequiredArgsConstructor
 @Tag(name = "공연 관리", description = "공연 등록/수정/삭제 관련 API")
 public class StageAdminController {
@@ -45,5 +49,41 @@ public class StageAdminController {
     public void deleteStageInfo(@PathVariable("stageId") Long stageId){
         stageAdminService.deleteStageInfo(stageId);
     }
+
+    @PostMapping("/{stageId}/song")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "곡 생성", description = "stageId에 해당하는 공연의 곡을 추가합니다.")
+    public ApiResponse<SongResponseDTO> createSong(
+            @PathVariable("stageId") Long stageId,
+            @RequestBody SongRequestDTO request){
+        return ApiResponse.success(stageAdminService.createSong(stageId, request));
+    }
+
+    @PatchMapping("/{stageId}/song/{songId}")
+    @Operation(summary = "곡 수정", description = "songId에 해당하는 곡을 수정합니다.")
+    public ApiResponse<SongResponseDTO> updateSong(
+            @PathVariable("stageId") Long stageId,
+            @PathVariable("songId") Long songId,
+            @RequestBody SongRequestDTO request){
+        return ApiResponse.success(stageAdminService.updateSong(stageId, songId, request));
+    }
+
+    @DeleteMapping("/{stageId}/song/{songId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "곡 삭제", description = "songId에 해당하는 곡을 삭제합니다.")
+    public void deleteSong(
+            @PathVariable("stageId") Long stageId,
+            @PathVariable("songId") Long songId
+    ){
+        stageAdminService.deleteSong(stageId, songId);
+    }
+
+
+
+
+
+
+
+
 
 }

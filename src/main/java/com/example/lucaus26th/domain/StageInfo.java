@@ -31,14 +31,12 @@ public class StageInfo {
     @JoinColumn(name = "stage_id")
     private Stage stage;
 
-    public StageInfo(
-            Stage stage,
+    private StageInfo(
             String instagram,
             String youtube,
             String performerImage,
             String info
     ) {
-        this.stage = stage;
         this.instagram = instagram;
         this.youtube = youtube;
         this.performerImage = performerImage;
@@ -46,16 +44,20 @@ public class StageInfo {
     }
 
     public static StageInfo create(
-            Stage stage,
             String instagram,
             String youtube,
             String performerImage,
             String info
     ) {
-        if (stage == null) {
-            throw new IllegalArgumentException("공연 상세 정보는 공연 없이 생성할 수 없습니다.");
-        }
-        return new StageInfo(stage, instagram, youtube, performerImage, info);
+        return new StageInfo(instagram, youtube, performerImage, info);
+    }
+
+    public void assignStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void removeStage() {
+        this.stage = null;
     }
 
     public void update(
@@ -64,14 +66,10 @@ public class StageInfo {
             String performerImage,
             String info
     ) {
-        if (instagram != null) {this.instagram = instagram;
-        }
-        if (youtube != null) {this.youtube = youtube;
-        }
-        if (performerImage != null) {this.performerImage = performerImage;
-        }
-        if (info != null) {this.info = info;
-        }
+        if (instagram != null) this.instagram = instagram;
+        if (youtube != null) this.youtube = youtube;
+        if (performerImage != null) this.performerImage = performerImage;
+        if (info != null) this.info = info;
     }
 
 }
