@@ -115,7 +115,7 @@ public class Booth extends BaseTimeEntity {
         for (BoothSetting setting : settings) {
             int index = order.indexOf(setting.getDay());
             if (index != -1) {
-                days.set(index, setting.getDay() + " : " + setting.getStartAt() + " - " + setting.getEndAt());
+                days.set(index, setting.getDay() + " " + setting.getStartAt() + " - " + setting.getEndAt());
             }
         }
 
