@@ -69,4 +69,27 @@ public class BoothResponseDto {
         }
 
     }
+
+    @Getter
+    @Builder
+    public static class Hot{
+        private Long location_id;
+        private String booth_image;
+        private BoothLocation location;
+        private String booth_name;
+        private String owner;
+        private Long like_count;
+        private Boolean is_liked;
+
+        public static BoothResponseDto.Hot fromEntity(Booth booth, boolean isLiked){
+            return Hot.builder()
+                    .location_id(booth.getLocationId())
+                    .booth_image(booth.getImage())
+                    .location(booth.getLocation())
+                    .booth_name(booth.getName())
+                    .is_liked(isLiked)
+                    .like_count(booth.getLikeCount())
+                    .build();
+        }
+    }
 }

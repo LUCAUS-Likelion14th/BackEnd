@@ -22,8 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.MonthDay;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -68,6 +69,7 @@ public class BoothService {
 
         return booth.getId();
     }
+
     // 조회 관련 쿼리 함수
     private boolean locationFilter(Booth booth, String location) {
         if (location == null) return true;
@@ -120,7 +122,6 @@ public class BoothService {
         return new PageImpl<>(boothList.subList(start,end), pageable, boothList.size());
     }
 
-
     // 상세조회
     public BoothResponseDto.Detail getBoothDetail(Long boothId, CustomUserDetails userDetails) {
         Booth booth = boothRepository.findById(boothId)
@@ -132,7 +133,44 @@ public class BoothService {
         Member member = userDetails.getMember();
         return BoothResponseDto.Detail.fromEntity(booth, boothLikeRepository.existsByBoothAndMember(booth,member));
     }
-    // 전체조회
+
+    // 인기 부스
+    public List<BoothResponseDto.Hot> getBoothHot(CustomUserDetails userDetails) {
+        // 인기 3개만 보여주기. (Booth.likeCount 로 정렬 후
+        // 현재(seoul time 기준) 시간에 영업 안하는거는 제외하고 3개 올려야함(BoothSetting 참고하자)
+        ZonedDateTime nowSeoul = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDate today = nowSeoul.toLocalDate();
+        LocalTime nowTime = nowSeoul.toLocalTime();
+
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
+        List<Booth> hotBooths = boothRepository.findAll().stream()
+                .filter(booth -> booth.getSettings().stream()
+                        .anyMatch(setting ->
+                                setting.getDate().equals(today) &&
+                                        !nowTime.isBefore(setting.getStartAt()) &&
+                                        !nowTime.isAfter(setting.getEndAt())
+                        )
+                )
+                .sorted(Comparator.comparing
+                        (Booth::getLikeCount).reversed())
+                .limit(3)
+                .toList();
+
+        boolean isLiked = false;
+        List<BoothResponseDto.Hot> result = hotBooths.stream()
+                .map(booth -> {
+                    boolean liked = false;
+                    if (member != null) {
+                        liked = boothLikeRepository.existsByBoothAndMember(booth, member);
+                    }
+                    return BoothResponseDto.Hot.fromEntity(booth, liked);
+                })
+                .toList();
+
+        return result;
+    }
+
 
     public void updateBooth(Long boothId,/* Long memberId*/ BoothUpdateRequestDto request) {
         // 나중에 관리자 체크 하기
