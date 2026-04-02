@@ -37,10 +37,11 @@ public class BoothController {
     public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getBooth(@RequestParam(required = false) String date,
                                                                               @RequestParam(required = false) String location,
                                                                               @RequestParam(required = false) String category,
+                                                                              @RequestParam(required = false) String search,
                                                                               @RequestParam(defaultValue = "0") int page,
                                                                               @AuthenticationPrincipal CustomUserDetails userDetails){
         Pageable pageable = PageRequest.of(page,8);
-        Page<BoothResponseDto.Lists> response = boothService.getBooth(date, location, category,pageable,userDetails);
+        Page<BoothResponseDto.Lists> response = boothService.getBooth(date, location, category,search, pageable,userDetails);
         //return ResponseEntity.ok(ApiResponse.of(response)); // 만약 메타데이터 필요없으면 response.getContent()
         return ResponseEntity.ok(ApiResponse.of(response.getContent()));
     }

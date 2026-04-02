@@ -87,8 +87,16 @@ public class BoothService {
                 .anyMatch(s -> MonthDay.from(s.getDate()).equals(monthDay));
     }
 
+    private boolean searchFilter(Booth booth, String search){
+        if(search == null) return true;
+        String name = booth.getName() != null ? booth.getName() : "";
+        String owner = booth.getOwner() != null ? booth.getOwner() : "";
+
+        return name.contains(search) || owner.contains(search);
+    }
+
     // 전체조회
-    public Page<BoothResponseDto.Lists> getBooth(String date, String location, String category, Pageable pageable, CustomUserDetails userDetails) {
+    public Page<BoothResponseDto.Lists> getBooth(String date, String location, String category, String search, Pageable pageable, CustomUserDetails userDetails) {
         List<Booth> booths = boothRepository.findAll();
         Member member = (userDetails != null) ? userDetails.getMember() : null;
 
@@ -96,6 +104,7 @@ public class BoothService {
                 .filter(booth -> locationFilter(booth, location))
                 .filter(booth -> categoryFilter(booth, category))
                 .filter(booth -> dateFilter(booth, date))
+                .filter(booth -> searchFilter(booth, search))
                 .map(booth -> {
                     boolean isLiked = false;
                     if (userDetails != null) {
