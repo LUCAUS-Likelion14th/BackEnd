@@ -4,6 +4,7 @@ import com.example.lucaus26th.domain.food.FoodTruck;
 import com.example.lucaus26th.dto.request.FoodTruckRequestDto;
 import com.example.lucaus26th.dto.request.FoodTruckSettingRequestDto;
 import com.example.lucaus26th.dto.request.MenuRequestDto;
+import com.example.lucaus26th.dto.response.FoodTruckDetailResponseDto;
 import com.example.lucaus26th.dto.response.FoodTruckResponseDto;
 import com.example.lucaus26th.dto.response.FoodTruckSettingResponseDto;
 import com.example.lucaus26th.dto.response.MenuResponseDto;
@@ -135,5 +136,23 @@ public class FoodTruckController {
         }
 
         return ResponseEntity.ok(foodTruckService.getFoodTrucks(location, date, memberId));
+    }
+
+    @GetMapping("/{foodTruckId}")
+    public ResponseEntity<FoodTruckDetailResponseDto> getFoodTruckDetail(
+            @PathVariable Long foodTruckId,
+            Authentication authentication
+    ) {
+        Long memberId = null;
+
+        // 로그인 유저 있으면 memberId 추출
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails user) {
+            memberId = user.getId();
+        }
+
+        FoodTruckDetailResponseDto response =
+                foodTruckService.getFoodTruckDetail(foodTruckId, memberId);
+
+        return ResponseEntity.ok(response);
     }
 }

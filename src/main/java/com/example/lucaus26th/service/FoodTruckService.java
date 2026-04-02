@@ -8,6 +8,7 @@ import com.example.lucaus26th.domain.food.Menu;
 import com.example.lucaus26th.dto.request.FoodTruckRequestDto;
 import com.example.lucaus26th.dto.request.FoodTruckSettingRequestDto;
 import com.example.lucaus26th.dto.request.MenuRequestDto;
+import com.example.lucaus26th.dto.response.FoodTruckDetailResponseDto;
 import com.example.lucaus26th.dto.response.FoodTruckResponseDto;
 import com.example.lucaus26th.dto.response.FoodTruckSettingResponseDto;
 import com.example.lucaus26th.dto.response.MenuResponseDto;
@@ -211,4 +212,44 @@ public class FoodTruckService {
                 .toList();
     }
 
+    public FoodTruckDetailResponseDto getFoodTruckDetail(Long foodTruckId, Long memberId) {
+        FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
+
+        boolean liked = false;
+        if (memberId != null) {
+            liked = foodLikeRepository.existsByFoodTruckIdAndMemberId(foodTruckId, memberId);
+        }
+
+        List<String> dates = foodTruck.getSettings().stream()
+                .map(setting ->
+                        setting.getDay() + " " +
+                                setting.getStartAt().toString().substring(0, 5) +
+                                " - " +
+                                setting.getEndAt().toString().substring(0, 5)
+                )
+                .toList();
+
+        List<FoodTruckDetailResponseDto.MenuDto> menus = foodTruck.getMenus().stream()
+                .map(menu -> FoodTruckDetailResponseDto.MenuDto.builder()
+                        .name(menu.getName())
+                        .price(menu.getPrice())
+                        .image(menu.getImage())
+                        .build())
+                .toList();
+
+        return FoodTruckDetailResponseDto.builder()
+                .id(foodTruck.getId())
+                .name(foodTruck.getName())
+                .locationId(foodTruck.getLocationId())
+                .location(foodTruck.getLocation())
+                .image(foodTruck.getImage())
+                .bestMenu(foodTruck.getBestMenu())
+                .likeCount(foodTruck.getLikeCount())
+                .liked(liked)
+                .foodTruckInfo(foodTruck.getFoodTruckInfo())
+                .date(dates)
+                .menu(menus)
+                .build();
+    }
 }
