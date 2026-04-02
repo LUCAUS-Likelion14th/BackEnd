@@ -1,5 +1,6 @@
 package com.example.lucaus26th.jwt;
 
+import com.example.lucaus26th.enums.JwtValidationType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;

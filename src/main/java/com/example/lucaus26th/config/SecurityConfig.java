@@ -5,6 +5,7 @@ import com.example.lucaus26th.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -39,16 +40,27 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
 
                 // 인가 설정
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(
+//                                "/",
+//                                "/join",
+//                                "/login",
+//                                "/oauth2/**",
+//                                "/login/oauth2/**",
+//                                "/h2-console/**"
+//                        ).permitAll()
+//                        .anyRequest().authenticated()
+//                )
+
+                // 일단 임시로 모든 api 허용
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/",
-                                "/join",
-                                "/login",
-                                "/oauth2/**",
-                                "/login/oauth2/**",
-                                "/h2-console/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        // 부스 좋아요는 로그인 필요
+                        .requestMatchers(HttpMethod.POST, "/booth/*/like/").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/booth/*/like/").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/foodTruck/*/like").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/foodTruck/*/like").authenticated()
+                        // 나머지는 전부 허용 (꼭 맨 마지막에 둘것)
+                        .anyRequest().permitAll()
                 )
 
                 // 소셜 로그인
