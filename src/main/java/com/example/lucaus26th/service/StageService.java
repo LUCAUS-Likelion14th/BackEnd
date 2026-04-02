@@ -2,6 +2,7 @@ package com.example.lucaus26th.service;
 
 import com.example.lucaus26th.domain.stage.Stage;
 import com.example.lucaus26th.domain.stage.StageCategory;
+import com.example.lucaus26th.dto.response.stage.LiveStageResponseDTO;
 import com.example.lucaus26th.dto.response.stage.PerformerSimpleResponseDTO;
 import com.example.lucaus26th.dto.response.stage.StageInfoResponseDTO;
 import com.example.lucaus26th.dto.response.stage.StageResponseDTO;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -39,5 +41,18 @@ public class StageService {
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new IllegalArgumentException("Stage not found"));
         return StageInfoResponseDTO.from(stage);
+    }
+
+    // 메인 홈 실시간 공연 조회
+    public LiveStageResponseDTO getLiveStage() {
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+        Stage stage = stageRepository
+                .findByDateAndStartAtLessThanEqualAndEndAtGreaterThanEqual(
+                        today, now, now
+                ).orElseThrow(() -> new IllegalArgumentException("Stage not found"));
+
+
+        return LiveStageResponseDTO.from(stage);
     }
 }
