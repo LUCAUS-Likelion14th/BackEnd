@@ -1,6 +1,6 @@
 package com.example.lucaus26th.dto.request.stage;
 
-import com.example.lucaus26th.domain.stage.StageCategory;
+import com.example.lucaus26th.enums.StageCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

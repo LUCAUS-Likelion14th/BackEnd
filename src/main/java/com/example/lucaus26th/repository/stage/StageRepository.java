@@ -1,7 +1,7 @@
 package com.example.lucaus26th.repository.stage;
 
 import com.example.lucaus26th.domain.stage.Stage;
-import com.example.lucaus26th.domain.stage.StageCategory;
+import com.example.lucaus26th.enums.StageCategory;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 

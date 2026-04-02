@@ -1,5 +1,6 @@
 package com.example.lucaus26th.domain.stage;
 
+import com.example.lucaus26th.enums.StageCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

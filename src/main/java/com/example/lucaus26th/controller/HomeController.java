@@ -1,23 +1,14 @@
 package com.example.lucaus26th.controller;
 
-import com.example.lucaus26th.domain.stage.StageCategory;
 import com.example.lucaus26th.dto.response.stage.LiveStageResponseDTO;
-import com.example.lucaus26th.dto.response.stage.PerformerSimpleResponseDTO;
 import com.example.lucaus26th.global.api.ApiResponse;
-import com.example.lucaus26th.service.StageService;
+import com.example.lucaus26th.service.stage.StageService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

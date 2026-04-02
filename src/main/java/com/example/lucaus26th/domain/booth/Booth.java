@@ -1,8 +1,7 @@
 package com.example.lucaus26th.domain.booth;
 
 import com.example.lucaus26th.domain.BaseTimeEntity;
-import com.example.lucaus26th.domain.Setting;
-import com.example.lucaus26th.dto.request.BoothUpdateRequestDto;
+import com.example.lucaus26th.dto.request.booth.BoothUpdateRequestDto;
 import com.example.lucaus26th.enums.BoothLocation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.annotation.processing.Generated;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.example.lucaus26th.domain.booth;
 
-import com.example.lucaus26th.dto.request.BoothSettingRequestDto;
+import com.example.lucaus26th.dto.request.booth.BoothSettingRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
