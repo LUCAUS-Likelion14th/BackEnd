@@ -1,13 +1,8 @@
 package com.example.lucaus26th.controller;
 
 import com.example.lucaus26th.domain.food.FoodTruck;
-import com.example.lucaus26th.dto.request.FoodTruckRequestDto;
-import com.example.lucaus26th.dto.request.FoodTruckSettingRequestDto;
-import com.example.lucaus26th.dto.request.MenuRequestDto;
-import com.example.lucaus26th.dto.response.FoodTruckDetailResponseDto;
-import com.example.lucaus26th.dto.response.FoodTruckResponseDto;
-import com.example.lucaus26th.dto.response.FoodTruckSettingResponseDto;
-import com.example.lucaus26th.dto.response.MenuResponseDto;
+import com.example.lucaus26th.dto.request.*;
+import com.example.lucaus26th.dto.response.*;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.FoodTruckService;
 import lombok.RequiredArgsConstructor;
@@ -155,4 +150,5 @@ public class FoodTruckController {
 
         return ResponseEntity.ok(response);
     }
+
 }

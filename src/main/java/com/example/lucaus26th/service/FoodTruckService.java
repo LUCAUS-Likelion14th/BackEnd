@@ -8,10 +8,7 @@ import com.example.lucaus26th.domain.food.Menu;
 import com.example.lucaus26th.dto.request.FoodTruckRequestDto;
 import com.example.lucaus26th.dto.request.FoodTruckSettingRequestDto;
 import com.example.lucaus26th.dto.request.MenuRequestDto;
-import com.example.lucaus26th.dto.response.FoodTruckDetailResponseDto;
-import com.example.lucaus26th.dto.response.FoodTruckResponseDto;
-import com.example.lucaus26th.dto.response.FoodTruckSettingResponseDto;
-import com.example.lucaus26th.dto.response.MenuResponseDto;
+import com.example.lucaus26th.dto.response.*;
 import com.example.lucaus26th.repository.food.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -251,5 +248,19 @@ public class FoodTruckService {
                 .date(dates)
                 .menu(menus)
                 .build();
+    }
+
+    public List<HotFoodTruckResponseDto> getHotFoodTrucks(Long memberId) {
+        List<FoodTruck> foodTrucks = foodTruckRepository.findTop3ByOrderByLikeCountDesc();
+
+        return foodTrucks.stream()
+                .map(foodTruck -> {
+                    boolean liked = false;
+                    if (memberId != null) {
+                        liked = foodLikeRepository.existsByFoodTruckIdAndMemberId(foodTruck.getId(), memberId);
+                    }
+                    return HotFoodTruckResponseDto.from(foodTruck, liked);
+                })
+                .toList();
     }
 }
