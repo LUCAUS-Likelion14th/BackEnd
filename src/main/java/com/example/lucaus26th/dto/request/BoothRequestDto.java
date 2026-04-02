@@ -24,11 +24,11 @@ public class BoothRequestDto {
     private String locationImage;
     private String instagram;
 
-    private SettingRequest setting;
+    //private SettingRequest setting;
     private List<Long> categoryIds = new ArrayList<>();
 
 
-    @Getter
+    /*@Getter
     @NoArgsConstructor
     public static class SettingRequest {
         private String mon;
@@ -36,5 +36,5 @@ public class BoothRequestDto {
         private String wed;
         private String thu;
         private String fri;
-    }
+    }*/
 }

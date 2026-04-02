@@ -12,8 +12,27 @@ import java.util.List;
 public class BoothResponseDto {
 
     @Getter
+    @Builder
     public static class Lists { // 전체조회
-        
+        private Long booth_id;
+        private Long location_id;
+        private String booth_image;
+        private String booth_name;
+        private BoothLocation booth_location;
+        private Boolean is_liked;
+        private Long like_count;
+
+        public static BoothResponseDto.Lists fromEntity(Booth booth, boolean isLiked){
+            return Lists.builder()
+                    .booth_id(booth.getId())
+                    .location_id(booth.getLocationId())
+                    .booth_image(booth.getImage())
+                    .booth_name(booth.getName())
+                    .booth_location(booth.getLocation())
+                    .is_liked(isLiked)
+                    .like_count(booth.getLikeCount())
+                    .build();
+        }
     }
 
     @Getter
@@ -44,10 +63,33 @@ public class BoothResponseDto {
                     .is_liked(isLiked)
                     .like_count(booth.getLikeCount())
                     .location(booth.getLocation())
-                    .date(booth.getDates())
+                    .date(booth.getDays())
                     .location_image(booth.getLocationImage())
                     .build();
         }
 
+    }
+
+    @Getter
+    @Builder
+    public static class Hot{
+        private Long location_id;
+        private String booth_image;
+        private BoothLocation location;
+        private String booth_name;
+        private String owner;
+        private Long like_count;
+        private Boolean is_liked;
+
+        public static BoothResponseDto.Hot fromEntity(Booth booth, boolean isLiked){
+            return Hot.builder()
+                    .location_id(booth.getLocationId())
+                    .booth_image(booth.getImage())
+                    .location(booth.getLocation())
+                    .booth_name(booth.getName())
+                    .is_liked(isLiked)
+                    .like_count(booth.getLikeCount())
+                    .build();
+        }
     }
 }

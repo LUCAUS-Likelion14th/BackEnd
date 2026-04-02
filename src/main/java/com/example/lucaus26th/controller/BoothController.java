@@ -9,11 +9,16 @@ import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.BoothService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/booth")
@@ -27,6 +32,18 @@ public class BoothController {
     public ResponseEntity<Long> createBooth(@RequestBody  BoothRequestDto request){
         Long boothId = boothService.createBooth(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(boothId);
+    }
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getBooth(@RequestParam(required = false) String date,
+                                                                              @RequestParam(required = false) String location,
+                                                                              @RequestParam(required = false) String category,
+                                                                              @RequestParam(required = false) String search,
+                                                                              @RequestParam(defaultValue = "0") int page,
+                                                                              @AuthenticationPrincipal CustomUserDetails userDetails){
+        Pageable pageable = PageRequest.of(page,8);
+        Page<BoothResponseDto.Lists> response = boothService.getBooth(date, location, category,search, pageable,userDetails);
+        //return ResponseEntity.ok(ApiResponse.of(response)); // 만약 메타데이터 필요없으면 response.getContent()
+        return ResponseEntity.ok(ApiResponse.of(response.getContent()));
     }
     @GetMapping("/{boothId}")
     public ResponseEntity<ApiResponse<BoothResponseDto.Detail>> getBoothDetail(@PathVariable Long boothId, @AuthenticationPrincipal CustomUserDetails userDetails){

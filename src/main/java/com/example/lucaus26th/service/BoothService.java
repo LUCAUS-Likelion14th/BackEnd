@@ -16,8 +16,16 @@ import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.booth.CategoryRepository;
 import com.example.lucaus26th.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,19 +40,6 @@ public class BoothService {
     // Booth CRUD 기능
     public Long createBooth(BoothRequestDto request) {
 
-        // Setting 생성 (요청에 Setting 있을 시)
-        Setting setting = null;
-        if(request.getSetting() != null){
-            BoothRequestDto.SettingRequest sr = request.getSetting();
-            setting = Setting.builder()
-                    .mon(sr.getMon())
-                    .tue(sr.getTue())
-                    .wed(sr.getWed())
-                    .thu(sr.getThu())
-                    .fri(sr.getFri())
-                    .build();
-            // Setting은 Booth의 cascade로 자동 저장되므로 별도 save 불필요
-        }
 
         // Booth 생성
         Booth booth = Booth.builder()
@@ -57,9 +52,6 @@ public class BoothService {
                 .locationImage(request.getLocationImage())
                 .instagram(request.getInstagram())
                 .build();
-        if(setting != null){
-            booth.setSetting(setting);
-        }
 
         boothRepository.save(booth);
 
@@ -78,6 +70,58 @@ public class BoothService {
         return booth.getId();
     }
 
+    // 조회 관련 쿼리 함수
+    private boolean locationFilter(Booth booth, String location) {
+        if (location == null) return true;
+        return booth.getLocation().name().equals(location);
+    }
+
+    private boolean categoryFilter(Booth booth, String category) {
+        if (category == null) return true;
+        return booth.getCategoryNames().contains(category);
+    }
+
+    private boolean dateFilter(Booth booth, String date) {
+        if (date == null) return true;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMdd");
+        MonthDay monthDay = MonthDay.parse(date, formatter);
+        return booth.getSettings().stream()
+                .anyMatch(s -> MonthDay.from(s.getDate()).equals(monthDay));
+    }
+
+    private boolean searchFilter(Booth booth, String search){
+        if(search == null) return true;
+        String name = booth.getName() != null ? booth.getName() : "";
+        String owner = booth.getOwner() != null ? booth.getOwner() : "";
+
+        return name.contains(search) || owner.contains(search);
+    }
+
+    // 전체조회
+    public Page<BoothResponseDto.Lists> getBooth(String date, String location, String category, String search, Pageable pageable, CustomUserDetails userDetails) {
+        List<Booth> booths = boothRepository.findAll();
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
+        List<BoothResponseDto.Lists> boothList = booths.stream()
+                .filter(booth -> locationFilter(booth, location))
+                .filter(booth -> categoryFilter(booth, category))
+                .filter(booth -> dateFilter(booth, date))
+                .filter(booth -> searchFilter(booth, search))
+                .map(booth -> {
+                    boolean isLiked = false;
+                    if (userDetails != null) {
+                        isLiked = boothLikeRepository.existsByBoothAndMember(booth,member);
+                    }
+                    return BoothResponseDto.Lists.fromEntity(booth, isLiked);
+                })
+                .toList();
+
+        // List → Page 변환
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), boothList.size());
+        return new PageImpl<>(boothList.subList(start,end), pageable, boothList.size());
+    }
+
     // 상세조회
     public BoothResponseDto.Detail getBoothDetail(Long boothId, CustomUserDetails userDetails) {
         Booth booth = boothRepository.findById(boothId)
@@ -89,7 +133,44 @@ public class BoothService {
         Member member = userDetails.getMember();
         return BoothResponseDto.Detail.fromEntity(booth, boothLikeRepository.existsByBoothAndMember(booth,member));
     }
-    // 전체조회
+
+    // 인기 부스
+    public List<BoothResponseDto.Hot> getBoothHot(CustomUserDetails userDetails) {
+        // 인기 3개만 보여주기. (Booth.likeCount 로 정렬 후
+        // 현재(seoul time 기준) 시간에 영업 안하는거는 제외하고 3개 올려야함(BoothSetting 참고하자)
+        ZonedDateTime nowSeoul = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDate today = nowSeoul.toLocalDate();
+        LocalTime nowTime = nowSeoul.toLocalTime();
+
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
+        List<Booth> hotBooths = boothRepository.findAll().stream()
+                .filter(booth -> booth.getSettings().stream()
+                        .anyMatch(setting ->
+                                setting.getDate().equals(today) &&
+                                        !nowTime.isBefore(setting.getStartAt()) &&
+                                        !nowTime.isAfter(setting.getEndAt())
+                        )
+                )
+                .sorted(Comparator.comparing
+                        (Booth::getLikeCount).reversed())
+                .limit(3)
+                .toList();
+
+        boolean isLiked = false;
+        List<BoothResponseDto.Hot> result = hotBooths.stream()
+                .map(booth -> {
+                    boolean liked = false;
+                    if (member != null) {
+                        liked = boothLikeRepository.existsByBoothAndMember(booth, member);
+                    }
+                    return BoothResponseDto.Hot.fromEntity(booth, liked);
+                })
+                .toList();
+
+        return result;
+    }
+
 
     public void updateBooth(Long boothId,/* Long memberId*/ BoothUpdateRequestDto request) {
         // 나중에 관리자 체크 하기
@@ -100,29 +181,7 @@ public class BoothService {
 
         booth.update(request);
 
-        // setting 수정 (근데 뭔가 좀 분리하고 싶네)
-        if (request.getSetting() != null){
-            BoothUpdateRequestDto.SettingRequest sr = request.getSetting();
-            Setting setting = booth.getSetting();
-            if (setting == null) {
-                // setting이 없으면 새로 생성
-                Setting newSetting = Setting.builder()
-                        .mon(sr.getMon())
-                        .tue(sr.getTue())
-                        .wed(sr.getWed())
-                        .thu(sr.getThu())
-                        .fri(sr.getFri())
-                        .build();
-                booth.setSetting(newSetting);
-            } else {
-                // 있으면 기존 setting 수정
-                setting.setMon(sr.getMon());
-                setting.setTue(sr.getTue());
-                setting.setWed(sr.getWed());
-                setting.setThu(sr.getThu());
-                setting.setFri(sr.getFri());
-            }
-        }
+
 
     }
 

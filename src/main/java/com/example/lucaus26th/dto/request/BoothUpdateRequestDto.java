@@ -16,9 +16,9 @@ public class BoothUpdateRequestDto {
     private String image;
     private String locationImage;
     private String instagram;
-    private SettingRequest setting;
+    //private SettingRequest setting;
 
-    @Getter
+    /*@Getter
     @NoArgsConstructor
     public static class SettingRequest {
         private String mon;
@@ -26,6 +26,6 @@ public class BoothUpdateRequestDto {
         private String wed;
         private String thu;
         private String fri;
-    }
+    }*/
 
 }

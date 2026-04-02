@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.annotation.processing.Generated;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -26,10 +27,9 @@ public class Booth extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long locationId; // 장소 아이디
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "setting_id")
-    private Setting setting;
-    // 운영정보 아이디 fk
+    // 운영정보
+    @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<BoothSetting> settings;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
@@ -64,9 +64,9 @@ public class Booth extends BaseTimeEntity {
         this.instagram = instagram;
     }
 
-    public void setSetting(Setting setting){
-        this.setting = setting;
-    }
+    //public void setSetting(Setting setting){
+        //this.setting = setting;
+    //}
 
     public void update(BoothUpdateRequestDto request){
         if (request.getLocationId() != null) this.locationId = request.getLocationId();
@@ -93,7 +93,7 @@ public class Booth extends BaseTimeEntity {
                 .map(boothCategory -> boothCategory.getCategory().getName())
                 .toList();
     }
-    public List<String> getDates(){
+    /*public List<String> getDates(){
         List<String> dates = new ArrayList<>();
         String mon =setting.getMon();
         String tue = setting.getTue();
@@ -106,6 +106,19 @@ public class Booth extends BaseTimeEntity {
         if (thu != null) dates.add("목요일 : " + thu);
         if (fri != null) dates.add("금요일 : " + fri);
         return dates;
-    }
+    }*/
+    public List<String> getDays(){
+        List<String> days = new ArrayList<>(Collections.nCopies(5, null));
 
+        List<String> order = List.of("월요일", "화요일", "수요일", "목요일", "금요일");
+
+        for (BoothSetting setting : settings) {
+            int index = order.indexOf(setting.getDay());
+            if (index != -1) {
+                days.set(index, setting.getDay() + " " + setting.getStartAt() + " - " + setting.getEndAt());
+            }
+        }
+
+        return days;
+    }
 }
