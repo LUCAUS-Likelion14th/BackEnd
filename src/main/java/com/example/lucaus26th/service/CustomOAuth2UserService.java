@@ -1,7 +1,7 @@
 package com.example.lucaus26th.service;
 
 import com.example.lucaus26th.domain.Member;
-import com.example.lucaus26th.repository.MemberRepository;
+import com.example.lucaus26th.repository.food.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

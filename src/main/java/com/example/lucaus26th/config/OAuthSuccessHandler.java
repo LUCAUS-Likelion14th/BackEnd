@@ -2,7 +2,7 @@ package com.example.lucaus26th.config;
 
 import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.jwt.JwtTokenProvider;
-import com.example.lucaus26th.repository.MemberRepository;
+import com.example.lucaus26th.repository.food.MemberRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +35,11 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                .orElseGet(() -> memberRepository.save(
+                        Member.builder()
+                                .email(email)
+                                .build()
+                ));
 
         String accessToken = jwtTokenProvider.generateAccessToken(member.getId());
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
