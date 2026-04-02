@@ -1,6 +1,7 @@
 package com.example.lucaus26th.domain.food;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ public class Menu {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "foodtruck_id")
+    @JoinColumn(name = "food_truck_id", nullable = false)
     private FoodTruck foodTruck;
 
     @Column(nullable = false)
@@ -24,4 +25,18 @@ public class Menu {
     private Long price;
 
     private String image;
+
+    @Builder
+    public Menu(String name, Long price, String image, FoodTruck foodTruck) {
+        this.name = name;
+        this.price = price;
+        this.image = image;
+        this.foodTruck = foodTruck;
+    }
+
+    public void update(String name, Long price, String image) {
+        if (name != null) this.name = name;
+        if (price != null) this.price = price;
+        if (image != null) this.image = image;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.lucaus26th.domain.food;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,14 +10,14 @@ import java.time.LocalTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FoodTruckSetting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "foodtruck_id", nullable = false)
     private FoodTruck foodTruck;
 
@@ -40,7 +41,10 @@ public class FoodTruckSetting {
         this.endAt = endAt;
     }
 
-    public void setFoodTruck(FoodTruck foodTruck) {
-        this.foodTruck = foodTruck;
+    public void update(LocalDate date, String day, LocalTime startAt, LocalTime endAt) {
+        this.date = date;
+        this.day = day;
+        this.startAt = startAt;
+        this.endAt = endAt;
     }
 }

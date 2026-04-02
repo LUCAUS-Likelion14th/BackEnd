@@ -5,11 +5,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class FoodTruckRequestDto {
+public class MenuRequestDto {
+
     private String name;
-    private Long locationId;
-    private String location;
+    private Long price;
     private String image;
-    private String bestMenu;
-    private String foodTruckInfo;
 }

@@ -27,6 +27,7 @@ public class FoodTruck {
     private String image;
     private String bestMenu;
     private Long likeCount;
+    private String foodTruckInfo;
 
     @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FoodTruckSetting> settings = new ArrayList<>();
@@ -40,31 +41,38 @@ public class FoodTruck {
 
 
     public FoodTruck(String name, Long locationId, String location,
-                     String image, String bestMenu, Long likeCount) {
+                     String image, String bestMenu, Long likeCount, String foodTruckInfo) {
         this.name = name;
         this.locationId = locationId;
         this.location = location;
         this.image = image;
         this.bestMenu = bestMenu;
         this.likeCount = likeCount;
+        this.foodTruckInfo = foodTruckInfo;
     }
 
     public void update(String name, Long locationId, String location,
-                       String image, String bestMenu) {
+                       String image, String bestMenu, String foodTruckInfo) {
         this.name = name;
         this.locationId = locationId;
         this.location = location;
         this.image = image;
         this.bestMenu = bestMenu;
+        this.foodTruckInfo = foodTruckInfo;
     }
 
     public void addSetting(FoodTruckSetting setting) {
         settings.add(setting);
-        setting.setFoodTruck(this);
     }
 
     public void increaseLikeCount() {
         if (this.likeCount == null) this.likeCount = 0L;
         this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
     }
 }
