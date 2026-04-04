@@ -9,6 +9,7 @@ import com.example.lucaus26th.dto.response.food.FoodTruckSettingResponseDto;
 import com.example.lucaus26th.dto.response.food.MenuResponseDto;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.food.FoodTruckService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/foodtruck")
 @RequiredArgsConstructor
+@Tag(name = "푸드트럭", description = "푸드트럭 관련 API")
 public class FoodTruckController {
     private final FoodTruckService foodTruckService;
 

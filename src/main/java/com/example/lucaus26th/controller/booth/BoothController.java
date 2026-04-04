@@ -7,6 +7,7 @@ import com.example.lucaus26th.dto.response.ApiResponse;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.booth.BoothService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequestMapping("/booth")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "부스", description = "부스 관련 API")
 public class BoothController {
 
     private final BoothService boothService;
