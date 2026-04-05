@@ -3,6 +3,7 @@ package com.example.lucaus26th.controller.booth;
 import com.example.lucaus26th.dto.request.booth.BoothSettingRequestDto;
 import com.example.lucaus26th.dto.response.booth.BoothSettingResponseDto;
 import com.example.lucaus26th.service.booth.BoothSettingService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/booth/setting")
 @RequiredArgsConstructor
+@Tag(name = "부스 운영정보", description = "부스 운영정보 관련 API")
 public class BoothSettingController {
 
     private final BoothSettingService boothSettingService;

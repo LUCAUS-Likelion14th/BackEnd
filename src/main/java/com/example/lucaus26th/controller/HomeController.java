@@ -38,6 +38,8 @@ public class HomeController {
     public ResponseEntity<ApiResponse<List<BoothResponseDto.Hot>>> getTopBooth(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<BoothResponseDto.Hot> response = boothService.getBoothHot(userDetails);
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
     @GetMapping("/hot-food")
     public ResponseEntity<List<HotFoodTruckResponseDto>> getHotFoodTrucks(Authentication authentication) {
         Long memberId = null;
