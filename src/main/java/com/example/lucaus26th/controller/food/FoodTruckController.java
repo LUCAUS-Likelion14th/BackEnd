@@ -25,25 +25,6 @@ import java.util.List;
 public class FoodTruckController {
     private final FoodTruckService foodTruckService;
 
-    @PostMapping
-    public ResponseEntity<FoodTruckResponseDto> createFoodTruck(@RequestBody FoodTruckRequestDto dto){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(foodTruckService.createFoodTruck(dto));
-    }
-
-    @PatchMapping("/{foodTruckId}")
-    public ResponseEntity<FoodTruckResponseDto> updateFoodTruck(
-            @PathVariable Long foodTruckId,
-            @RequestBody FoodTruckRequestDto dto){
-        return ResponseEntity.ok(foodTruckService.updateFoodTruck(foodTruckId, dto));
-    }
-
-    @DeleteMapping("/{foodTruckId}")
-    public ResponseEntity<Void> deleteFoodTruck(@PathVariable Long foodTruckId) {
-        foodTruckService.deleteFoodTruck(foodTruckId);
-        return ResponseEntity.noContent().build();
-    }
-
     @PostMapping("/{foodTruckId}/like")
     public ResponseEntity<String> createFoodLike(
             @PathVariable Long foodTruckId,
@@ -68,59 +49,6 @@ public class FoodTruckController {
 
         foodTruckService.deleteFoodLike(foodTruckId, user.getId());
 
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{foodTruckId}/menu")
-    public ResponseEntity<MenuResponseDto> createMenu(
-            @PathVariable Long foodTruckId,
-            @RequestBody MenuRequestDto dto
-    ) {
-        return ResponseEntity.ok(foodTruckService.createMenu(foodTruckId, dto));
-    }
-
-    @PatchMapping("/{foodTruckId}/menu/{menuId}")
-    public ResponseEntity<MenuResponseDto> updateMenu(
-            @PathVariable Long foodTruckId,
-            @PathVariable Long menuId,
-            @RequestBody MenuRequestDto dto
-    ) {
-        return ResponseEntity.ok(foodTruckService.updateMenu(foodTruckId, menuId, dto));
-    }
-
-    @DeleteMapping("/{foodTruckId}/menu/{menuId}")
-    public ResponseEntity<Void> deleteMenu(
-            @PathVariable Long foodTruckId,
-            @PathVariable Long menuId
-    ) {
-        foodTruckService.deleteMenu(foodTruckId, menuId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{foodTruckId}/setting")
-    public ResponseEntity<FoodTruckSettingResponseDto> createSetting(
-            @PathVariable Long foodTruckId,
-            @RequestBody FoodTruckSettingRequestDto dto
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(foodTruckService.createSetting(foodTruckId, dto));
-    }
-
-    @PatchMapping("/{foodTruckId}/setting/{settingId}")
-    public ResponseEntity<FoodTruckSettingResponseDto> updateSetting(
-            @PathVariable Long foodTruckId,
-            @PathVariable Long settingId,
-            @RequestBody FoodTruckSettingRequestDto dto
-    ) {
-        return ResponseEntity.ok(foodTruckService.updateSetting(foodTruckId, settingId, dto));
-    }
-
-    @DeleteMapping("/{foodTruckId}/setting/{settingId}")
-    public ResponseEntity<Void> deleteSetting(
-            @PathVariable Long foodTruckId,
-            @PathVariable Long settingId
-    ) {
-        foodTruckService.deleteSetting(foodTruckId, settingId);
         return ResponseEntity.noContent().build();
     }
 

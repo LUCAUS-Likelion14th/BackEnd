@@ -29,11 +29,6 @@ public class BoothController {
 
     private final BoothService boothService;
 
-    @PostMapping
-    public ResponseEntity<Long> createBooth(@RequestBody  BoothRequestDto request){
-        Long boothId = boothService.createBooth(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(boothId);
-    }
     @GetMapping
     public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getBooth(@RequestParam(required = false) String date,
                                                                               @RequestParam(required = false) String location,
@@ -50,16 +45,6 @@ public class BoothController {
     public ResponseEntity<ApiResponse<BoothResponseDto.Detail>> getBoothDetail(@PathVariable Long boothId, @AuthenticationPrincipal CustomUserDetails userDetails){
         BoothResponseDto.Detail response = boothService.getBoothDetail(boothId, userDetails);
         return ResponseEntity.ok(ApiResponse.of(response));
-    }
-    @PatchMapping("/{boothId}")
-    public ResponseEntity<Long> updateBooth(@PathVariable Long boothId, @RequestBody BoothUpdateRequestDto request){
-        boothService.updateBooth(boothId, request);
-        return ResponseEntity.status(HttpStatus.OK).body(boothId);
-    }
-    @DeleteMapping("/{boothId}")
-    public ResponseEntity<Void> deleteBooth(@PathVariable Long boothId){
-        boothService.deleteBooth(boothId);
-        return ResponseEntity.noContent().build();
     }
 
     // 좋아요 관련
