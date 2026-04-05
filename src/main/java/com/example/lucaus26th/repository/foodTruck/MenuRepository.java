@@ -1,6 +1,6 @@
-package com.example.lucaus26th.repository.food;
+package com.example.lucaus26th.repository.foodTruck;
 
-import com.example.lucaus26th.domain.food.Menu;
+import com.example.lucaus26th.domain.foodTruck.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

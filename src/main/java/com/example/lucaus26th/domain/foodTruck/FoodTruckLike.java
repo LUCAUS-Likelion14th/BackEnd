@@ -1,4 +1,4 @@
-package com.example.lucaus26th.domain.food;
+package com.example.lucaus26th.domain.foodTruck;
 
 
 import com.example.lucaus26th.domain.Member;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class FoodLike {
+public class FoodTruckLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class FoodLike {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public FoodLike(FoodTruck foodTruck, Member member) {
+    public FoodTruckLike(FoodTruck foodTruck, Member member) {
         this.foodTruck = foodTruck;
         this.member = member;
     }
