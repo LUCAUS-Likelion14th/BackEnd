@@ -4,6 +4,9 @@ import com.example.lucaus26th.dto.request.notice.NoticeRequestDto;
 import com.example.lucaus26th.dto.response.notice.NoticeResponseDto;
 import com.example.lucaus26th.service.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +28,10 @@ public class NoticeController {
 
     // 공지 전체 조회
     @GetMapping("/notice")
-    public ResponseEntity<List<NoticeResponseDto>> getNotices() {
-        return ResponseEntity.ok(noticeService.getALLNotice());
+    public ResponseEntity<Page<NoticeResponseDto>> getAllNotice(
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        return ResponseEntity.ok(noticeService.getALlNotice(pageable));
     }
 
     // 공지 수정
