@@ -59,6 +59,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/booth/*/like/").authenticated()
                         .requestMatchers(HttpMethod.POST,"/foodTruck/*/like").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/foodTruck/*/like").authenticated()
+                        // 마이페이지도 로그인 필요
+                        .requestMatchers(HttpMethod.GET, "/mypage").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/mypage/booth").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/mypage/foodtruck").authenticated()
                         // 나머지는 전부 허용 (꼭 맨 마지막에 둘것)
                         .anyRequest().permitAll()
                 )
