@@ -1,7 +1,7 @@
 package com.example.lucaus26th.service;
 
 import com.example.lucaus26th.domain.Member;
-import com.example.lucaus26th.repository.foodTruck.MemberRepository;
+import com.example.lucaus26th.repository.food.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -39,8 +39,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberRepository.save(member);
         }
 
+        // oauth 로그인 직후에도 db의 role 기준으로 권한 반영
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
+                Collections.singleton(new SimpleGrantedAuthority(member.getRole().name())),
                 oAuth2User.getAttributes(),
                 "email"
         );

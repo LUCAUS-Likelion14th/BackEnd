@@ -63,6 +63,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/mypage").authenticated()
                         .requestMatchers(HttpMethod.GET, "/mypage/booth").authenticated()
                         .requestMatchers(HttpMethod.GET, "/mypage/foodtruck").authenticated()
+                        // 관리자 대시보드 접근 권한 - 총학 & 관리자에만 허용
+                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN", "STUDENT_COUNCIL")
                         // 나머지는 전부 허용 (꼭 맨 마지막에 둘것)
                         .anyRequest().permitAll()
                 )

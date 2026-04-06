@@ -2,7 +2,7 @@ package com.example.lucaus26th.dto.response;
 
 import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
-import com.example.lucaus26th.dto.response.foodTruck.MyFoodTruckResponseDto;
+import com.example.lucaus26th.dto.response.food.MyFoodTruckResponseDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

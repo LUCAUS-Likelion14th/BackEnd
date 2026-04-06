@@ -1,12 +1,16 @@
 package com.example.lucaus26th.controller;
 
+import com.example.lucaus26th.dto.response.PromotionResponseDTO;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
+import com.example.lucaus26th.service.PromotionService;
+import com.example.lucaus26th.dto.response.notice.ActiveNoticeResponseDto;
 import com.example.lucaus26th.service.booth.BoothService;
-import com.example.lucaus26th.dto.response.foodTruck.HotFoodTruckResponseDto;
+import com.example.lucaus26th.dto.response.food.HotFoodTruckResponseDto;
 import com.example.lucaus26th.dto.response.stage.LiveStageResponseDTO;
 import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.food.FoodTruckService;
+import com.example.lucaus26th.service.notice.NoticeService;
 import com.example.lucaus26th.service.stage.StageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +30,8 @@ public class HomeController {
     private final StageService stageService;
     private final BoothService boothService;
     private final FoodTruckService foodTruckService;
+    private final PromotionService promotionService;
+    private final NoticeService noticeService;
 
     @GetMapping("/live-stage")
     @Operation(summary = "실시간 공연 조회", description = "메인홈에서 현재 진행 중인 공연을 조회합니다.")
@@ -48,6 +54,17 @@ public class HomeController {
         }
 
         return ResponseEntity.ok(foodTruckService.getHotFoodTrucks(memberId));
+    }
+
+    @GetMapping("/promotion")
+    @Operation(summary = "프로모션 목록 조회", description = "최근 등록된 프로모션 5개를 목록으로 조회합니다.")
+    public ResponseEntity<ApiResponse<List<PromotionResponseDTO>>> getPromotionList(){
+        return ResponseEntity.ok(ApiResponse.success(promotionService.getPromotionList()));
+    }
+
+    @GetMapping("/active-notice")
+    public ResponseEntity<ActiveNoticeResponseDto> getActiveNotice() {
+        return ResponseEntity.ok(noticeService.getActiveNotice());
     }
 
 }
