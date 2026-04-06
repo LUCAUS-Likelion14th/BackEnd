@@ -72,6 +72,7 @@ public class BoothResponseDto {
     @Getter
     @Builder
     public static class Hot{
+        private Long booth_id;
         private Long location_id;
         private String booth_image;
         private BoothLocation location;
@@ -82,12 +83,31 @@ public class BoothResponseDto {
 
         public static BoothResponseDto.Hot fromEntity(Booth booth, boolean isLiked){
             return Hot.builder()
+                    .booth_id(booth.getId())
                     .location_id(booth.getLocationId())
                     .booth_image(booth.getImage())
                     .location(booth.getLocation())
                     .booth_name(booth.getName())
                     .is_liked(isLiked)
                     .like_count(booth.getLikeCount())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class MyBooth{
+        private Long booth_id;
+        private Long location_id;
+        private String booth_image;
+        private String booth_name;
+
+        public static BoothResponseDto.MyBooth fromEntity(Booth booth){
+            return MyBooth.builder()
+                    .booth_id(booth.getId())
+                    .location_id(booth.getLocationId())
+                    .booth_image(booth.getImage())
+                    .booth_name(booth.getName())
                     .build();
         }
     }

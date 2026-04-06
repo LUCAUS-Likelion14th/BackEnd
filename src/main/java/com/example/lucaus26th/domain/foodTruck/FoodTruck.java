@@ -1,4 +1,4 @@
-package com.example.lucaus26th.domain.food;
+package com.example.lucaus26th.domain.foodTruck;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -37,7 +37,7 @@ public class FoodTruck {
     private List<Menu> menus = new ArrayList<>();
 
     @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FoodLike> foodLikes = new ArrayList<>();
+    private List<FoodTruckLike> foodTruckLikes = new ArrayList<>();
 
 
     public FoodTruck(String name, Long locationId, String location,

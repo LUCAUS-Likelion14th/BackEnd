@@ -1,4 +1,4 @@
-package com.example.lucaus26th.exception;
+package com.example.lucaus26th.global.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

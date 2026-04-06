@@ -4,6 +4,7 @@ import com.example.lucaus26th.domain.Member;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -35,8 +36,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return List.of(); // role 추가되면 여기서 반환
-        }
+            return List.of(new SimpleGrantedAuthority(member.getRole().name()));
+        } // member에 role 권한도 들어갈 수 있도록 수정
 
     // 아래는 전부 true 고정
     @Override public boolean isAccountNonExpired() { return true; }

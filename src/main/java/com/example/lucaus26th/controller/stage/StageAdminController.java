@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
-// TODO: admin 계정 권한 추가
 @RestController
 @RequestMapping("/admin/stage")
 @RequiredArgsConstructor
