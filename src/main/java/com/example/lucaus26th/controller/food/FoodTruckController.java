@@ -1,17 +1,11 @@
 package com.example.lucaus26th.controller.food;
 
-import com.example.lucaus26th.dto.request.food.FoodTruckRequestDto;
-import com.example.lucaus26th.dto.request.food.FoodTruckSettingRequestDto;
-import com.example.lucaus26th.dto.request.food.MenuRequestDto;
 import com.example.lucaus26th.dto.response.food.FoodTruckDetailResponseDto;
 import com.example.lucaus26th.dto.response.food.FoodTruckResponseDto;
-import com.example.lucaus26th.dto.response.food.FoodTruckSettingResponseDto;
-import com.example.lucaus26th.dto.response.food.MenuResponseDto;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.food.FoodTruckService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

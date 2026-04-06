@@ -6,22 +6,16 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class HotFoodTruckResponseDto {
+public class MyFoodTruckResponseDto {
     private Long id;
     private String name;
     private String image;
-    private String bestMenu;
-    private Long likeCount;
-    private boolean liked;
 
-    public static HotFoodTruckResponseDto from(FoodTruck foodTruck, boolean liked) {
-        return HotFoodTruckResponseDto.builder()
+    public static MyFoodTruckResponseDto from(FoodTruck foodTruck) {
+        return MyFoodTruckResponseDto.builder()
                 .id(foodTruck.getId())
                 .name(foodTruck.getName())
                 .image(foodTruck.getImage())
-                .bestMenu(foodTruck.getBestMenu())
-                .likeCount(foodTruck.getLikeCount())
-                .liked(liked)
                 .build();
     }
 }
