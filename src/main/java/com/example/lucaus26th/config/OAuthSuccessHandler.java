@@ -2,7 +2,7 @@ package com.example.lucaus26th.config;
 
 import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.jwt.JwtTokenProvider;
-import com.example.lucaus26th.repository.foodTruck.MemberRepository;
+import com.example.lucaus26th.repository.food.MemberRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

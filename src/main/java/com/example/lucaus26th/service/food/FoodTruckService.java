@@ -1,15 +1,15 @@
 package com.example.lucaus26th.service.food;
 
 import com.example.lucaus26th.domain.Member;
-import com.example.lucaus26th.domain.foodTruck.FoodTruckLike;
-import com.example.lucaus26th.domain.foodTruck.FoodTruck;
-import com.example.lucaus26th.domain.foodTruck.FoodTruckSetting;
-import com.example.lucaus26th.domain.foodTruck.Menu;
+import com.example.lucaus26th.domain.food.FoodTruckLike;
+import com.example.lucaus26th.domain.food.FoodTruck;
+import com.example.lucaus26th.domain.food.FoodTruckSetting;
+import com.example.lucaus26th.domain.food.Menu;
 import com.example.lucaus26th.dto.request.food.FoodTruckRequestDto;
 import com.example.lucaus26th.dto.request.food.FoodTruckSettingRequestDto;
 import com.example.lucaus26th.dto.request.food.MenuRequestDto;
 import com.example.lucaus26th.dto.response.food.*;
-import com.example.lucaus26th.repository.foodTruck.*;
+import com.example.lucaus26th.repository.food.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
