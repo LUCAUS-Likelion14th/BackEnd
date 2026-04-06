@@ -71,6 +71,16 @@ public class MyPageService {
 
 
     // 내 좋아요 조회 - 부스
+    public List<BoothResponseDto.Lists> getMyBoothLikes(CustomUserDetails userDetails) {
+        Member member = userDetails.getMember();
+
+        List<BoothLike> boothLikes = boothLikeRepository.findByMember(member);
+
+        return boothLikes.stream()
+                .sorted(Comparator.comparing(BoothLike::getId).reversed())
+                .map(boothLike -> BoothResponseDto.Lists.fromEntity(boothLike.getBooth(), true))
+                .toList();
+    }
 
     // 내 좋아요 조회 - 푸드트럭
     public List<FoodTruckResponseDto> getMyFoodTruckLikes(CustomUserDetails userDetails) {
