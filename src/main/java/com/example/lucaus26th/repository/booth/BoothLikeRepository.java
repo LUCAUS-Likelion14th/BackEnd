@@ -5,6 +5,7 @@ import com.example.lucaus26th.domain.booth.Booth;
 import com.example.lucaus26th.domain.booth.BoothLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BoothLikeRepository extends JpaRepository<BoothLike,Long> {
@@ -13,4 +14,6 @@ public interface BoothLikeRepository extends JpaRepository<BoothLike,Long> {
     Optional<BoothLike> findByBoothAndMember(Booth booth, Member member);
 
     void deleteAllByBooth(Booth booth);
+
+    List<BoothLike> findByMember(Member member);
 }

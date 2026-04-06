@@ -1,4 +1,4 @@
-package com.example.lucaus26th.domain.food;
+package com.example.lucaus26th.domain.foodTruck;
 
 import jakarta.persistence.*;
 import lombok.Builder;
