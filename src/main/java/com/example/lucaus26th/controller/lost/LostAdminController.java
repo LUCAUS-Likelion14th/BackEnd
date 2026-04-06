@@ -1,8 +1,8 @@
 package com.example.lucaus26th.controller.lost;
 
 import com.example.lucaus26th.dto.request.lost.LostRequestDto;
-import com.example.lucaus26th.dto.response.ApiResponse;
 import com.example.lucaus26th.dto.response.lost.LostResponseDto;
+import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.lost.LostService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ public class LostAdminController {
     public ResponseEntity<ApiResponse<LostResponseDto>> createLost(@Valid @RequestBody LostRequestDto request, @AuthenticationPrincipal CustomUserDetails userDetails){
 
         LostResponseDto response = lostService.createLost(request,userDetails);
-        return ResponseEntity.ok(ApiResponse.of(response));
+        return ResponseEntity.ok(ApiResponse.success(response));
 
     }
 
@@ -33,7 +33,7 @@ public class LostAdminController {
     public ResponseEntity<ApiResponse<LostResponseDto>> updateLost(@PathVariable Long lostId, @Valid @RequestBody LostRequestDto request, @AuthenticationPrincipal CustomUserDetails userDetails){
 
         LostResponseDto response = lostService.updateLost(lostId,request,userDetails);
-        return ResponseEntity.ok(ApiResponse.of(response));
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @DeleteMapping("/{lostId}")

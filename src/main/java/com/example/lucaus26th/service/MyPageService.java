@@ -3,15 +3,15 @@ package com.example.lucaus26th.service;
 
 import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.domain.booth.BoothLike;
-import com.example.lucaus26th.domain.foodTruck.FoodTruckLike;
+import com.example.lucaus26th.domain.food.FoodTruckLike;
 import com.example.lucaus26th.dto.response.MyPageResponseDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
 import com.example.lucaus26th.dto.response.food.FoodTruckResponseDto;
 import com.example.lucaus26th.dto.response.food.MyFoodTruckResponseDto;
 import com.example.lucaus26th.repository.booth.BoothLikeRepository;
 import com.example.lucaus26th.repository.booth.BoothRepository;
-import com.example.lucaus26th.repository.foodTruck.FoodTruckLikeRepository;
-import com.example.lucaus26th.repository.foodTruck.FoodTruckRepository;
+import com.example.lucaus26th.repository.food.FoodTruckLikeRepository;
+import com.example.lucaus26th.repository.food.FoodTruckRepository;
 import com.example.lucaus26th.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

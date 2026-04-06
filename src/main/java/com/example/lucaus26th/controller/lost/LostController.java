@@ -1,8 +1,7 @@
 package com.example.lucaus26th.controller.lost;
 
-
-import com.example.lucaus26th.dto.response.ApiResponse;
 import com.example.lucaus26th.dto.response.lost.LostResponseDto;
+import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.service.lost.LostService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,7 @@ public class LostController {
                                                                       @RequestParam(defaultValue = "0") int page){
         Pageable pageable = PageRequest.of(page, 6);
         Page<LostResponseDto> response = lostService.getLost(category, date, pageable);
-        return ResponseEntity.ok(ApiResponse.of(response.getContent()));
+        return ResponseEntity.ok(ApiResponse.success(response.getContent()));
     }
 
 
