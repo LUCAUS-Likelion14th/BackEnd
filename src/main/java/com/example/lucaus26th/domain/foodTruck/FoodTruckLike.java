@@ -1,4 +1,4 @@
-package com.example.lucaus26th.domain.food;
+package com.example.lucaus26th.domain.foodTruck;
 
 
 import com.example.lucaus26th.domain.Member;

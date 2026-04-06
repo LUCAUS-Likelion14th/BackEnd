@@ -1,10 +1,10 @@
-package com.example.lucaus26th.controller.food;
+package com.example.lucaus26th.controller.foodTruck;
 
-import com.example.lucaus26th.dto.request.food.FoodTruckRequestDto;
-import com.example.lucaus26th.dto.request.food.MenuRequestDto;
-import com.example.lucaus26th.dto.response.food.FoodTruckResponseDto;
-import com.example.lucaus26th.dto.response.food.MenuResponseDto;
-import com.example.lucaus26th.service.food.FoodTruckService;
+import com.example.lucaus26th.dto.request.foodTruck.FoodTruckRequestDto;
+import com.example.lucaus26th.dto.request.foodTruck.MenuRequestDto;
+import com.example.lucaus26th.dto.response.foodTruck.FoodTruckResponseDto;
+import com.example.lucaus26th.dto.response.foodTruck.MenuResponseDto;
+import com.example.lucaus26th.service.foodTruck.FoodTruckService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

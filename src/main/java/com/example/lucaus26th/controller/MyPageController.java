@@ -2,7 +2,7 @@ package com.example.lucaus26th.controller;
 
 import com.example.lucaus26th.dto.response.MyPageResponseDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
-import com.example.lucaus26th.dto.response.food.FoodTruckResponseDto;
+import com.example.lucaus26th.dto.response.foodTruck.FoodTruckResponseDto;
 import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.MyPageService;

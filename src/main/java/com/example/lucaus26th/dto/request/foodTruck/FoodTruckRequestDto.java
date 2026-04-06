@@ -1,4 +1,4 @@
-package com.example.lucaus26th.dto.request.food;
+package com.example.lucaus26th.dto.request.foodTruck;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
