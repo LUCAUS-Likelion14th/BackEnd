@@ -3,8 +3,8 @@ package com.example.lucaus26th.controller.booth;
 
 import com.example.lucaus26th.dto.request.booth.BoothRequestDto;
 import com.example.lucaus26th.dto.request.booth.BoothUpdateRequestDto;
-import com.example.lucaus26th.dto.response.ApiResponse;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
+import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.booth.BoothService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,12 +39,12 @@ public class BoothController {
         Pageable pageable = PageRequest.of(page,8);
         Page<BoothResponseDto.Lists> response = boothService.getBooth(date, location, category,search, pageable,userDetails);
         //return ResponseEntity.ok(ApiResponse.of(response)); // 만약 메타데이터 필요없으면 response.getContent()
-        return ResponseEntity.ok(ApiResponse.of(response.getContent()));
+        return ResponseEntity.ok(ApiResponse.success(response.getContent()));
     }
     @GetMapping("/{boothId}")
     public ResponseEntity<ApiResponse<BoothResponseDto.Detail>> getBoothDetail(@PathVariable Long boothId, @AuthenticationPrincipal CustomUserDetails userDetails){
         BoothResponseDto.Detail response = boothService.getBoothDetail(boothId, userDetails);
-        return ResponseEntity.ok(ApiResponse.of(response));
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     // 좋아요 관련
