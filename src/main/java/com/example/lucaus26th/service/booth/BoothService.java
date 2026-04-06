@@ -72,7 +72,7 @@ public class BoothService {
     // 조회 관련 쿼리 함수
     private boolean locationFilter(Booth booth, String location) {
         if (location == null) return true;
-        return booth.getLocation().name().equals(location);
+        return booth.getLocation().getDescription().equals(location);
     }
 
     private boolean categoryFilter(Booth booth, String category) {

@@ -49,15 +49,15 @@ public class BoothController {
 
     // 좋아요 관련
     @PostMapping("/{boothId}/like")
-    public ResponseEntity<Void> createBoothLike(@PathVariable Long boothId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<ApiResponse<Void>> createBoothLike(@PathVariable Long boothId, @AuthenticationPrincipal CustomUserDetails userDetails){
         // 서비스 호출
         boothService.createBoothLike(boothId, userDetails.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
     @DeleteMapping("/{boothId}/like")
-    public ResponseEntity<Void> deleteBoothLike(@PathVariable Long boothId,@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<ApiResponse<Void>> deleteBoothLike(@PathVariable Long boothId,@AuthenticationPrincipal CustomUserDetails userDetails){
 
         boothService.deleteBoothLike(boothId, userDetails.getId());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }
