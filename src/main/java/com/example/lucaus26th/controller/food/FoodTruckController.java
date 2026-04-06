@@ -2,6 +2,7 @@ package com.example.lucaus26th.controller.food;
 
 import com.example.lucaus26th.dto.response.food.FoodTruckDetailResponseDto;
 import com.example.lucaus26th.dto.response.food.FoodTruckResponseDto;
+import com.example.lucaus26th.global.api.ApiResponse;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.food.FoodTruckService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +21,7 @@ public class FoodTruckController {
     private final FoodTruckService foodTruckService;
 
     @PostMapping("/{foodTruckId}/like")
-    public ResponseEntity<String> createFoodLike(
+    public ResponseEntity<ApiResponse<Void>> createFoodLike(
             @PathVariable Long foodTruckId,
             Authentication authentication
     ) {
@@ -29,11 +30,11 @@ public class FoodTruckController {
         }
 
         foodTruckService.createFoodLike(foodTruckId, user.getId());
-        return ResponseEntity.ok("푸드트럭 좋아요 성공");
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     @DeleteMapping("/{foodTruckId}/like")
-    public ResponseEntity<Void> deleteFoodLike(
+    public ResponseEntity<ApiResponse<Void>> deleteFoodLike(
             @PathVariable Long foodTruckId,
             Authentication authentication
     ) {
@@ -43,11 +44,11 @@ public class FoodTruckController {
 
         foodTruckService.deleteFoodLike(foodTruckId, user.getId());
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     @GetMapping
-    public ResponseEntity<List<FoodTruckResponseDto>> getFoodTrucks(
+    public ResponseEntity<ApiResponse<List<FoodTruckResponseDto>>> getFoodTrucks(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String date,
             Authentication authentication
@@ -58,11 +59,11 @@ public class FoodTruckController {
             memberId = user.getId();
         }
 
-        return ResponseEntity.ok(foodTruckService.getFoodTrucks(location, date, memberId));
+        return ResponseEntity.ok(ApiResponse.success(foodTruckService.getFoodTrucks(location, date, memberId)));
     }
 
     @GetMapping("/{foodTruckId}")
-    public ResponseEntity<FoodTruckDetailResponseDto> getFoodTruckDetail(
+    public ResponseEntity<ApiResponse<FoodTruckDetailResponseDto>> getFoodTruckDetail(
             @PathVariable Long foodTruckId,
             Authentication authentication
     ) {
@@ -76,7 +77,7 @@ public class FoodTruckController {
         FoodTruckDetailResponseDto response =
                 foodTruckService.getFoodTruckDetail(foodTruckId, memberId);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
 }
