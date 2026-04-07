@@ -1,6 +1,6 @@
-package com.example.lucaus26th.dto.response.food;
+package com.example.lucaus26th.dto.response.foodTruck;
 
-import com.example.lucaus26th.domain.food.FoodTruck;
+import com.example.lucaus26th.domain.foodTruck.FoodTruck;
 import lombok.Builder;
 import lombok.Getter;
 

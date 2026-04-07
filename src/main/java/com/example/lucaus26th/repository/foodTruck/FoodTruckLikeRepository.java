@@ -1,7 +1,7 @@
-package com.example.lucaus26th.repository.food;
+package com.example.lucaus26th.repository.foodTruck;
 
 import com.example.lucaus26th.domain.Member;
-import com.example.lucaus26th.domain.food.FoodTruckLike;
+import com.example.lucaus26th.domain.foodTruck.FoodTruckLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

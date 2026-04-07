@@ -1,8 +1,8 @@
-package com.example.lucaus26th.controller.food;
+package com.example.lucaus26th.controller.foodTruck;
 
-import com.example.lucaus26th.dto.request.food.FoodTruckSettingRequestDto;
-import com.example.lucaus26th.dto.response.food.FoodTruckSettingResponseDto;
-import com.example.lucaus26th.service.food.FoodTruckService;
+import com.example.lucaus26th.dto.request.foodTruck.FoodTruckSettingRequestDto;
+import com.example.lucaus26th.dto.response.foodTruck.FoodTruckSettingResponseDto;
+import com.example.lucaus26th.service.foodTruck.FoodTruckService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/foodtruck/{foodTruckId}/setting")
 @RequiredArgsConstructor
 @Tag(name = "푸드트럭 운영정보 관리", description = "푸드트럭 운영정보 등록/수정/삭제 관련 API")
-public class FoodSettingAdminController {
+public class FoodTruckSettingAdminController {
     private final FoodTruckService foodTruckService;
 
     @PostMapping()
