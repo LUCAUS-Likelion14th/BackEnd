@@ -37,9 +37,9 @@ public class LostAdminController {
     }
 
     @DeleteMapping("/{lostId}")
-    public ResponseEntity<Void> deleteLost(@PathVariable Long lostId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<ApiResponse<Void>> deleteLost(@PathVariable Long lostId, @AuthenticationPrincipal CustomUserDetails userDetails){
         lostService.deleteLost(lostId,userDetails);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
 }

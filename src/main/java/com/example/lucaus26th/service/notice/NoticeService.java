@@ -25,7 +25,7 @@ public class NoticeService {
                 request.getTitle(),
                 request.getContent(),
                 request.getImportant() != null ? request.getImportant() : false,
-                request.getActive() != null ? request.getActive() : false
+                false
         );
 
         Notice savedNotice = noticeRepository.save(notice);
@@ -46,7 +46,7 @@ public class NoticeService {
                 request.getTitle() != null ? request.getTitle() : notice.getTitle(),
                 request.getContent() != null ? request.getContent() : notice.getContent(),
                 request.getImportant() != null ? request.getImportant() : notice.isImportant(),
-                request.getActive() != null ? request.getActive() : notice.isActive()
+                false
         );
 
         return NoticeResponseDto.from(notice);
@@ -75,11 +75,25 @@ public class NoticeService {
         return NoticeResponseDto.from(notice);
     }
 
-    public NoticeResponseDto toggleActive(Long noticeId) {
+    public NoticeResponseDto activateNotice(Long noticeId) {
+        Notice target = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+
+        // 기존 active 공지 있으면 해제
+        noticeRepository.findByActiveTrue()
+                .ifPresent(Notice::deactivate);
+
+        // 선택 공지 활성화
+        target.activate();
+
+        return NoticeResponseDto.from(target);
+    }
+
+    public NoticeResponseDto deactivateNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
 
-        notice.toggleActive();
+        notice.deactivate();
 
         return NoticeResponseDto.from(notice);
     }
