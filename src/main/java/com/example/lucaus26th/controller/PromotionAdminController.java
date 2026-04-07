@@ -18,18 +18,19 @@ public class PromotionAdminController {
 
     private final PromotionAdminService promotionAdminService;
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "프로모션 생성", description = "새로운 프로모션을 생성합니다.")
-    public ApiResponse<PromotionResponseDTO> createPromotion(@RequestBody PromotionRequestDTO request){
+    public ApiResponse<PromotionResponseDTO> createPromotion(
+            @ModelAttribute PromotionRequestDTO request){
         return ApiResponse.success(promotionAdminService.createPromotion(request));
     }
 
-    @PatchMapping("/{promotionId}")
+    @PatchMapping(value = "/{promotionId}", consumes = "multipart/form-data")
     @Operation(summary = "프로모션 수정", description = "promotionId에 해당하는 프로모션을 수정합니다.")
     public ApiResponse<PromotionResponseDTO> updatePromotion(
             @PathVariable("promotionId") Long promotionId,
-            @RequestBody PromotionRequestDTO request){
+            @ModelAttribute PromotionRequestDTO request){
         return ApiResponse.success(promotionAdminService.updatePromotion(promotionId, request));
     }
 
