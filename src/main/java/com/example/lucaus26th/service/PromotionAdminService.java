@@ -4,6 +4,8 @@ import com.example.lucaus26th.domain.Promotion;
 import com.example.lucaus26th.dto.request.PromotionRequestDTO;
 import com.example.lucaus26th.dto.response.PromotionResponseDTO;
 import com.example.lucaus26th.global.S3Service;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class PromotionAdminService {
     @Transactional
     public PromotionResponseDTO updatePromotion(Long promoId, PromotionRequestDTO request) {
         Promotion promotion = promotionRespository.findById(promoId)
-                .orElseThrow(() -> new IllegalArgumentException("Promotion not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PROMOTION_NOT_FOUND));
 
         String imageUrl;
         try{
@@ -49,7 +51,7 @@ public class PromotionAdminService {
     @Transactional
     public void deletePromotion(Long promoId) {
         Promotion promotion = promotionRespository.findById(promoId)
-                .orElseThrow(() -> new IllegalArgumentException("Promotion not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PROMOTION_NOT_FOUND));
         promotionRespository.delete(promotion);
     }
 }

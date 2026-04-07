@@ -1,5 +1,7 @@
 package com.example.lucaus26th.global;
 
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,7 @@ public class S3Service {
 
     public String upload(MultipartFile file, String dirName) throws IOException {
         if(file == null || file.isEmpty()){
-            throw new IllegalArgumentException("빈 파일은 업로드할 수 없습니다.");
+            throw new BusinessException(ErrorCode.EMPTY_FILE);
         }
 
         // 파일명 가져오기 -> 중복 방지를 위해 UUID 붙이기 -> S3에 저장될 key 생성
@@ -45,10 +47,14 @@ public class S3Service {
 
         // S3에 업로드 수행
         // MultipartFile의 InputStream(파일 데이터)을 꺼내서 S3로 보냄
-        s3Client.putObject(
-                putObjectRequest,
-                RequestBody.fromInputStream(file.getInputStream(), file.getSize())
-        );
+        try {
+            s3Client.putObject(
+                    putObjectRequest,
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+            );
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
+        }
 
         // DB의 필드에 저장할 URL
         return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + key;
