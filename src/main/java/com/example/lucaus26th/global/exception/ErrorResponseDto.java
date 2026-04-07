@@ -6,13 +6,23 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ErrorResponseDto {
+    private String code;
     private String message;
+
+    // 커스텀 에러코드 + 메시지 반환
+    public static ErrorResponseDto of(ErrorCode errorCode) {
+        return new ErrorResponseDto(errorCode.getCode(), errorCode.getMessage());
+    }
 }
 
-/*### 동작 흐름
+/*
+### 동작 흐름
 ```
-validateTimeFormat() → IllegalArgumentException 발생
+validateTimeFormat() → BusinessException(ErrorCode.INVALID_TIME_FORMAT) 발생 [BusinessException]
         ↓
-GlobalExceptionHandler가 전역으로 낚아챔
+GlobalExceptionHandler가 BusinessException을 전역으로 잡음 [GlobalExceptionHandler]
         ↓
-400 Bad Request + {"message": "형식 오류 (HH:MM - HH:MM): ..."}*/
+ErrorCode에서 HttpStatus, code, message를 꺼냄 [ErrorCode]
+        ↓
+400 Bad Request + {"code": "TIME_400_1", "message": "형식 오류 (HH:MM - HH:MM)입니다."} [ErrorResponseDto]
+*/
