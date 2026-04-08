@@ -46,6 +46,8 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
 	// json localtime 관련
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation platform("software.amazon.awssdk:bom:2.32.25")
+	implementation 'software.amazon.awssdk:s3'
 }
 
 tasks.named('test') {
