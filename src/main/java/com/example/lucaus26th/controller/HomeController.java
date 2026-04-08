@@ -47,13 +47,17 @@ public class HomeController {
     }
 
     @GetMapping("/hot-food")
-    public ResponseEntity<List<HotFoodTruckResponseDto>> getHotFoodTrucks(Authentication authentication) {
+    public ResponseEntity<ApiResponse<List<HotFoodTruckResponseDto>>> getHotFoodTrucks(
+            Authentication authentication
+    ) {
         Long memberId = null;
+
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails user) {
             memberId = user.getId();
         }
-
-        return ResponseEntity.ok(foodTruckService.getHotFoodTrucks(memberId));
+        return ResponseEntity.ok(
+                ApiResponse.success(foodTruckService.getHotFoodTrucks(memberId))
+        );
     }
 
     @GetMapping("/promotion")
@@ -63,8 +67,10 @@ public class HomeController {
     }
 
     @GetMapping("/active-notice")
-    public ResponseEntity<ActiveNoticeResponseDto> getActiveNotice() {
-        return ResponseEntity.ok(noticeService.getActiveNotice());
+    public ResponseEntity<ApiResponse<ActiveNoticeResponseDto>> getActiveNotice() {
+        return ResponseEntity.ok(
+                ApiResponse.success(noticeService.getActiveNotice())
+        );
     }
 
 }

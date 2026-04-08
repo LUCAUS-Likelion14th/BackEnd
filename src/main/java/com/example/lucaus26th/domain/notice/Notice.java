@@ -39,7 +39,11 @@ public class Notice extends BaseTimeEntity {
         this.important = !this.important;
     }
 
-    public void toggleActive() {
-        this.active = !this.active;
+    public void activate() {
+        this.active = true;
+    }
+
+    public void deactivate() {
+        this.active = false;
     }
 }

@@ -9,5 +9,4 @@ public class NoticeRequestDto {
     private String title;
     private String content;
     private Boolean important;
-    private Boolean active;
 }

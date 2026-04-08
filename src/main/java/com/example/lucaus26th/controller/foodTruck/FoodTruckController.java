@@ -1,4 +1,4 @@
-package com.example.lucaus26th.controller.food;
+package com.example.lucaus26th.controller.foodTruck;
 
 import com.example.lucaus26th.dto.response.foodTruck.FoodTruckDetailResponseDto;
 import com.example.lucaus26th.dto.response.foodTruck.FoodTruckResponseDto;

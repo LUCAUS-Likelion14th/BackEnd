@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
     Page<Notice> findAllByOrderByImportantDescCreatedAtDesc(Pageable pageable);
     Optional<Notice> findFirstByActiveTrueOrderByCreatedAtDesc();
+    Optional<Notice> findByActiveTrue();
 }
