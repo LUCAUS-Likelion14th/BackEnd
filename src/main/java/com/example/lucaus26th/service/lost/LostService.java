@@ -4,6 +4,7 @@ package com.example.lucaus26th.service.lost;
 import com.example.lucaus26th.domain.lost.Lost;
 import com.example.lucaus26th.dto.request.lost.LostRequestDto;
 import com.example.lucaus26th.dto.response.lost.LostResponseDto;
+import com.example.lucaus26th.global.S3Service;
 import com.example.lucaus26th.repository.lost.LostRepository;
 import com.example.lucaus26th.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -21,16 +23,22 @@ import java.util.List;
 public class LostService {
 
     private final LostRepository lostRepository;
+    private final S3Service s3Service;
 
     public LostResponseDto createLost(LostRequestDto request, CustomUserDetails userDetails){
 
-        // 관리자 체크하기
-
+        // s3 업로드 처리
+        String imageUrl;
+        try{
+            imageUrl = s3Service.upload(request.getImage(), "lost");
+        } catch(IOException e){
+            throw new RuntimeException("S3 이미지 업롣에 실패했습니다.", e);
+        }
 
         Lost lost = Lost.builder()
                 .category(request.getCategory())
                 .name(request.getName())
-                .image(request.getImage())
+                .image(imageUrl)
                 .date(request.getDate())
                 .findLocation(request.getFindLocation())
                 .storage(request.getStorage())
@@ -80,7 +88,17 @@ public class LostService {
         Lost lost = lostRepository.findById(lostId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 분실물입니다 : " + lostId));
 
-        lost.update(request);
+        // s3 업로드 처리
+        String imageUrl = null;
+        if (request.getImage() != null && !request.getImage().isEmpty()){
+            try{
+                imageUrl = s3Service.upload(request.getImage(), "lost");
+            }catch (IOException e){
+                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+            }
+        }
+
+        lost.update(imageUrl,request);
 
         return  LostResponseDto.fromEntity(lost);
     }
