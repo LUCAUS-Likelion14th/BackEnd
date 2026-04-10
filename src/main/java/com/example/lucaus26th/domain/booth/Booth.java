@@ -66,14 +66,14 @@ public class Booth extends BaseTimeEntity {
         //this.setting = setting;
     //}
 
-    public void update(BoothUpdateRequestDto request){
+    public void update(String boothImageUrl,String boothLocationImageUrl,BoothUpdateRequestDto request){
         if (request.getLocationId() != null) this.locationId = request.getLocationId();
         if (request.getName() != null) this.name = request.getName();
         if (request.getOwner() != null) this.owner = request.getOwner();
         if (request.getInfo() != null) this.info = request.getInfo();
         if (request.getLocation() != null) this.location = request.getLocation();
-        if (request.getImage() != null) this.image = request.getImage();
-        if (request.getLocationImage() != null) this.locationImage = request.getLocationImage();
+        if (boothImageUrl != null) this.image = boothImageUrl;
+        if (boothLocationImageUrl != null) this.locationImage = boothLocationImageUrl;
         if (request.getInstagram() != null) this.instagram = request.getInstagram();
     }
 

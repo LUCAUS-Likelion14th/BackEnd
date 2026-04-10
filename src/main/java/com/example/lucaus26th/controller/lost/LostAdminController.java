@@ -27,9 +27,6 @@ public class LostAdminController {
     public ResponseEntity<ApiResponse<LostResponseDto>> createLost(@Valid @ModelAttribute LostRequestDto request,
                                                                    @AuthenticationPrincipal CustomUserDetails userDetails){
 
-        System.out.println("image: " + request.getImage());
-        System.out.println("isEmpty: " + (request.getImage() == null ? "null" : request.getImage().isEmpty()));
-        System.out.println("size: " + (request.getImage() == null ? "null" : request.getImage().getSize()));
 
         LostResponseDto response = lostService.createLost(request,userDetails);
         return ResponseEntity.ok(ApiResponse.success(response));

@@ -32,7 +32,7 @@ public class LostService {
         try{
             imageUrl = s3Service.upload(request.getImage(), "lost");
         } catch(IOException e){
-            throw new RuntimeException("S3 이미지 업롣에 실패했습니다.", e);
+            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
         }
 
         Lost lost = Lost.builder()
