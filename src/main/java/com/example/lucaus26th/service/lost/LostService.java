@@ -41,7 +41,6 @@ public class LostService {
                 .image(imageUrl)
                 .date(request.getDate())
                 .findLocation(request.getFindLocation())
-                .storage(request.getStorage())
                 .build();
 
         lostRepository.save(lost);

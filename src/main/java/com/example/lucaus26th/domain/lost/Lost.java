@@ -35,7 +35,6 @@ public class Lost {
         if (imageUrl != null) this.image = imageUrl;
         if (request.getDate() != null) this.date = request.getDate();
         if (request.getFindLocation() != null) this.findLocation = request.getFindLocation();
-        if (request.getStorage() != null) this.storage = request.getStorage();
     }
 
 }

@@ -22,5 +22,5 @@ public class LostRequestDto {
     @Pattern(regexp = "^(0[1-9]|1[0-2])\\.(0[1-9]|[12][0-9]|3[01])$", message = "날짜 형식이 올바르지 않습니다. (MM.DD)")
     private String date;
     private String findLocation;
-    private String storage;
+    //private String storage;
 }
