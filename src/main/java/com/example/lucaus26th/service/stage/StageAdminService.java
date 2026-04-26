@@ -131,8 +131,8 @@ public class StageAdminService {
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
         Song song = Song.create(request.getTitle(), request.getPlayOrder());
+        stage.addSong(song);
         Song savedSong = songRepository.save(song);
-        stage.addSong(savedSong);
         return SongResponseDTO.from(savedSong);
     }
 
