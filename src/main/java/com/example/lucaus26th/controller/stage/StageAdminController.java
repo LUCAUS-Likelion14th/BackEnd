@@ -20,18 +20,18 @@ import org.springframework.web.bind.annotation.*;
 public class StageAdminController {
     private final StageAdminService stageAdminService;
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "공연 생성", description = "새로운 공연을 생성합니다.")
-    public ApiResponse<StageResponseDTO> createStage(@RequestBody StageRequestDTO request){
+    public ApiResponse<StageResponseDTO> createStage(@ModelAttribute StageRequestDTO request){
         return ApiResponse.success(stageAdminService.createStage(request));
     }
 
-    @PatchMapping("/{stageId}")
+    @PatchMapping(value = "/{stageId}", consumes = "multipart/form-data")
     @Operation(summary = "공연 수정", description = "stageId에 해당하는 공연을 수정합니다.")
     public ApiResponse<StageResponseDTO> updateStage(
             @PathVariable("stageId") Long stageId,
-            @RequestBody StageRequestDTO request){
+            @ModelAttribute StageRequestDTO request){
         return ApiResponse.success(stageAdminService.updateStage(stageId, request));
     }
 
