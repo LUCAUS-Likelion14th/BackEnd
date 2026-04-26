@@ -41,6 +41,9 @@ public class StageRequestDTO {
 
     //TODO: stageinfo 따로 입력받는 버전으로 수정 고려
     public boolean hasStageInfoField(){
-        return instagram != null || youtube != null || performerImage != null || info != null;
+        return (instagram != null && !instagram.isBlank())
+                || (youtube != null && !youtube.isBlank())
+                || (performerImage != null && !performerImage.isEmpty())
+                || (info != null && !info.isBlank());
     }
 }

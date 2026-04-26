@@ -29,7 +29,7 @@ public class Promotion {
     }
 
     public void updatePromotion(String image, String instagram) {
-        this.image = image;
-        this.instagram = instagram;
+        if (image != null) this.image = image;
+        if (instagram != null) this.instagram = instagram;
     }
 }

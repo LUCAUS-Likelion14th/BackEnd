@@ -1,6 +1,5 @@
 package com.example.lucaus26th.service.stage;
 
-import com.example.lucaus26th.domain.Promotion;
 import com.example.lucaus26th.domain.stage.Song;
 import com.example.lucaus26th.domain.stage.Stage;
 import com.example.lucaus26th.domain.stage.StageInfo;
@@ -74,12 +73,7 @@ public class StageAdminService {
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
 
-        String logoImageUrl;
-        try{
-            logoImageUrl = s3Service.upload(request.getLogoImage(), "stage/logo");
-        } catch(IOException e){
-            throw new RuntimeException("S3 이미지 업로드에 실패했습니다", e);
-        }
+        String logoImageUrl = s3Service.uploadIfPresent(request.getLogoImage(), "stage/logo");
         stage.updateStage(
                 request.getCategory(),
                 request.getStartAt(),
@@ -91,23 +85,18 @@ public class StageAdminService {
 
         StageInfo stageInfo = stageInfoRepository.findById(stageId).orElse(null);
 
-        if(request.hasStageInfoField()){
-            String performerImageUrl;
-            try{
-                performerImageUrl = s3Service.upload(request.getPerformerImage(), "stage/performer");
-            }catch(IOException e){
-                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
-            }
-            if(stageInfo == null){
-                stageInfo = StageInfo.create(
+        if (request.hasStageInfoField()) {
+            String performerImageUrl = s3Service.uploadIfPresent(request.getPerformerImage(), "stage/performer");
+            if (stageInfo == null) {
+                StageInfo newStageInfo = StageInfo.create(
                         request.getInstagram(),
                         request.getYoutube(),
                         performerImageUrl,
                         request.getInfo()
                 );
-                stageInfoRepository.save(stageInfo);
-                stage.connectStageInfo(stageInfo);
-            }else{
+                stage.connectStageInfo(newStageInfo);
+                stageInfoRepository.save(newStageInfo);
+            } else {
                 stageInfo.update(
                         request.getInstagram(),
                         request.getYoutube(),
