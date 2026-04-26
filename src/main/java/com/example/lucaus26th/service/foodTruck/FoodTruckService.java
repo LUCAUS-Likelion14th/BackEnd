@@ -9,11 +9,14 @@ import com.example.lucaus26th.dto.request.foodTruck.FoodTruckRequestDto;
 import com.example.lucaus26th.dto.request.foodTruck.FoodTruckSettingRequestDto;
 import com.example.lucaus26th.dto.request.foodTruck.MenuRequestDto;
 import com.example.lucaus26th.dto.response.foodTruck.*;
+import com.example.lucaus26th.global.S3Service;
+import com.example.lucaus26th.global.exception.BusinessException;
 import com.example.lucaus26th.repository.foodTruck.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,14 +30,21 @@ public class FoodTruckService {
     private final MemberRepository memberRepository;
     private final MenuRepository menuRepository;
     private final FoodTruckSettingRepository foodTruckSettingRepository;
+    private final S3Service s3Service;
 
     // 푸드트럭 생성
     public FoodTruckResponseDto createFoodTruck(FoodTruckRequestDto request) {
+        String imageUrl;
+        try{
+            imageUrl = s3Service.upload(request.getImage(), "foodtruck");
+        } catch(IOException e){
+            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+        }
         FoodTruck foodTruck = new FoodTruck(
                 request.getName(),
                 request.getLocationId(),
                 request.getLocation(),
-                request.getImage(),
+                imageUrl,
                 request.getBestMenu(),
                 0L,
                 request.getFoodTruckInfo()
@@ -49,11 +59,12 @@ public class FoodTruckService {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
 
+        String imageUrl = s3Service.uploadIfPresent(request.getImage(), "foodtruck");
         foodTruck.update(
                 request.getName(),
                 request.getLocationId(),
                 request.getLocation(),
-                request.getImage(),
+                imageUrl,
                 request.getBestMenu(),
                 request.getFoodTruckInfo()
         );
@@ -105,10 +116,16 @@ public class FoodTruckService {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
 
+        String imageUrl;
+        try{
+            imageUrl = s3Service.upload(dto.getImage(), "foodtruck/menu");
+        } catch(IOException e){
+            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+        }
         Menu menu = Menu.builder()
                 .name(dto.getName())
                 .price(dto.getPrice())
-                .image(dto.getImage())
+                .image(imageUrl)
                 .foodTruck(foodTruck)
                 .build();
 
@@ -121,7 +138,8 @@ public class FoodTruckService {
         Menu menu = menuRepository.findByIdAndFoodTruckId(menuId, foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메뉴입니다."));
 
-        menu.update(dto.getName(), dto.getPrice(), dto.getImage());
+        String imageUrl = s3Service.uploadIfPresent(dto.getImage(), "foodtruck/menu");
+        menu.update(dto.getName(), dto.getPrice(), imageUrl);
 
         return MenuResponseDto.from(menu);
     }

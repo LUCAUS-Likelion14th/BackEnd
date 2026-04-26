@@ -28,6 +28,18 @@ public class S3Service {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    public String uploadIfPresent(MultipartFile file, String dirName) {
+        if (file == null || file.isEmpty()){
+            return null;
+        }
+        try{
+            return upload(file, dirName);
+        } catch (IOException e){
+            throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
+        }
+
+    }
+
     public String upload(MultipartFile file, String dirName) throws IOException {
         if(file == null || file.isEmpty()){
             throw new BusinessException(ErrorCode.EMPTY_FILE);

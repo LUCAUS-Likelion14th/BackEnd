@@ -8,6 +8,7 @@ import com.example.lucaus26th.domain.booth.Category;
 import com.example.lucaus26th.dto.request.booth.BoothRequestDto;
 import com.example.lucaus26th.dto.request.booth.BoothUpdateRequestDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
+import com.example.lucaus26th.global.S3Service;
 import com.example.lucaus26th.repository.foodTruck.MemberRepository;
 import com.example.lucaus26th.repository.booth.BoothCategoryRepository;
 import com.example.lucaus26th.repository.booth.BoothLikeRepository;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -35,10 +37,20 @@ public class BoothService {
     private final BoothCategoryRepository boothCategoryRepository;
     private final MemberRepository memberRepository;
     private final BoothLikeRepository boothLikeRepository;
+    private final S3Service s3Service;
 
     // Booth CRUD 기능
     public Long createBooth(BoothRequestDto request) {
 
+        // s3 업로드 처리
+        String boothImageUrl = null;
+        String boothLocationImageUrl = null;
+        try {
+            boothImageUrl = s3Service.upload(request.getImage(), "booth");
+            boothLocationImageUrl = s3Service.upload(request.getLocationImage(), "boothLocation");
+        }catch(IOException e){
+            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+        }
 
         // Booth 생성
         Booth booth = Booth.builder()
@@ -47,8 +59,8 @@ public class BoothService {
                 .owner(request.getOwner())
                 .location(request.getLocation())
                 .info(request.getInfo())
-                .image(request.getImage())
-                .locationImage(request.getLocationImage())
+                .image(boothImageUrl)
+                .locationImage(boothLocationImageUrl)
                 .instagram(request.getInstagram())
                 .build();
 
@@ -178,7 +190,25 @@ public class BoothService {
         Booth booth = boothRepository.findById(boothId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 : " + boothId));
 
-        booth.update(request);
+        // s3 업로드 처리
+        String boothImageUrl = null;
+        if(request.getImage() != null && !request.getImage().isEmpty()){
+            try{
+                boothImageUrl = s3Service.upload(request.getImage(), "booth");
+            }catch (IOException e){
+                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+            }
+        }
+        String boothLocationImageUrl = null;
+        if (request.getLocationImage() != null && !request.getLocationImage().isEmpty()){
+            try{
+                boothLocationImageUrl = s3Service.upload(request.getLocationImage(), "boothLocation");
+            }catch (IOException e){
+                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+            }
+        }
+
+        booth.update(boothImageUrl, boothLocationImageUrl,request);
 
 
 

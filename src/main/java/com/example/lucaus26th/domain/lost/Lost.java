@@ -29,13 +29,12 @@ public class Lost {
     private String findLocation;
     private String storage;
 
-    public void update(LostRequestDto request){
+    public void update(String imageUrl, LostRequestDto request){
         if (request.getCategory() != null) this.category = request.getCategory();
         if (request.getName() != null) this.name = request.getName();
-        if (request.getImage() != null) this.image = request.getImage();
+        if (imageUrl != null) this.image = imageUrl;
         if (request.getDate() != null) this.date = request.getDate();
         if (request.getFindLocation() != null) this.findLocation = request.getFindLocation();
-        if (request.getStorage() != null) this.storage = request.getStorage();
     }
 
 }

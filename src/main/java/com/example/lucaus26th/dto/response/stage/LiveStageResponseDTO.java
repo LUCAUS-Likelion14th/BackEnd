@@ -18,7 +18,7 @@ public class LiveStageResponseDTO {
     private Long stageId;
 
     private String performer;
-    private String logo;
+    private String logoImage;
     private String time;
 
     public static LiveStageResponseDTO from(Stage stage){
@@ -29,7 +29,7 @@ public class LiveStageResponseDTO {
         return LiveStageResponseDTO.builder()
                 .stageId(stage.getId())
                 .performer(stage.getPerformer())
-                .logo(stage.getLogo())
+                .logoImage(stage.getLogoImage())
                 .time(formattedStartAt + " - " + formattedEndAt)
                 .build();
     }

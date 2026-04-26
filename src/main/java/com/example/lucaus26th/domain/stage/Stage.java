@@ -36,8 +36,8 @@ public class Stage {
     @Column(nullable = false, length = 100)
     private String performer;
 
-    @Column(name = "logo")
-    private String logo;
+    @Column(name = "logo_image")
+    private String logoImage;
 
     @OneToMany(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("playOrder ASC")
@@ -53,14 +53,14 @@ public class Stage {
             LocalTime endAt,
             LocalDate date,
             String performer,
-            String logo
+            String logoImage
     ) {
         this.category = category;
         this.startAt = startAt;
         this.endAt = endAt;
         this.date = date;
         this.performer = performer;
-        this.logo = logo;
+        this.logoImage = logoImage;
     }
 
     //필수정보 검증 후 공연 생성
@@ -70,12 +70,12 @@ public class Stage {
             LocalTime endAt,
             LocalDate date,
             String performer,
-            String logo
+            String logoImage
     ) {
         validateRequiredFields(category, startAt, endAt, date, performer);
         validateTime(startAt, endAt);
 
-        return new Stage(category, startAt, endAt, date, performer, logo);
+        return new Stage(category, startAt, endAt, date, performer, logoImage);
     }
 
     public void updateStage(
@@ -84,12 +84,12 @@ public class Stage {
             LocalTime endAt,
             LocalDate date,
             String performer,
-            String logo
+            String logoImage
     ) {
         if (category != null) this.category = category;
         if (date != null) this.date = date;
         if (performer != null && !performer.isBlank()) this.performer = performer;
-        if (logo != null) this.logo = logo;
+        if (logoImage != null) this.logoImage = logoImage;
 
         LocalTime newStartAt = (startAt != null) ? startAt : this.startAt;
         LocalTime newEndAt = (endAt != null) ? endAt : this.endAt;

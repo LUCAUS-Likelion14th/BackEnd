@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
-@JsonPropertyOrder({ "stage_id", "start_at", "end_at", "time", "status", "performer_logo", "performer", "category" })
+@JsonPropertyOrder({ "stage_id", "start_at", "end_at", "time", "status", "logo_image", "performer", "category" })
 public class StageResponseDTO {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
@@ -30,8 +30,8 @@ public class StageResponseDTO {
     private String time;
     private String status;
 
-    @JsonProperty("performer_logo")
-    private String performerLogo;
+    @JsonProperty("logo_image")
+    private String logoImage;
 
     private String performer;
     private String category;
@@ -49,7 +49,7 @@ public class StageResponseDTO {
                 .endAt(endDateTime)
                 .time(formattedStartAt + " - " + formattedEndAt)
                 .status(calculateStatus(startDateTime, endDateTime))
-                .performerLogo(stage.getLogo())
+                .logoImage(stage.getLogoImage())
                 .performer(stage.getPerformer())
                 .category(stage.getCategory().getDisplayName())
                 .build();

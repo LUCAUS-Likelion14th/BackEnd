@@ -23,9 +23,9 @@ public class PromotionAdminService {
     @Transactional
     public PromotionResponseDTO createPromotion(PromotionRequestDTO request) {
         String imageUrl;
-        try{
+        try {
             imageUrl = s3Service.upload(request.getImage(), "promotion");
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
         }
         Promotion promotion = Promotion.create(imageUrl, request.getInstagram());
@@ -38,12 +38,7 @@ public class PromotionAdminService {
         Promotion promotion = promotionRespository.findById(promoId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PROMOTION_NOT_FOUND));
 
-        String imageUrl;
-        try{
-            imageUrl = s3Service.upload(request.getImage(), "promotion");
-        } catch (IOException e) {
-            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
-        }
+        String imageUrl = s3Service.uploadIfPresent(request.getImage(), "promotion");
         promotion.updatePromotion(imageUrl, request.getInstagram());
         return PromotionResponseDTO.from(promotion);
     }

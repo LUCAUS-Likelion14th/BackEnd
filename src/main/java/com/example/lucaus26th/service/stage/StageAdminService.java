@@ -7,6 +7,7 @@ import com.example.lucaus26th.dto.request.stage.SongRequestDTO;
 import com.example.lucaus26th.dto.request.stage.StageRequestDTO;
 import com.example.lucaus26th.dto.response.stage.SongResponseDTO;
 import com.example.lucaus26th.dto.response.stage.StageResponseDTO;
+import com.example.lucaus26th.global.S3Service;
 import com.example.lucaus26th.repository.stage.SongRepository;
 import com.example.lucaus26th.repository.stage.StageInfoRepository;
 import com.example.lucaus26th.repository.stage.StageRepository;
@@ -14,6 +15,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,26 +26,40 @@ public class StageAdminService {
     private final StageRepository stageRepository;
     private final StageInfoRepository stageInfoRepository;
     private final SongRepository songRepository;
+    private final S3Service s3Service;
 
     // 공연 생성
     @Transactional
     public StageResponseDTO createStage(StageRequestDTO request) {
+        String logoImageUrl;
+        try{
+            logoImageUrl = s3Service.upload(request.getLogoImage(), "stage/logo");
+        } catch(IOException e){
+            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+        }
         Stage stage = Stage.create(
                 request.getCategory(),
                 request.getStartAt(),
                 request.getEndAt(),
                 request.getDate(),
                 request.getPerformer(),
-                request.getLogo()
+                logoImageUrl
         );
 
         Stage savedStage = stageRepository.save(stage);
 
         if(request.hasStageInfoField()){
+            String performerImageUrl;
+            try{
+                performerImageUrl = s3Service.upload(request.getPerformerImage(), "stage/performer");
+            } catch(IOException e){
+                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+            }
+
             StageInfo stageInfo = StageInfo.create(
                     request.getInstagram(),
                     request.getYoutube(),
-                    request.getPerformerImage(),
+                    performerImageUrl,
                     request.getInfo()
             );
             savedStage.connectStageInfo(stageInfo);
@@ -56,32 +73,34 @@ public class StageAdminService {
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
 
+        String logoImageUrl = s3Service.uploadIfPresent(request.getLogoImage(), "stage/logo");
         stage.updateStage(
                 request.getCategory(),
                 request.getStartAt(),
                 request.getEndAt(),
                 request.getDate(),
                 request.getPerformer(),
-                request.getLogo()
+                logoImageUrl
         );
 
         StageInfo stageInfo = stageInfoRepository.findById(stageId).orElse(null);
 
-        if(request.hasStageInfoField()){
-            if(stageInfo == null){
-                stageInfo = StageInfo.create(
+        if (request.hasStageInfoField()) {
+            String performerImageUrl = s3Service.uploadIfPresent(request.getPerformerImage(), "stage/performer");
+            if (stageInfo == null) {
+                StageInfo newStageInfo = StageInfo.create(
                         request.getInstagram(),
                         request.getYoutube(),
-                        request.getPerformerImage(),
+                        performerImageUrl,
                         request.getInfo()
                 );
-                stageInfoRepository.save(stageInfo);
-                stage.connectStageInfo(stageInfo);
-            }else{
+                stage.connectStageInfo(newStageInfo);
+                stageInfoRepository.save(newStageInfo);
+            } else {
                 stageInfo.update(
                         request.getInstagram(),
                         request.getYoutube(),
-                        request.getPerformerImage(),
+                        performerImageUrl,
                         request.getInfo()
                 );
             }
