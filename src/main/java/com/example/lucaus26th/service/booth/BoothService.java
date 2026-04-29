@@ -15,6 +15,7 @@ import com.example.lucaus26th.repository.booth.BoothLikeRepository;
 import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.booth.CategoryRepository;
 import com.example.lucaus26th.security.CustomUserDetails;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,16 +39,21 @@ public class BoothService {
     private final MemberRepository memberRepository;
     private final BoothLikeRepository boothLikeRepository;
     private final S3Service s3Service;
+    private final EntityManager entityManager;
 
     // Booth CRUD 기능
-    public Long createBooth(BoothRequestDto request) {
+    public BoothResponseDto.All createBooth(BoothRequestDto request) {
 
         // s3 업로드 처리
         String boothImageUrl = null;
         String boothLocationImageUrl = null;
         try {
-            boothImageUrl = s3Service.upload(request.getImage(), "booth");
-            boothLocationImageUrl = s3Service.upload(request.getLocationImage(), "boothLocation");
+            if (request.getImage() != null && !request.getImage().isEmpty()) {
+                boothImageUrl = s3Service.upload(request.getImage(), "booth");
+            }
+            if (request.getLocationImage() != null && !request.getLocationImage().isEmpty()) {
+                boothLocationImageUrl = s3Service.upload(request.getLocationImage(), "boothLocation");
+            }
         }catch(IOException e){
             throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
         }
@@ -78,7 +84,11 @@ public class BoothService {
             }
         }
 
-        return booth.getId();
+        entityManager.flush();
+        entityManager.clear();
+        Booth savedBooth = boothRepository.findById(booth.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다/create 실패 :" + booth.getId()));
+        return BoothResponseDto.All.fromEntity(savedBooth);
     }
 
     // 조회 관련 쿼리 함수
@@ -183,7 +193,7 @@ public class BoothService {
     }
 
 
-    public void updateBooth(Long boothId,/* Long memberId*/ BoothUpdateRequestDto request) {
+    public BoothResponseDto.All updateBooth(Long boothId,/* Long memberId*/ BoothUpdateRequestDto request) {
         // 나중에 관리자 체크 하기
         // adminValidater.validate(memberId);
 
@@ -210,7 +220,7 @@ public class BoothService {
 
         booth.update(boothImageUrl, boothLocationImageUrl,request);
 
-
+        return BoothResponseDto.All.fromEntity(booth);
 
     }
 

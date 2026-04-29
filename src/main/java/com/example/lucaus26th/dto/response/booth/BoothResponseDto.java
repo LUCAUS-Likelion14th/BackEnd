@@ -113,4 +113,40 @@ public class BoothResponseDto {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    public static class All { // create, update 할때만
+        private Long booth_id;
+        private Long location_id;
+        private String booth_image;
+        private String booth_name;
+        private String booth_owner;
+        private List<String> booth_category;  // ["소개팅", "음식"]
+        private String booth_info;
+        private String owner_insta;
+        private Boolean is_liked;
+        private Long like_count;
+        private String location;
+        //private List<String> date;
+        private String location_image;
+
+        public static BoothResponseDto.All fromEntity(Booth booth){
+            return All.builder()
+                    .booth_id(booth.getId())
+                    .location_id(booth.getLocationId())
+                    .booth_image(booth.getImage())
+                    .booth_name(booth.getName())
+                    .booth_owner(booth.getOwner())
+                    .booth_category(booth.getCategoryNames())// 카테고리
+                    .booth_info(booth.getInfo())
+                    .owner_insta(booth.getInstagram())
+                    .like_count(booth.getLikeCount())
+                    .location(booth.getLocation().getDescription())
+                    //.date(booth.getDays())
+                    .location_image(booth.getLocationImage())
+                    .build();
+        }
+
+    }
 }
