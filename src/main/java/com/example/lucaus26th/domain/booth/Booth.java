@@ -60,6 +60,7 @@ public class Booth extends BaseTimeEntity {
         this.image = image;
         this.locationImage = locationImage;
         this.instagram = instagram;
+        this.categories = new ArrayList<>();
     }
 
     //public void setSetting(Setting setting){
