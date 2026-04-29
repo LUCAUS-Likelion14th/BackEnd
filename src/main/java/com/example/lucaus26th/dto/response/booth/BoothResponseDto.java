@@ -17,6 +17,7 @@ public class BoothResponseDto {
         private Long location_id;
         private String booth_image;
         private String booth_name;
+        private String booth_owner;
         private String booth_location;
         private Boolean is_liked;
         private Long like_count;
@@ -27,6 +28,7 @@ public class BoothResponseDto {
                     .location_id(booth.getLocationId())
                     .booth_image(booth.getImage())
                     .booth_name(booth.getName())
+                    .booth_owner(booth.getOwner())
                     .booth_location(booth.getLocation().getDescription())
                     .is_liked(isLiked)
                     .like_count(booth.getLikeCount())
