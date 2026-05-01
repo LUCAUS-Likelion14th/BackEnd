@@ -10,6 +10,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.time.Duration;
+import java.util.Map;
 
 @Configuration
 @EnableCaching
@@ -17,14 +18,6 @@ public class CacheConfig {
 
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-
-        RedisCacheConfiguration tenMinutesCache = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(10))
-                .disableCachingNullValues()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(RedisSerializer.string()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(RedisSerializer.json()));
 
         RedisCacheConfiguration oneHourCache = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofHours(1))
@@ -35,9 +28,12 @@ public class CacheConfig {
                         .fromSerializer(RedisSerializer.json()));
 
         return RedisCacheManager.builder(connectionFactory)
-                .cacheDefaults(tenMinutesCache)
-                .withCacheConfiguration("cache_10min", tenMinutesCache)
-                .withCacheConfiguration("cache_1hour", oneHourCache)
+                .cacheDefaults(oneHourCache)
+                .withInitialCacheConfigurations(Map.of(
+                        "foodtruck", oneHourCache,
+                        "booth", oneHourCache,
+                        "performance", oneHourCache
+                ))
                 .build();
     }
 }

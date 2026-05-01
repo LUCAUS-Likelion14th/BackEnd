@@ -32,7 +32,7 @@ public class FoodTruckService {
     private final FoodTruckCacheService foodTruckCacheService;
 
     // 푸드트럭 생성
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public FoodTruckResponseDto createFoodTruck(FoodTruckRequestDto request) {
         String imageUrl;
         try{
@@ -55,7 +55,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 수정
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public FoodTruckResponseDto updateFoodTruck(Long foodTruckId, FoodTruckRequestDto request) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -74,7 +74,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 삭제
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void deleteFoodTruck(Long foodTruckId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -83,7 +83,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 좋아요 생성
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void createFoodLike(Long foodTruckId, Long memberId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -102,7 +102,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 좋아요 삭제
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void deleteFoodLike(Long foodTruckId, Long memberId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -116,7 +116,7 @@ public class FoodTruckService {
     }
 
     // 메뉴 생성
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public MenuResponseDto createMenu(Long foodTruckId, MenuRequestDto dto) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -139,7 +139,7 @@ public class FoodTruckService {
     }
 
     // 메뉴 수정
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public MenuResponseDto updateMenu(Long foodTruckId, Long menuId, MenuRequestDto dto) {
         Menu menu = menuRepository.findByIdAndFoodTruckId(menuId, foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메뉴입니다."));
@@ -151,7 +151,7 @@ public class FoodTruckService {
     }
 
     // 메뉴 삭제
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void deleteMenu(Long foodTruckId, Long menuId) {
         Menu menu = menuRepository.findByIdAndFoodTruckId(menuId, foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메뉴입니다."));
@@ -160,7 +160,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 운영정보 생성
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public FoodTruckSettingResponseDto createSetting(Long foodTruckId, FoodTruckSettingRequestDto dto) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -177,7 +177,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 운영정보 수정
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public FoodTruckSettingResponseDto updateSetting(Long foodTruckId, Long settingId, FoodTruckSettingRequestDto dto) {
         FoodTruckSetting setting = foodTruckSettingRepository
                 .findByIdAndFoodTruckId(settingId, foodTruckId)
@@ -194,7 +194,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 운영정보 삭제
-    @CacheEvict(value = "cache_10min", allEntries = true)
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void deleteSetting(Long foodTruckId, Long settingId) {
         FoodTruckSetting setting = foodTruckSettingRepository
                 .findByIdAndFoodTruckId(settingId, foodTruckId)

@@ -22,7 +22,7 @@ public class FoodTruckCacheService {
 
     private final FoodTruckRepository foodTruckRepository;
 
-    @Cacheable(value = "cache_10min", key = "'foodtruck_list_' + #location + '_' + #date")
+    @Cacheable(value = "foodtruck", key = "'list_' + #location + '_' + #date")
     public List<FoodTruckResponseDto> getFoodTrucks(String location, String date) {
         List<FoodTruck> foodTrucks = foodTruckRepository.findAll();
         return foodTrucks.stream()
@@ -32,7 +32,7 @@ public class FoodTruckCacheService {
                 .toList();
     }
 
-    @Cacheable(value = "cache_10min", key = "'foodtruck_detail_' + #foodTruckId")
+    @Cacheable(value = "foodtruck", key = "'detail_' + #foodTruckId")
     public FoodTruckDetailResponseDto getFoodTruckDetail(Long foodTruckId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -68,7 +68,7 @@ public class FoodTruckCacheService {
                 .build();
     }
 
-    @Cacheable(value = "cache_10min", key = "'hot_foodtrucks'")
+    @Cacheable(value = "foodtruck", key = "'hot'")
     public List<HotFoodTruckResponseDto> getHotFoodTrucks() {
         List<FoodTruck> foodTrucks = foodTruckRepository.findTop3ByOrderByLikeCountDesc();
         return foodTrucks.stream()
