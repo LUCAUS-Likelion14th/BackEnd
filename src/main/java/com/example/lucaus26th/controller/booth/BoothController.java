@@ -1,6 +1,7 @@
 package com.example.lucaus26th.controller.booth;
 
 
+import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.dto.request.booth.BoothRequestDto;
 import com.example.lucaus26th.dto.request.booth.BoothUpdateRequestDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
@@ -36,14 +37,17 @@ public class BoothController {
                                                                               @RequestParam(required = false) String search,
                                                                               @RequestParam(defaultValue = "0") int page,
                                                                               @AuthenticationPrincipal CustomUserDetails userDetails){
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
         Pageable pageable = PageRequest.of(page,8);
-        Page<BoothResponseDto.Lists> response = boothService.getBooth(date, location, category,search, pageable,userDetails);
+        Page<BoothResponseDto.Lists> response = boothService.getBooth(date, location, category,search, pageable,member);
         //return ResponseEntity.ok(ApiResponse.of(response)); // 만약 메타데이터 필요없으면 response.getContent()
         return ResponseEntity.ok(ApiResponse.success(response.getContent()));
     }
     @GetMapping("/{boothId}")
     public ResponseEntity<ApiResponse<BoothResponseDto.Detail>> getBoothDetail(@PathVariable Long boothId, @AuthenticationPrincipal CustomUserDetails userDetails){
-        BoothResponseDto.Detail response = boothService.getBoothDetail(boothId, userDetails);
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+        BoothResponseDto.Detail response = boothService.getBoothDetail(boothId, member);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
