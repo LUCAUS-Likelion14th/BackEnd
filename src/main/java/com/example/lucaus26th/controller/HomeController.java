@@ -1,5 +1,6 @@
 package com.example.lucaus26th.controller;
 
+import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.dto.response.PromotionResponseDTO;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
 import com.example.lucaus26th.service.PromotionService;
@@ -42,7 +43,9 @@ public class HomeController {
     @GetMapping("/top-booth")
     @Operation(summary = "인기 부스 조회", description = "메인홈에서 현재 인기있는 부스를 조회합니다.")
     public ResponseEntity<ApiResponse<List<BoothResponseDto.Hot>>> getTopBooth(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<BoothResponseDto.Hot> response = boothService.getBoothHot(userDetails);
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
+        List<BoothResponseDto.Hot> response = boothService.getBoothHot(member);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

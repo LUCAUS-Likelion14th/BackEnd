@@ -119,9 +119,9 @@ public class BoothService {
     }
 
     // 전체조회
-    public Page<BoothResponseDto.Lists> getBooth(String date, String location, String category, String search, Pageable pageable, CustomUserDetails userDetails) {
+    public Page<BoothResponseDto.Lists> getBooth(String date, String location, String category, String search, Pageable pageable, Member member) {
         List<Booth> booths = boothRepository.findAll();
-        Member member = (userDetails != null) ? userDetails.getMember() : null;
+        //Member member = (userDetails != null) ? userDetails.getMember() : null;
 
         List<BoothResponseDto.Lists> boothList = booths.stream()
                 .filter(booth -> locationFilter(booth, location))
@@ -130,7 +130,7 @@ public class BoothService {
                 .filter(booth -> searchFilter(booth, search))
                 .map(booth -> {
                     boolean isLiked = false;
-                    if (userDetails != null) {
+                    if (member != null) {
                         isLiked = boothLikeRepository.existsByBoothAndMember(booth,member);
                     }
                     return BoothResponseDto.Lists.fromEntity(booth, isLiked);
@@ -144,26 +144,26 @@ public class BoothService {
     }
 
     // 상세조회
-    public BoothResponseDto.Detail getBoothDetail(Long boothId, CustomUserDetails userDetails) {
+    public BoothResponseDto.Detail getBoothDetail(Long boothId, Member member) {
         Booth booth = boothRepository.findById(boothId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 :" + boothId));
-        if (userDetails == null){
+        if (member == null){
             // 비로그인
             return BoothResponseDto.Detail.fromEntity(booth, false);
         }
-        Member member = userDetails.getMember();
+        //Member member = userDetails.getMember();
         return BoothResponseDto.Detail.fromEntity(booth, boothLikeRepository.existsByBoothAndMember(booth,member));
     }
 
     // 인기 부스
-    public List<BoothResponseDto.Hot> getBoothHot(CustomUserDetails userDetails) {
+    public List<BoothResponseDto.Hot> getBoothHot(Member member) {
         // 인기 3개만 보여주기. (Booth.likeCount 로 정렬 후
         // 현재(seoul time 기준) 시간에 영업 안하는거는 제외하고 3개 올려야함(BoothSetting 참고하자)
         ZonedDateTime nowSeoul = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDate today = nowSeoul.toLocalDate();
         LocalTime nowTime = nowSeoul.toLocalTime();
 
-        Member member = (userDetails != null) ? userDetails.getMember() : null;
+        //Member member = (userDetails != null) ? userDetails.getMember() : null;
 
         List<Booth> hotBooths = boothRepository.findAll().stream()
                 .filter(booth -> booth.getSettings().stream()

@@ -1,5 +1,6 @@
 package com.example.lucaus26th.controller;
 
+import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.dto.response.MyPageResponseDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
 import com.example.lucaus26th.dto.response.foodTruck.FoodTruckResponseDto;
@@ -32,13 +33,17 @@ public class MyPageController {
             throw new IllegalArgumentException("로그인이 필요합니다.");
         }
 
-        return ResponseEntity.ok(ApiResponse.success(myPageService.getMyPage(user)));
+        Member member = user.getMember();
+
+        return ResponseEntity.ok(ApiResponse.success(myPageService.getMyPage(member)));
     }
 
     // 내가 좋아요 한 부스
     @GetMapping("/booth")
     public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getMyBoothLikes(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<BoothResponseDto.Lists> response =  myPageService.getMyBoothLikes(userDetails);
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
+        List<BoothResponseDto.Lists> response =  myPageService.getMyBoothLikes(member);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -51,6 +56,8 @@ public class MyPageController {
             throw new IllegalArgumentException("로그인이 필요합니다.");
         }
 
-        return ResponseEntity.ok(ApiResponse.success(myPageService.getMyFoodTruckLikes(user)));
+        Member member = user.getMember();
+
+        return ResponseEntity.ok(ApiResponse.success(myPageService.getMyFoodTruckLikes(member)));
     }
 }
