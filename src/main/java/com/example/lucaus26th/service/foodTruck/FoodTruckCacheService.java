@@ -6,8 +6,6 @@ import com.example.lucaus26th.dto.response.foodTruck.FoodTruckDetailResponseDto;
 import com.example.lucaus26th.dto.response.foodTruck.FoodTruckResponseDto;
 import com.example.lucaus26th.dto.response.foodTruck.HotFoodTruckResponseDto;
 import com.example.lucaus26th.repository.foodTruck.FoodTruckRepository;
-import com.example.lucaus26th.repository.foodTruck.FoodTruckSettingRepository;
-import com.example.lucaus26th.repository.foodTruck.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

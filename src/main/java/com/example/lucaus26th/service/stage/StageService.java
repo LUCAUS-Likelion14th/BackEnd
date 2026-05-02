@@ -10,6 +10,7 @@ import com.example.lucaus26th.repository.stage.StageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,6 +24,7 @@ public class StageService {
     private final StageRepository stageRepository;
 
     // 공연자 목록 조회
+    @Cacheable(value = "performance", key = "'performers_' + #date + '_' + #category")
     public List<PerformerSimpleResponseDTO> getPerformerList(LocalDate date, StageCategory category) {
         return stageRepository.findByDateAndCategoryOrderByStartAtAsc(date, category).stream()
                 .map(PerformerSimpleResponseDTO::from)
@@ -30,6 +32,7 @@ public class StageService {
     }
 
     // 타임테이블 조회
+    @Cacheable(value = "performance", key = "'stage_list_' + #date")
     public List<StageResponseDTO> getStageList(LocalDate date) {
         return stageRepository.findByDateOrderByStartAtAsc(date).stream()
                 .map(StageResponseDTO::from)
@@ -37,6 +40,7 @@ public class StageService {
     }
 
     // 공연 정보 상세 조회
+    @Cacheable(value = "performance", key = "'stage_info_' + #stageId")
     public StageInfoResponseDTO getStageInfo(Long stageId) {
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new IllegalArgumentException("Stage not found"));
