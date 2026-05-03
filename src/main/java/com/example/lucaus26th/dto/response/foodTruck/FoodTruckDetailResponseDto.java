@@ -29,4 +29,20 @@ public class FoodTruckDetailResponseDto {
         private Long price;
         private String image;
     }
+
+    public FoodTruckDetailResponseDto withLiked(boolean liked) {
+        return FoodTruckDetailResponseDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .locationId(this.locationId)
+                .location(this.location)
+                .image(this.image)
+                .bestMenu(this.bestMenu)
+                .likeCount(this.likeCount)
+                .liked(liked)
+                .foodTruckInfo(this.foodTruckInfo)
+                .date(this.date)
+                .menu(this.menu)
+                .build();
+    }
 }

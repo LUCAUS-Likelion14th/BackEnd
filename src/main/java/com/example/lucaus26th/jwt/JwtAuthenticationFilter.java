@@ -36,7 +36,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             final String token = getJwtFromRequest(request);
+            if (token == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             JwtValidationType jwtValidationType = jwtTokenProvider.validateToken(token);
+
             if (jwtValidationType == VALID_JWT) {
                 Long memberId = jwtTokenProvider.getMemberIdFromAccessToken(token);
                 Member member = memberRepository.findById(memberId)

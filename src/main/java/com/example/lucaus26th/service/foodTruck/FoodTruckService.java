@@ -10,15 +10,13 @@ import com.example.lucaus26th.dto.request.foodTruck.FoodTruckSettingRequestDto;
 import com.example.lucaus26th.dto.request.foodTruck.MenuRequestDto;
 import com.example.lucaus26th.dto.response.foodTruck.*;
 import com.example.lucaus26th.global.S3Service;
-import com.example.lucaus26th.global.exception.BusinessException;
 import com.example.lucaus26th.repository.foodTruck.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.MonthDay;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -31,8 +29,10 @@ public class FoodTruckService {
     private final MenuRepository menuRepository;
     private final FoodTruckSettingRepository foodTruckSettingRepository;
     private final S3Service s3Service;
+    private final FoodTruckCacheService foodTruckCacheService;
 
     // 푸드트럭 생성
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public FoodTruckResponseDto createFoodTruck(FoodTruckRequestDto request) {
         String imageUrl;
         try{
@@ -55,6 +55,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 수정
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public FoodTruckResponseDto updateFoodTruck(Long foodTruckId, FoodTruckRequestDto request) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -73,6 +74,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 삭제
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void deleteFoodTruck(Long foodTruckId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -81,6 +83,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 좋아요 생성
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void createFoodLike(Long foodTruckId, Long memberId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -99,6 +102,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 좋아요 삭제
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void deleteFoodLike(Long foodTruckId, Long memberId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -112,6 +116,7 @@ public class FoodTruckService {
     }
 
     // 메뉴 생성
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public MenuResponseDto createMenu(Long foodTruckId, MenuRequestDto dto) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -134,6 +139,7 @@ public class FoodTruckService {
     }
 
     // 메뉴 수정
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public MenuResponseDto updateMenu(Long foodTruckId, Long menuId, MenuRequestDto dto) {
         Menu menu = menuRepository.findByIdAndFoodTruckId(menuId, foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메뉴입니다."));
@@ -145,6 +151,7 @@ public class FoodTruckService {
     }
 
     // 메뉴 삭제
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void deleteMenu(Long foodTruckId, Long menuId) {
         Menu menu = menuRepository.findByIdAndFoodTruckId(menuId, foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메뉴입니다."));
@@ -153,6 +160,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 운영정보 생성
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public FoodTruckSettingResponseDto createSetting(Long foodTruckId, FoodTruckSettingRequestDto dto) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
@@ -169,6 +177,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 운영정보 수정
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public FoodTruckSettingResponseDto updateSetting(Long foodTruckId, Long settingId, FoodTruckSettingRequestDto dto) {
         FoodTruckSetting setting = foodTruckSettingRepository
                 .findByIdAndFoodTruckId(settingId, foodTruckId)
@@ -185,6 +194,7 @@ public class FoodTruckService {
     }
 
     // 푸드트럭 운영정보 삭제
+    @CacheEvict(value = "foodtruck", allEntries = true)
     public void deleteSetting(Long foodTruckId, Long settingId) {
         FoodTruckSetting setting = foodTruckSettingRepository
                 .findByIdAndFoodTruckId(settingId, foodTruckId)
@@ -193,92 +203,48 @@ public class FoodTruckService {
         foodTruckSettingRepository.delete(setting);
     }
 
-    // 장소 필터링
-    private boolean locationFilter(FoodTruck foodTruck, String location) {
-        if (location == null || location.isBlank()) return true;
-        return foodTruck.getLocation().equals(location);
-    }
-
-    // 날짜 필터랑
-    private boolean dateFilter(FoodTruck foodTruck, String date) {
-        if (date == null || date.isBlank()) return true;
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMdd");
-        MonthDay monthDay = MonthDay.parse(date, formatter);
-
-        return foodTruck.getSettings().stream()
-                .anyMatch(setting -> MonthDay.from(setting.getDate()).equals(monthDay));
-    }
-
-    // 전체 조횐
+    // 전체 조회
     public List<FoodTruckResponseDto> getFoodTrucks(String location, String date, Long memberId) {
-        List<FoodTruck> foodTrucks = foodTruckRepository.findAll();
+        List<FoodTruckResponseDto> foodTrucks =
+                foodTruckCacheService.getFoodTrucks(location, date);
+
+        if (memberId == null) {
+            return foodTrucks;
+        }
 
         return foodTrucks.stream()
-                .filter(foodTruck -> locationFilter(foodTruck, location))
-                .filter(foodTruck -> dateFilter(foodTruck, date))
-                .map(foodTruck -> {
-                    boolean liked = false;
-                    if (memberId != null) {
-                        liked = foodTruckLikeRepository.existsByFoodTruckIdAndMemberId(foodTruck.getId(), memberId);
-                    }
-                    return FoodTruckResponseDto.from(foodTruck, liked);
-                })
+                .map(dto -> dto.withLiked(
+                        foodTruckLikeRepository.existsByFoodTruckIdAndMemberId(dto.getId(), memberId)
+                ))
                 .toList();
     }
 
     public FoodTruckDetailResponseDto getFoodTruckDetail(Long foodTruckId, Long memberId) {
-        FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
+        FoodTruckDetailResponseDto detail =
+                foodTruckCacheService.getFoodTruckDetail(foodTruckId);
 
-        boolean liked = false;
-        if (memberId != null) {
-            liked = foodTruckLikeRepository.existsByFoodTruckIdAndMemberId(foodTruckId, memberId);
+        if (memberId == null) {
+            return detail;
         }
 
-        List<String> dates = foodTruck.getSettings().stream()
-                .map(setting ->
-                        setting.getDay() + " " +
-                                setting.getStartAt().toString().substring(0, 5) +
-                                " - " +
-                                setting.getEndAt().toString().substring(0, 5)
-                )
-                .toList();
+        boolean liked = foodTruckLikeRepository.existsByFoodTruckIdAndMemberId(foodTruckId, memberId);
 
-        List<FoodTruckDetailResponseDto.MenuDto> menus = foodTruck.getMenus().stream()
-                .map(menu -> FoodTruckDetailResponseDto.MenuDto.builder()
-                        .name(menu.getName())
-                        .price(menu.getPrice())
-                        .image(menu.getImage())
-                        .build())
-                .toList();
-
-        return FoodTruckDetailResponseDto.builder()
-                .id(foodTruck.getId())
-                .name(foodTruck.getName())
-                .locationId(foodTruck.getLocationId())
-                .location(foodTruck.getLocation())
-                .image(foodTruck.getImage())
-                .bestMenu(foodTruck.getBestMenu())
-                .likeCount(foodTruck.getLikeCount())
-                .liked(liked)
-                .foodTruckInfo(foodTruck.getFoodTruckInfo())
-                .date(dates)
-                .menu(menus)
-                .build();
+        return detail.withLiked(liked);
     }
 
-    public List<HotFoodTruckResponseDto> getHotFoodTrucks(Long memberId) {
-        List<FoodTruck> foodTrucks = foodTruckRepository.findTop3ByOrderByLikeCountDesc();
 
-        return foodTrucks.stream()
-                .map(foodTruck -> {
-                    boolean liked = false;
-                    if (memberId != null) {
-                        liked = foodTruckLikeRepository.existsByFoodTruckIdAndMemberId(foodTruck.getId(), memberId);
-                    }
-                    return HotFoodTruckResponseDto.from(foodTruck, liked);
-                })
+    public List<HotFoodTruckResponseDto> getHotFoodTrucks(Long memberId) {
+        List<HotFoodTruckResponseDto> hotFoodTrucks =
+                foodTruckCacheService.getHotFoodTrucks();
+
+        if (memberId == null) {
+            return hotFoodTrucks;
+        }
+
+        return hotFoodTrucks.stream()
+                .map(dto -> dto.withLiked(
+                        foodTruckLikeRepository.existsByFoodTruckIdAndMemberId(dto.getId(), memberId)
+                ))
                 .toList();
     }
 }

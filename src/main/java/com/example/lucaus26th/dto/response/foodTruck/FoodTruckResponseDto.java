@@ -28,4 +28,17 @@ public class FoodTruckResponseDto {
                 .liked(liked)
                 .build();
     }
+
+    public FoodTruckResponseDto withLiked(boolean liked) {
+        return FoodTruckResponseDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .locationId(this.locationId)
+                .location(this.location)
+                .image(this.image)
+                .bestMenu(this.bestMenu)
+                .likeCount(this.likeCount)
+                .liked(liked)
+                .build();
+    }
 }
