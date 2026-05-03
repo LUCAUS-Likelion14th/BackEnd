@@ -36,6 +36,10 @@ jobs:
       - name: Build bootJar
         run: ./gradlew clean bootJar -x test
 
+      - name: Grant execute permission for scripts
+        if: github.ref == 'refs/heads/main'
+        run: chmod +x scripts/stop.sh scripts/start.sh
+
       - name: Configure AWS credentials
         if: github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v4
@@ -44,7 +48,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.GITHUB_ACTIONS_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.GITHUB_ACTIONS_AWS_REGION }}
 
-      - name: Upload JAR to S3
+      - name: Zip deploy files
         if: github.ref == 'refs/heads/main'
         run: |
-          aws s3 cp build/libs/*.jar s3://lucaus-codedeploy-artifacts/deploy/application.jar
+          mkdir -p deploy
+          cp build/libs/*SNAPSHOT.jar deploy/application.jar
+          cp appspec.yml deploy/
+          cp -r scripts/ deploy/
+          cd deploy && zip -r ../deploy.zip .
+
+      - name: Upload to S3
+        if: github.ref == 'refs/heads/main'
+        run: |
+          aws s3 cp deploy.zip s3://lucaus-codedeploy-artifacts/deploy/deploy.zip
+
+      - name: Deploy to CodeDeploy
+        if: github.ref == 'refs/heads/main'
+        run: |
+          aws deploy create-deployment \
+            --application-name lucaus-codedeploy \
+            --deployment-group-name lucaus-codedeploy-group \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --s3-location bucket=lucaus-codedeploy-artifacts,key=deploy/deploy.zip,bundleType=zip
