@@ -20,24 +20,31 @@ public class Member {
 
     private String name;
 
-    private Integer studentID;
+    private String studentID;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberRole role;
 
+    private Boolean isApplied = false;
+
     @Builder
     public Member(String email) {
         this.email = email;
         this.role = MemberRole.USER; // USER를 기본값으로 설정
+        this.isApplied = false;
     }
 
-    public void updateMember(String name, Integer studentID) {
+    public void updateMemberInfo(String name, String studentID) {
         this.name = name;
         this.studentID = studentID;
     }
 
     public void updateRole(MemberRole role) {
         this.role = role;
+    }
+
+    public void apply() {
+        this.isApplied = true;
     }
 }
