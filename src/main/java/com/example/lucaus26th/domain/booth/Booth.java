@@ -43,6 +43,8 @@ public class Booth extends BaseTimeEntity {
     private String image; // 이미지 링크
     private String locationImage; // 장소 이미지 링크
     private String instagram; // 인스타 링크
+    
+    private String stampPwd; // 부스 비번
 
     // 부스가 삭제될 때 연결 데이터도 함께 지워지도록 설정
     @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -50,7 +52,7 @@ public class Booth extends BaseTimeEntity {
 
 
     @Builder
-    public Booth(Long locationId, String name, String owner, BoothLocation location, String info, String image, String locationImage, String instagram) {
+    public Booth(Long locationId, String name, String owner, BoothLocation location, String info, String image, String locationImage, String instagram, String stampPwd) {
         this.locationId = locationId;
         this.name = name;
         this.owner = owner;
@@ -60,6 +62,7 @@ public class Booth extends BaseTimeEntity {
         this.image = image;
         this.locationImage = locationImage;
         this.instagram = instagram;
+        this.stampPwd = stampPwd;
         this.categories = new ArrayList<>();
     }
 
@@ -76,6 +79,7 @@ public class Booth extends BaseTimeEntity {
         if (boothImageUrl != null) this.image = boothImageUrl;
         if (boothLocationImageUrl != null) this.locationImage = boothLocationImageUrl;
         if (request.getInstagram() != null) this.instagram = request.getInstagram();
+        if (request.getStampPwd() != null) this.stampPwd = request.getStampPwd();
     }
 
     // 좋아요 관련

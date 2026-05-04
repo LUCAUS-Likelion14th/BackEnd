@@ -68,6 +68,7 @@ public class BoothService {
                 .image(boothImageUrl)
                 .locationImage(boothLocationImageUrl)
                 .instagram(request.getInstagram())
+                .stampPwd(request.getStampPwd())
                 .build();
 
         boothRepository.save(booth);
