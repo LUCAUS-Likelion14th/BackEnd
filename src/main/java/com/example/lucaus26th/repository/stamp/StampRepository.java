@@ -10,4 +10,5 @@ import java.util.List;
 public interface StampRepository extends JpaRepository<Stamp,Long> {
     boolean existsByBoothAndMember(Booth booth, Member member);
     List<Stamp> findByMember(Member member);
+    Long countByMember(Member member);
 }
