@@ -1,6 +1,7 @@
 package com.example.lucaus26th.domain.booth;
 
 import com.example.lucaus26th.domain.BaseTimeEntity;
+import com.example.lucaus26th.domain.stamp.StampBooth;
 import com.example.lucaus26th.dto.request.booth.BoothUpdateRequestDto;
 import com.example.lucaus26th.enums.BoothLocation;
 import jakarta.persistence.*;
@@ -50,6 +51,8 @@ public class Booth extends BaseTimeEntity {
     @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoothCategory> categories = new ArrayList<>();
 
+    @OneToOne(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
+    private StampBooth stampBooth;
 
     @Builder
     public Booth(Long locationId, String name, String owner, BoothLocation location, String info, String image, String locationImage, String instagram, String stampPwd) {
