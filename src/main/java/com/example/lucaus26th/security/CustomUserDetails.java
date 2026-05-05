@@ -26,7 +26,7 @@ public class CustomUserDetails implements UserDetails {
     public String getEmail(){
         return member.getEmail();
     }
-    public Integer getStudentId(){
+    public String getStudentId(){
         return member.getStudentID();
     }
     @Override

@@ -13,6 +13,10 @@ public class ErrorResponseDto {
     public static ErrorResponseDto of(ErrorCode errorCode) {
         return new ErrorResponseDto(errorCode.getCode(), errorCode.getMessage());
     }
+
+    public static ErrorResponseDto of(String errorCode, String message) {
+        return new ErrorResponseDto(errorCode, message);
+    }
 }
 
 /*
