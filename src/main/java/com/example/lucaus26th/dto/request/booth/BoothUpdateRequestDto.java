@@ -22,6 +22,7 @@ public class BoothUpdateRequestDto {
     @Schema(type = "string", format = "binary", description = "부스위치 이미지 파일")
     private MultipartFile locationImage;
     private String instagram;
+    private String stampPwd;
     //private SettingRequest setting;
 
     /*@Getter
