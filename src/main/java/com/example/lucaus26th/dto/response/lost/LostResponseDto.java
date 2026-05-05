@@ -3,11 +3,15 @@ package com.example.lucaus26th.dto.response.lost;
 
 import com.example.lucaus26th.domain.lost.Lost;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LostResponseDto {
 
     @JsonProperty("lost_id")

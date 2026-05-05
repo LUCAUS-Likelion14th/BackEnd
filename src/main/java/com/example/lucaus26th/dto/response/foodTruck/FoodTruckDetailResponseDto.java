@@ -1,12 +1,16 @@
 package com.example.lucaus26th.dto.response.foodTruck;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FoodTruckDetailResponseDto {
 
     private Long id;
@@ -24,6 +28,8 @@ public class FoodTruckDetailResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MenuDto {
         private String name;
         private Long price;

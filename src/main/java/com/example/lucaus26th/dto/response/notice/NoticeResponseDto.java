@@ -2,13 +2,17 @@ package com.example.lucaus26th.dto.response.notice;
 
 import com.example.lucaus26th.domain.notice.Notice;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class NoticeResponseDto {
 
     private Long id;

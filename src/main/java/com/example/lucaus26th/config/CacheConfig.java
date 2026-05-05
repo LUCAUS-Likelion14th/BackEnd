@@ -30,9 +30,10 @@ public class CacheConfig {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL,
-                JsonTypeInfo.As.WRAPPER_OBJECT
+                ObjectMapper.DefaultTyping.EVERYTHING,
+                JsonTypeInfo.As.PROPERTY
         );
+
         RedisSerializer<Object> serializer = new RedisSerializer<>() {
             @Override
             public byte[] serialize(Object value) throws SerializationException {

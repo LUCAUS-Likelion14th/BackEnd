@@ -3,11 +3,15 @@ package com.example.lucaus26th.dto.response.stage;
 import com.example.lucaus26th.domain.stage.Song;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonPropertyOrder({ "song_id", "title", "play_order" })
 public class SongResponseDTO {
     @JsonProperty("song_id")
