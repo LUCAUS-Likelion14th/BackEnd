@@ -60,7 +60,7 @@ jobs:
       - name: Upload to S3
         if: github.ref == 'refs/heads/main'
         run: |
-          aws s3 cp deploy.zip s3://lucaus-codedeploy-artifacts/deploy/deploy.zip
+          aws s3 cp deploy.zip s3://lucaus-codedeploy-artifacts-994851303288-ap-northeast-2-an/deploy/deploy.zip
 
       - name: Deploy to CodeDeploy
         if: github.ref == 'refs/heads/main'
@@ -69,4 +69,4 @@ jobs:
             --application-name lucaus-codedeploy \
             --deployment-group-name lucaus-codedeploy-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
-            --s3-location bucket=lucaus-codedeploy-artifacts,key=deploy/deploy.zip,bundleType=zip
+            --s3-location bucket=lucaus-codedeploy-artifacts-994851303288-ap-northeast-2-an,key=deploy/deploy.zip,bundleType=zip
