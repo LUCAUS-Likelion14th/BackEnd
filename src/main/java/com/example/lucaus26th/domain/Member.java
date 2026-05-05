@@ -26,7 +26,7 @@ public class Member {
     @Column(nullable = false)
     private MemberRole role;
 
-    private Boolean isApplied = false;
+    private boolean isApplied = false;
 
     @Builder
     public Member(String email) {
@@ -35,9 +35,9 @@ public class Member {
         this.isApplied = false;
     }
 
-    public void updateMemberInfo(String name, String studentID) {
+    public void updateMemberInfo(String name, String studentId) {
         this.name = name;
-        this.studentID = studentID;
+        this.studentID = studentId;
     }
 
     public void updateRole(MemberRole role) {

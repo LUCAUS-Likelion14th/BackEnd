@@ -3,7 +3,9 @@ package com.example.lucaus26th.service.stamp;
 import com.example.lucaus26th.domain.Member;
 import com.example.lucaus26th.domain.booth.Booth;
 import com.example.lucaus26th.domain.stamp.Stamp;
+import com.example.lucaus26th.domain.stamp.StampBooth;
 import com.example.lucaus26th.dto.request.stamp.StampRegisterRequestDto;
+import com.example.lucaus26th.dto.request.stamp.StampRequestDto;
 import com.example.lucaus26th.dto.response.stamp.StampMemberInfoResponseDto;
 import com.example.lucaus26th.dto.response.stamp.StampResponseDto;
 import com.example.lucaus26th.repository.booth.BoothRepository;
@@ -14,6 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,10 +70,39 @@ public class StampService {
         return stampBoothRepository.count();
     }
     // 도장 전체 조회
+    public StampResponseDto.Stamp getStamp(Long memberId){
+        // 사용자 정보 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
+        
+        // 도장판 정보 입력 안했을 때
+        if (member.getName() == null || member.getStudentID() == null){
+            throw new IllegalStateException("학생 정보(이름&학번) 을 입력하지 않았습니다.");
+        }
+
+        // 전체 스탬프 대상 부스 목록
+        List<StampBooth> allStampBooths = stampBoothRepository.findAll();
+
+        // 레포지토리에서 바로 Set<Long>을 받아옴
+        Set<Long> stampedBoothIds = stampRepository.findBoothIdsByMember(member);
+
+        List<StampResponseDto.BoothInfo> boothInfos = allStampBooths.stream()
+                .map(sb -> {
+                    Booth booth = sb.getBooth();
+                    return StampResponseDto.BoothInfo.builder()
+                            .booth_id(booth.getId())
+                            .name(booth.getName())
+                            .is_stamped(stampedBoothIds.contains(booth.getId()))
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return StampResponseDto.Stamp.from(member.getName(), member.getStudentID(),getStampCount(member), getStampAll(), boothInfos);
+    }
     
     // 도장 찍기
     // 혹시 모를 상황에 대해 도장판에 해당하는 부스인지 체크하기
-    public void createStamp(Long memberId, Long boothId,String password){
+    public void createStamp(Long memberId, Long boothId, StampRequestDto request){
         if (!stampBoothRepository.existsByBoothId(boothId)){
             throw new IllegalStateException(("도장을 찍을 수 없는 부스입니다." + boothId));
         }
@@ -80,6 +115,7 @@ public class StampService {
         if(booth.getStampPwd() == null){
             throw new IllegalStateException("부스에 도장 비밀번호가 등록되어 있지 않습니다.");
         }
+        String password = request.getPassword();
         if (!password.equals(booth.getStampPwd())){
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
@@ -109,8 +145,8 @@ public class StampService {
     }
     
     // 경품 응모
-    public void updateIsApplied(Long memberId, String password){
-        
+    public void updateIsApplied(Long memberId, StampRequestDto request){
+        String password = request.getPassword();
         // 비번 체크
         if (!applyPassword.equals(password)){
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
@@ -120,7 +156,7 @@ public class StampService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
         
         // 중복 응모 방지
-        if (member.getIsApplied()) {
+        if (member.isApplied()) {
             throw new IllegalStateException("이미 응모하셨습니다.");
         }
 

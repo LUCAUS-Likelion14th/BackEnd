@@ -1,6 +1,7 @@
 package com.example.lucaus26th.controller.stamp;
 
 import com.example.lucaus26th.dto.request.stamp.StampRegisterRequestDto;
+import com.example.lucaus26th.dto.request.stamp.StampRequestDto;
 import com.example.lucaus26th.dto.response.stamp.StampMemberInfoResponseDto;
 import com.example.lucaus26th.dto.response.stamp.StampResponseDto;
 import com.example.lucaus26th.global.api.ApiResponse;
@@ -37,9 +38,14 @@ public class StampController {
     }
 
     @PostMapping("/{boothId}")
-    public ResponseEntity<ApiResponse<Void>> createStamp(@PathVariable Long boothId,@RequestBody String password, @AuthenticationPrincipal CustomUserDetails user){
-        stampService.createStamp(user.getMember().getId(), boothId, password);
+    public ResponseEntity<ApiResponse<Void>> createStamp(@PathVariable Long boothId, @RequestBody StampRequestDto request, @AuthenticationPrincipal CustomUserDetails user){
+        stampService.createStamp(user.getMember().getId(), boothId, request);
         return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<StampResponseDto.Stamp>> getStamp(@AuthenticationPrincipal CustomUserDetails user){
+        return ResponseEntity.ok(ApiResponse.success(stampService.getStamp(user.getMember().getId())));
     }
 
     @GetMapping("/my")
@@ -49,8 +55,8 @@ public class StampController {
     }
 
     @PatchMapping("/prize")
-    public ResponseEntity<ApiResponse<Void>> updateIsApplied(@RequestBody String password, @AuthenticationPrincipal CustomUserDetails user){
-        stampService.updateIsApplied(user.getMember().getId(), password);
+    public ResponseEntity<ApiResponse<Void>> updateIsApplied(@RequestBody StampRequestDto request, @AuthenticationPrincipal CustomUserDetails user){
+        stampService.updateIsApplied(user.getMember().getId(), request);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
