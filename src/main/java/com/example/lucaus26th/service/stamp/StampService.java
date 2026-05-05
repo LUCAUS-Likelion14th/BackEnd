@@ -8,6 +8,8 @@ import com.example.lucaus26th.dto.request.stamp.StampRegisterRequestDto;
 import com.example.lucaus26th.dto.request.stamp.StampRequestDto;
 import com.example.lucaus26th.dto.response.stamp.StampMemberInfoResponseDto;
 import com.example.lucaus26th.dto.response.stamp.StampResponseDto;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.foodTruck.MemberRepository;
 import com.example.lucaus26th.repository.stamp.StampBoothRepository;
@@ -37,7 +39,7 @@ public class StampService {
     // 이름&학번 입력
     public void updateMemberInfo(StampRegisterRequestDto request, Long memberId){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         member.updateMemberInfo(request.getName(), request.getStudentId());
     }
