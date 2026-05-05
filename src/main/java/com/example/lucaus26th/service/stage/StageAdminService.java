@@ -13,6 +13,7 @@ import com.example.lucaus26th.repository.stage.StageInfoRepository;
 import com.example.lucaus26th.repository.stage.StageRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class StageAdminService {
 
     // 공연 생성
     @Transactional
+    @CacheEvict(value = "performance", allEntries = true)
     public StageResponseDTO createStage(StageRequestDTO request) {
         String logoImageUrl;
         try{
@@ -69,6 +71,7 @@ public class StageAdminService {
     }
 
     @Transactional
+    @CacheEvict(value = "performance", allEntries = true)
     public StageResponseDTO updateStage(Long stageId, StageRequestDTO request){
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
@@ -111,6 +114,7 @@ public class StageAdminService {
     }
 
     @Transactional
+    @CacheEvict(value = "performance", allEntries = true)
     public void deleteStage(Long stageId) {
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
@@ -118,6 +122,7 @@ public class StageAdminService {
     }
 
     @Transactional
+    @CacheEvict(value = "performance", allEntries = true)
     public void deleteStageInfo(Long stageId) {
         StageInfo stageInfo = stageInfoRepository.findById(stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
@@ -127,6 +132,7 @@ public class StageAdminService {
     }
 
     @Transactional
+    @CacheEvict(value = "performance", allEntries = true)
     public SongResponseDTO createSong(Long stageId, SongRequestDTO request) {
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
@@ -137,6 +143,7 @@ public class StageAdminService {
     }
 
     @Transactional
+    @CacheEvict(value = "performance", allEntries = true)
     public SongResponseDTO updateSong(Long stageId, Long songId, SongRequestDTO request) {
         Song song = songRepository.findByIdAndStageId(songId, stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no song found with id: " + songId));
@@ -145,6 +152,7 @@ public class StageAdminService {
     }
 
     @Transactional
+    @CacheEvict(value = "performance", allEntries = true)
     public void deleteSong(Long stageId, Long songId) {
         Song song = songRepository.findByIdAndStageId(songId, stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no song found with id: " + songId));

@@ -32,8 +32,6 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-
-
     // 예상하지 못한 모든 예외 처리
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {

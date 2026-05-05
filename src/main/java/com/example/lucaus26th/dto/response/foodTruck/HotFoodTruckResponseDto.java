@@ -1,11 +1,15 @@
 package com.example.lucaus26th.dto.response.foodTruck;
 
 import com.example.lucaus26th.domain.foodTruck.FoodTruck;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class HotFoodTruckResponseDto {
     private Long id;
     private String name;
@@ -21,6 +25,17 @@ public class HotFoodTruckResponseDto {
                 .image(foodTruck.getImage())
                 .bestMenu(foodTruck.getBestMenu())
                 .likeCount(foodTruck.getLikeCount())
+                .liked(liked)
+                .build();
+    }
+
+    public HotFoodTruckResponseDto withLiked(boolean liked) {
+        return HotFoodTruckResponseDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .image(this.image)
+                .bestMenu(this.bestMenu)
+                .likeCount(this.likeCount)
                 .liked(liked)
                 .build();
     }

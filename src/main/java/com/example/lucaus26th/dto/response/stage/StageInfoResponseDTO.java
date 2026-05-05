@@ -4,14 +4,18 @@ import com.example.lucaus26th.domain.stage.Stage;
 import com.example.lucaus26th.domain.stage.StageInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonPropertyOrder({ "stage_id", "time", "stage_info", "performer", "performer_image", "instagram", "youtube", "songs" })
 public class StageInfoResponseDTO {
 

@@ -1,14 +1,18 @@
 package com.example.lucaus26th.dto.response.foodTruck;
 
 import com.example.lucaus26th.domain.foodTruck.FoodTruckSetting;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FoodTruckSettingResponseDto {
     private Long id;
     private Long foodTruckId;
