@@ -16,6 +16,21 @@ public enum ErrorCode {
     EMPTY_FILE(HttpStatus.BAD_REQUEST, "S3_4001", "빈 파일은 업로드할 수 없습니다."),
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3_5001", "파일 업로드에 실패했습니다."),
 
+    // member
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER_4041", "해당 회원을 찾을 수 없습니다"),
+
+    // booth
+    BOOTH_NOT_FOUND(HttpStatus.NOT_FOUND,"BOOTH_4041", "해당 부스를 찾을 수 없습니다."),
+
+    // stamp
+    NO_MEMBER_INFO(HttpStatus.BAD_REQUEST, "STAMP_4001", "학생 정보(이름&학번)를 입력하지 않았습니다."),
+    UNSTAMPABLE_BOOTH(HttpStatus.BAD_REQUEST, "STAMP_4002", "도장을 찍을 수 없느 부스입니다."),
+    NO_STAMP_PASSWORD(HttpStatus.CONFLICT, "STAMP_4091", "부스에 도장 비밀번호가 등록되어 있지 않습니다."),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "STAMP_4003", "비밀번호가 일치하지 않습니다."),
+    ALREADY_STAMPED(HttpStatus.CONFLICT, "STAMP_4092", "이미 찍은 도장입니다."),
+    ALREADY_APPLIED(HttpStatus.CONFLICT, "APPLY_4091", "이미 응모하셨습니다."),
+    NOT_ENOUGH_STAMPS(HttpStatus.BAD_REQUEST,"APPLY_4001", "모든 스탬프를 모아야 응모할 수 있습니다."),
+
     // promotion
     PROMOTION_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTION_4041", "해당 프로모션을 찾을 수 없습니다.");
 
