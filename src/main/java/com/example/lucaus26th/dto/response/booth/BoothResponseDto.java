@@ -2,8 +2,11 @@ package com.example.lucaus26th.dto.response.booth;
 
 
 import com.example.lucaus26th.domain.booth.Booth;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 
@@ -11,6 +14,8 @@ public class BoothResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Lists { // 전체조회
         private Long booth_id;
         private Long location_id;
@@ -49,6 +54,8 @@ public class BoothResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Detail { // 상세조회
         private Long booth_id;
         private Long location_id;
@@ -100,6 +107,8 @@ public class BoothResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Hot{
         private Long booth_id;
         private Long location_id;
