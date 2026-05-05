@@ -33,6 +33,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: Create yml files
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_SECRET_YML }}" > src/main/resources/application-secret.yml
+          echo "${{ secrets.APPLICATION_DEV_YML }}" > src/main/resources/application-dev.yml
+
       - name: Build bootJar
         run: ./gradlew clean bootJar -x test
 
