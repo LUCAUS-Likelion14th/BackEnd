@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponseDto(
+                .body(ErrorResponseDto.of(
                         ErrorCode.INVALID_INPUT_VALUE.getCode(),
                         e.getMessage()
                 ));
