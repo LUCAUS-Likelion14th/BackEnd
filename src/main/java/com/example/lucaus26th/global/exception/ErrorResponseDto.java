@@ -6,12 +6,24 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ErrorResponseDto {
+
+    private final boolean success;
     private String code;
     private String message;
+
+    private ErrorResponseDto(String code, String message) {
+        this.success = false;
+        this.code = code;
+        this.message = message;
+    }
 
     // 커스텀 에러코드 + 메시지 반환
     public static ErrorResponseDto of(ErrorCode errorCode) {
         return new ErrorResponseDto(errorCode.getCode(), errorCode.getMessage());
+    }
+
+    public static ErrorResponseDto of(String errorCode, String message) {
+        return new ErrorResponseDto(errorCode, message);
     }
 }
 
