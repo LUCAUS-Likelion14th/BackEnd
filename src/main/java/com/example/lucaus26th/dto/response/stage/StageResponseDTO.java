@@ -3,8 +3,10 @@ package com.example.lucaus26th.dto.response.stage;
 import com.example.lucaus26th.domain.stage.Stage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -12,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonPropertyOrder({ "stage_id", "start_at", "end_at", "time", "status", "logo_image", "performer", "category" })
 public class StageResponseDTO {
 

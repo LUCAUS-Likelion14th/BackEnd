@@ -148,6 +148,8 @@ public class BoothResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MyBooth{
         private Long booth_id;
         private Long location_id;
@@ -166,6 +168,8 @@ public class BoothResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class All { // create, update 할때만
         private Long booth_id;
         private Long location_id;

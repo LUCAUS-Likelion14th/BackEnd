@@ -1,12 +1,16 @@
 package com.example.lucaus26th.dto.response.stamp;
 
 import com.example.lucaus26th.domain.Member;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class StampMemberInfoResponseDto {
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Info{
         private String name;
         private String student_id;
@@ -21,6 +25,8 @@ public class StampMemberInfoResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Check{
         private Boolean is_registered;
 

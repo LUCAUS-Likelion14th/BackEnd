@@ -1,13 +1,17 @@
 package com.example.lucaus26th.dto.response.stamp;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 public class StampResponseDto {
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Stamp{
         private String name;
         private String student_id;
@@ -28,6 +32,8 @@ public class StampResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class BoothInfo {
         private Long booth_id;
         private String name;
@@ -36,6 +42,8 @@ public class StampResponseDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class My{
         private Long stamp_count;
         private Long stamp_all;
