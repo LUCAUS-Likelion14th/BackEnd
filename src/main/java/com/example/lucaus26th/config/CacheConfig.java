@@ -31,9 +31,8 @@ public class CacheConfig {
         objectMapper.activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
                 ObjectMapper.DefaultTyping.NON_FINAL,
-                JsonTypeInfo.As.PROPERTY
+                JsonTypeInfo.As.WRAPPER_OBJECT
         );
-
         RedisSerializer<Object> serializer = new RedisSerializer<>() {
             @Override
             public byte[] serialize(Object value) throws SerializationException {
