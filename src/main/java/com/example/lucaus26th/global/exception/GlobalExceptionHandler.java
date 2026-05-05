@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 우리가 정의한 BusinessException을 처리
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponseDto> handleBusinessException(BusinessException e) {
         ErrorCode errorCode = e.getErrorCode();
@@ -19,7 +18,6 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponseDto.of(errorCode));
     }
 
-    // 잘못된 요청값 처리
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException e) {
         log.warn("잘못된 요청값", e);
@@ -32,7 +30,6 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    // 예상하지 못한 모든 예외 처리
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {
         log.error("예상하지 못한 서버 예외 발생", e);

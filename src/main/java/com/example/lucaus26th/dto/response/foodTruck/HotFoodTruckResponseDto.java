@@ -24,4 +24,15 @@ public class HotFoodTruckResponseDto {
                 .liked(liked)
                 .build();
     }
+
+    public HotFoodTruckResponseDto withLiked(boolean liked) {
+        return HotFoodTruckResponseDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .image(this.image)
+                .bestMenu(this.bestMenu)
+                .likeCount(this.likeCount)
+                .liked(liked)
+                .build();
+    }
 }

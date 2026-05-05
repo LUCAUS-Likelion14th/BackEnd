@@ -34,8 +34,8 @@ public class MyPageService {
     // 나중에 도장판 개수 알려주는거 추가하는거 잊지말기
 
     // 마이페이지 전체 조회
-    public MyPageResponseDto getMyPage(CustomUserDetails userDetails) {
-        Member member = userDetails.getMember(); // 이거 무조건 member(로그인) 필요하니까, securityconfig였나 거기에 url추가하기 (좋아요처럼)
+    public MyPageResponseDto getMyPage(Member member) {
+        //Member member = userDetails.getMember(); // 이거 무조건 member(로그인) 필요하니까, securityconfig였나 거기에 url추가하기 (좋아요처럼)
 
         // 부스관련
         List<BoothLike> allBoothLikes = boothLikeRepository.findByMember(member);
@@ -71,8 +71,8 @@ public class MyPageService {
 
 
     // 내 좋아요 조회 - 부스
-    public List<BoothResponseDto.Lists> getMyBoothLikes(CustomUserDetails userDetails) {
-        Member member = userDetails.getMember();
+    public List<BoothResponseDto.Lists> getMyBoothLikes(Member member) {
+        //Member member = userDetails.getMember();
 
         List<BoothLike> boothLikes = boothLikeRepository.findByMember(member);
 
@@ -83,8 +83,8 @@ public class MyPageService {
     }
 
     // 내 좋아요 조회 - 푸드트럭
-    public List<FoodTruckResponseDto> getMyFoodTruckLikes(CustomUserDetails userDetails) {
-        Member member = userDetails.getMember();
+    public List<FoodTruckResponseDto> getMyFoodTruckLikes(Member member) {
+        //Member member = userDetails.getMember();
 
         List<FoodTruckLike> foodTruckLikes = foodTruckLikeRepository.findByMember(member);
 

@@ -7,6 +7,7 @@ import com.example.lucaus26th.dto.response.booth.BoothSettingResponseDto;
 import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.booth.BoothSettingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class BoothSettingService {
     private final BoothRepository boothRepository;
 
     // BoothSetting CRUD 기능
+    @CacheEvict(value = "booth", allEntries = true)
     public BoothSettingResponseDto createBoothSetting(BoothSettingRequestDto request){
         // Booth 불러오기
         Long boothId = request.getBoothId();
@@ -38,6 +40,7 @@ public class BoothSettingService {
         return BoothSettingResponseDto.fromEntity(setting,booth);
     }
 
+    @CacheEvict(value = "booth", allEntries = true)
     public BoothSettingResponseDto updateBoothSetting(BoothSettingRequestDto request, Long settingId){
         BoothSetting boothSetting = boothSettingRepository.findById(settingId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 부스 운영정보 : " + settingId));
         Long boothId = request.getBoothId();
@@ -53,6 +56,7 @@ public class BoothSettingService {
         return BoothSettingResponseDto.fromEntity(boothSetting,boothSetting.getBooth());
     }
 
+    @CacheEvict(value = "booth", allEntries = true)
     public void deleteBoothSetting(Long settingId){
 
         boothSettingRepository.deleteById(settingId);

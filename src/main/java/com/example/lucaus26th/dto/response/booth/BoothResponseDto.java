@@ -2,7 +2,6 @@ package com.example.lucaus26th.dto.response.booth;
 
 
 import com.example.lucaus26th.domain.booth.Booth;
-import com.example.lucaus26th.enums.BoothLocation;
 import lombok.Builder;
 import lombok.Getter;
 import java.util.List;
@@ -32,6 +31,18 @@ public class BoothResponseDto {
                     .booth_location(booth.getLocation().getDescription())
                     .is_liked(isLiked)
                     .like_count(booth.getLikeCount())
+                    .build();
+        }
+        public BoothResponseDto.Lists withLiked(boolean isLiked) {
+            return Lists.builder()
+                    .booth_id(this.booth_id)
+                    .location_id(this.location_id)
+                    .booth_image(this.booth_image)
+                    .booth_name(this.booth_name)
+                    .booth_owner(this.booth_owner)
+                    .booth_location(this.booth_location)
+                    .is_liked(isLiked)
+                    .like_count(this.like_count)
                     .build();
         }
     }
@@ -69,6 +80,22 @@ public class BoothResponseDto {
                     .build();
         }
 
+        public BoothResponseDto.Detail withLiked(boolean isLiked) {
+            return Detail.builder()
+                    .booth_id(this.booth_id)
+                    .location_id(this.location_id)
+                    .booth_image(this.booth_image)
+                    .booth_name(this.booth_name)
+                    .booth_category(this.booth_category)
+                    .booth_info(this.booth_info)
+                    .owner_insta(this.owner_insta)
+                    .is_liked(isLiked)
+                    .like_count(this.like_count)
+                    .location(this.location)
+                    .date(this.date)
+                    .location_image(this.location_image)
+                    .build();
+        }
     }
 
     @Getter
@@ -90,8 +117,22 @@ public class BoothResponseDto {
                     .booth_image(booth.getImage())
                     .location(booth.getLocation().getDescription())
                     .booth_name(booth.getName())
+                    .owner(booth.getOwner())
                     .is_liked(isLiked)
                     .like_count(booth.getLikeCount())
+                    .build();
+        }
+
+        public BoothResponseDto.Hot withLiked(boolean isLiked) {
+            return Hot.builder()
+                    .booth_id(this.booth_id)
+                    .location_id(this.location_id)
+                    .booth_image(this.booth_image)
+                    .location(this.location)
+                    .booth_name(this.booth_name)
+                    .owner(this.owner)
+                    .like_count(this.like_count)
+                    .is_liked(isLiked)
                     .build();
         }
     }
