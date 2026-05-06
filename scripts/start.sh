@@ -11,7 +11,9 @@ chmod +x "$JAR_NAME"
 
 # 3. JAR 실행 (nohup을 사용하여 백그라운드 실행)
 echo "> $JAR_NAME 실행"
-nohup java -jar "$JAR_NAME" > "$APP_PATH/nohup.out" 2>&1 &
+nohup java -jar "$JAR_NAME" \
+  --spring.config.import=optional:file:/home/ubuntu/app/application-secret.yml \
+  > "$APP_PATH/nohup.out" 2>&1 &
 
 # 4. 실행 확인 (선택 사항: 프로세스가 떴는지 잠시 대기 후 확인)
 sleep 30
@@ -23,4 +25,4 @@ else
     echo "> 애플리케이션 실행 성공 (PID: $CURRENT_PID)"
 fi
 
-#test ver.01
+#test ver.02
