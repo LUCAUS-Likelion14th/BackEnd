@@ -14,7 +14,7 @@ echo "> $JAR_NAME 실행"
 nohup java -jar "$JAR_NAME" > "$APP_PATH/nohup.out" 2>&1 &
 
 # 4. 실행 확인 (선택 사항: 프로세스가 떴는지 잠시 대기 후 확인)
-sleep 5
+sleep 30
 CURRENT_PID=$(pgrep -f "$JAR_NAME")
 if [ -z "$CURRENT_PID" ]; then
     echo "> 애플리케이션 실행 실패!"
