@@ -33,21 +33,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Create yml files
-        run: |
-          mkdir -p src/main/resources
-          cat > src/main/resources/application.yml << 'EOF'
-          ${{ secrets.APPLICATION_YML }}
-          EOF
-          cat > src/main/resources/application-secret.yml << 'EOF'
-          ${{ secrets.APPLICATION_SECRET_YML }}
-          EOF
-          cat > src/main/resources/application-dev.yml << 'EOF'
-          ${{ secrets.APPLICATION_DEV_YML }}
-          EOF
-
       - name: Build bootJar
         run: ./gradlew clean bootJar -x test
+
+      - name: Create secret yml
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.APPLICATION_SECRET_YML }}" > application-secret.yml
 
       - name: Grant execute permission for scripts
         if: github.ref == 'refs/heads/main'
@@ -68,6 +60,7 @@ jobs:
           cp build/libs/*SNAPSHOT.jar deploy/application.jar
           cp appspec.yml deploy/
           cp -r scripts/ deploy/
+          cp application-secret.yml deploy/
           cd deploy && zip -r ../deploy.zip .
 
       - name: Upload to S3
