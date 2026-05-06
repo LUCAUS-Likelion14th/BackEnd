@@ -75,4 +75,5 @@ jobs:
             --application-name lucaus-codedeploy \
             --deployment-group-name lucaus-codedeploy-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
-            --s3-location bucket=lucaus-codedeploy-artifacts-994851303288-ap-northeast-2-an,key=deploy/deploy.zip,bundleType=zip
+            --s3-location bucket=lucaus-codedeploy-artifacts-994851303288-ap-northeast-2-an,key=deploy/deploy.zip,bundleType=zip \
+            --file-exists-behavior OVERWRITE
