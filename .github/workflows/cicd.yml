@@ -36,9 +36,15 @@ jobs:
       - name: Create yml files
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
-          echo "${{ secrets.APPLICATION_SECRET_YML }}" > src/main/resources/application-secret.yml
-          echo "${{ secrets.APPLICATION_DEV_YML }}" > src/main/resources/application-dev.yml
+          cat > src/main/resources/application.yml << 'EOF'
+          ${{ secrets.APPLICATION_YML }}
+          EOF
+          cat > src/main/resources/application-secret.yml << 'EOF'
+          ${{ secrets.APPLICATION_SECRET_YML }}
+          EOF
+          cat > src/main/resources/application-dev.yml << 'EOF'
+          ${{ secrets.APPLICATION_DEV_YML }}
+          EOF
 
       - name: Build bootJar
         run: ./gradlew clean bootJar -x test
