@@ -25,4 +25,4 @@ else
     echo "> 애플리케이션 실행 성공 (PID: $CURRENT_PID)"
 fi
 
-#test ver.02
+#test ver.03

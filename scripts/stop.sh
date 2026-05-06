@@ -6,7 +6,7 @@ sudo systemctl stop lucaus || true
 
 # 2. 8080 포트를 사용 중인 프로세스 ID(PID) 확인
 echo "> 8080 포트 점유 프로세스 확인"
-CURRENT_PID=$(sudo lsof -t -i:8080)
+CURRENT_PID=$(pgrep -f application.jar)
 
 # 3. 프로세스가 존재하면 강제 종료
 if [ -z "$CURRENT_PID" ]; then
