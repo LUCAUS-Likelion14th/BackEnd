@@ -36,6 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 *.log
-**/application*.yml
+**/application-secret.yml
+**/application-local.yml
 .env
 global-bundle.pem

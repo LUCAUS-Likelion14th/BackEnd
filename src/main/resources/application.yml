@@ -1,0 +1,39 @@
+spring:
+  config:
+    import: optional:application-secret.yml
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+  jackson:
+    property-ordering-strategy: DEFAULT
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+jwt:
+  secret: ${JWT_SECRET}
+
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET}
+    region:
+      static: ${S3_REGION}
+
+server:
+  forward-headers-strategy: framework
