@@ -21,6 +21,10 @@ public enum ErrorCode {
 
     // booth
     BOOTH_NOT_FOUND(HttpStatus.NOT_FOUND,"BOOTH_4041", "해당 부스를 찾을 수 없습니다."),
+    NO_BOOTH_LIKE(HttpStatus.NOT_FOUND, "BOOTHLIKE_4041", "좋아요를 누르지 않았습니다."),
+    ALREADY_BOOTH_LIKE(HttpStatus.CONFLICT, "BOOTHLIKE_4091", "이미 좋아요를 눌렀습니다."),
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_4041", "해당 카테고리를 찾을 수 없습니다."),
+    WRONG_BOOTH_LOCATION(HttpStatus.BAD_REQUEST, "BOOTHLOCATION_4001", "올바른 부스장소섹션 이름이 아닙니다."),
 
     // 날짜 형식 (쿼리)
     WRONG_DATE_FORMAT(HttpStatus.BAD_REQUEST, "DATE_4001", "날짜 형식이 올바르지 않습니다. MMDD 형식으로 입력해주세요."),
