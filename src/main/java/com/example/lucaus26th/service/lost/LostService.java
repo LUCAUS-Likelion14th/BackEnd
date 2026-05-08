@@ -27,12 +27,17 @@ public class LostService {
 
     public LostResponseDto createLost(LostRequestDto request, CustomUserDetails userDetails){
 
+        // 카테고리
+        String category = request.getCategory();
+        //if(category != "")
         // s3 업로드 처리
-        String imageUrl;
-        try{
-            imageUrl = s3Service.upload(request.getImage(), "lost");
-        } catch(IOException e){
-            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+        String imageUrl = null;
+        if (request.getImage() != null && !request.getImage().isEmpty()){
+            try{
+                imageUrl = s3Service.upload(request.getImage(), "lost");
+            } catch(IOException e){
+                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+            }
         }
 
         Lost lost = Lost.builder()
@@ -57,6 +62,7 @@ public class LostService {
 
     private boolean dateFilter(Lost lost, String date){
         if(date == null) return true;
+        if (date.length() != 4 || !date.matches("\\d{4}")) return false; // 추가
 
         // "MMDD" → "MM.DD" 변환
         String formatted = date.substring(0, 2) + "." + date.substring(2, 4);
