@@ -24,7 +24,7 @@ public enum ErrorCode {
 
     // stamp
     NO_MEMBER_INFO(HttpStatus.BAD_REQUEST, "STAMP_4001", "학생 정보(이름&학번)를 입력하지 않았습니다."),
-    UNSTAMPABLE_BOOTH(HttpStatus.BAD_REQUEST, "STAMP_4002", "도장을 찍을 수 없느 부스입니다."),
+    UNSTAMPABLE_BOOTH(HttpStatus.BAD_REQUEST, "STAMP_4002", "도장을 찍을 수 없는 부스입니다."),
     NO_STAMP_PASSWORD(HttpStatus.CONFLICT, "STAMP_4091", "부스에 도장 비밀번호가 등록되어 있지 않습니다."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "STAMP_4003", "비밀번호가 일치하지 않습니다."),
     ALREADY_STAMPED(HttpStatus.CONFLICT, "STAMP_4092", "이미 찍은 도장입니다."),
