@@ -80,6 +80,11 @@ public class JwtTokenProvider {
         return ((Number) claims.get("memberId")).longValue();
     }
 
+    public Long getMemberIdFromRefreshToken(String token) {
+        Claims claims = getBody(token);
+        return ((Number) claims.get("memberId")).longValue();
+    }
+
     private Claims getBody(final String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
