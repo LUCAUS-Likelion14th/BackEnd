@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getStatus())
-                .body(ErrorResponseDto.of(errorCode));
+                .body(ErrorResponseDto.of(errorCode.getCode(), e.getMessage()));
     }
 
     // 잘못된 요청값 처리

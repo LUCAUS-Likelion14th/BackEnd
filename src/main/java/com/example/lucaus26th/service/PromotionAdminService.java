@@ -26,7 +26,7 @@ public class PromotionAdminService {
         try {
             imageUrl = s3Service.upload(request.getImage(), "promotion");
         } catch (IOException e) {
-            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+            throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
         }
         Promotion promotion = Promotion.create(imageUrl, request.getInstagram());
         promotionRespository.save(promotion);
