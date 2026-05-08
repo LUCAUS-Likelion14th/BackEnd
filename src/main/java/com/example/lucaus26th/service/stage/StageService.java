@@ -6,6 +6,8 @@ import com.example.lucaus26th.dto.response.stage.LiveStageResponseDTO;
 import com.example.lucaus26th.dto.response.stage.PerformerSimpleResponseDTO;
 import com.example.lucaus26th.dto.response.stage.StageInfoResponseDTO;
 import com.example.lucaus26th.dto.response.stage.StageResponseDTO;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.stage.StageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,7 +45,7 @@ public class StageService {
     @Cacheable(value = "performance", key = "'stage_info_' + #stageId")
     public StageInfoResponseDTO getStageInfo(Long stageId) {
         Stage stage = stageRepository.findById(stageId)
-                .orElseThrow(() -> new IllegalArgumentException("Stage not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.STAGE_NOT_FOUND));;
         return StageInfoResponseDTO.from(stage);
     }
 
@@ -54,7 +56,7 @@ public class StageService {
         Stage stage = stageRepository
                 .findByDateAndStartAtLessThanEqualAndEndAtGreaterThanEqual(
                         today, now, now
-                ).orElseThrow(() -> new IllegalArgumentException("Stage not found"));
+                ).orElseThrow(() -> new BusinessException(ErrorCode.STAGE_NOT_FOUND));
 
 
         return LiveStageResponseDTO.from(stage);
