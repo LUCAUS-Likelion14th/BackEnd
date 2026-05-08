@@ -3,6 +3,8 @@ package com.example.lucaus26th.controller.foodTruck;
 import com.example.lucaus26th.dto.response.foodTruck.FoodTruckDetailResponseDto;
 import com.example.lucaus26th.dto.response.foodTruck.FoodTruckResponseDto;
 import com.example.lucaus26th.global.api.ApiResponse;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.security.CustomUserDetails;
 import com.example.lucaus26th.service.foodTruck.FoodTruckService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +28,7 @@ public class FoodTruckController {
             Authentication authentication
     ) {
         if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails user)) {
-            throw new IllegalArgumentException("로그인이 필요합니다.");
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
 
         foodTruckService.createFoodLike(foodTruckId, user.getId());
@@ -39,7 +41,7 @@ public class FoodTruckController {
             Authentication authentication
     ) {
         if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails user)) {
-            throw new IllegalArgumentException("로그인이 필요합니다.");
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
 
         foodTruckService.deleteFoodLike(foodTruckId, user.getId());
