@@ -25,6 +25,13 @@ public enum ErrorCode {
     // 날짜 형식 (쿼리)
     WRONG_DATE_FORMAT(HttpStatus.BAD_REQUEST, "DATE_4001", "날짜 형식이 올바르지 않습니다. MMDD 형식으로 입력해주세요."),
 
+    // stage
+    STAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "STAGE_4041", "해당 공연을 찾을 수 없습니다."),
+    STAGE_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "STAGE_INFO_4041", "해당 공연 상세 정보를 찾을 수 없습니다."),
+    LIVE_STAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "STAGE_4041", "현재 진행 중인 공연이 없습니다."),
+    SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "SONG_4041", "해당 곡을 찾을 수 없습니다."),
+    INVALID_STAGE_TIME(HttpStatus.BAD_REQUEST, "STAGE_4001", "공연 시작 시간은 종료 시간보다 빨라야 합니다."),
+
     // stamp
     NO_MEMBER_INFO(HttpStatus.BAD_REQUEST, "STAMP_4001", "학생 정보(이름&학번)를 입력하지 않았습니다."),
     UNSTAMPABLE_BOOTH(HttpStatus.BAD_REQUEST, "STAMP_4002", "도장을 찍을 수 없는 부스입니다."),
