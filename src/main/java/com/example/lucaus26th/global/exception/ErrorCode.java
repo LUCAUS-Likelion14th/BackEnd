@@ -57,7 +57,11 @@ public enum ErrorCode {
 
     // notice
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE_4041", "해당 공지사항을 찾을 수 없습니다."),
-    ACTIVE_NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE_4042", "현재 활성화된 공지사항이 없습니다.");
+    ACTIVE_NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE_4042", "현재 활성화된 공지사항이 없습니다."),
+
+    // 인증
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH_4011", "로그인이 필요합니다.");
+
 
     private final HttpStatus status;
     private final String code;
