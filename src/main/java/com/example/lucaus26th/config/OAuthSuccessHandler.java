@@ -44,7 +44,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtTokenProvider.generateAccessToken(member.getId());
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
 
-        String redirectUrl = "http://localhost:3000/login/success"
+        String redirectUrl = "https://lucaus-liart.vercel.app/login/success"
                 + "?accessToken=" + accessToken
                 + "&refreshToken=" + refreshToken;
 
