@@ -5,6 +5,8 @@ import com.example.lucaus26th.domain.lost.Lost;
 import com.example.lucaus26th.dto.request.lost.LostRequestDto;
 import com.example.lucaus26th.dto.response.lost.LostResponseDto;
 import com.example.lucaus26th.global.S3Service;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.lost.LostRepository;
 import com.example.lucaus26th.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
@@ -24,19 +26,26 @@ public class LostService {
 
     private final LostRepository lostRepository;
     private final S3Service s3Service;
+    private static final List<String> VALID_CATEGORIES = List.of("전자기기", "지갑/카드", "화장품", "우산", "기타");
+
 
     public LostResponseDto createLost(LostRequestDto request, CustomUserDetails userDetails){
 
         // 카테고리
         String category = request.getCategory();
-        //if(category != "")
+        if (category != null){
+            if (!VALID_CATEGORIES.contains(category)){
+                throw new BusinessException(ErrorCode.WRONG_LOST_CATEGORY);
+            }
+        }
+
         // s3 업로드 처리
         String imageUrl = null;
         if (request.getImage() != null && !request.getImage().isEmpty()){
             try{
                 imageUrl = s3Service.upload(request.getImage(), "lost");
             } catch(IOException e){
-                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+                throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }
 
@@ -57,12 +66,19 @@ public class LostService {
     // 관련 필터 함수
     private boolean categoryFilter(Lost lost, String category){
         if(category == null){ return true;}
+        if (!VALID_CATEGORIES.contains(category)){
+            throw new BusinessException(ErrorCode.WRONG_LOST_CATEGORY);
+        }
         return lost.getCategory().equals(category);
     }
 
     private boolean dateFilter(Lost lost, String date){
         if(date == null) return true;
-        if (date.length() != 4 || !date.matches("\\d{4}")) return false; // 추가
+
+        // "MMDD" 형식 검증
+        if (date.length() != 4 || !date.matches("\\d{4}")) {
+            throw new BusinessException(ErrorCode.WRONG_DATE_FORMAT);
+        }
 
         // "MMDD" → "MM.DD" 변환
         String formatted = date.substring(0, 2) + "." + date.substring(2, 4);
@@ -84,6 +100,10 @@ public class LostService {
         // List -> Page 변환
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), lostList.size());
+        // 페이지 범위 초과 처리
+        if (start >= lostList.size()) {
+            return new PageImpl<>(List.of(), pageable, lostList.size());
+        }
         return new PageImpl<>(lostList.subList(start,end),pageable, lostList.size());
     }
 
@@ -91,7 +111,7 @@ public class LostService {
         // Role 체크하기
 
         Lost lost = lostRepository.findById(lostId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 분실물입니다 : " + lostId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.LOST_NOT_FOUND));
 
         // s3 업로드 처리
         String imageUrl = null;
@@ -99,7 +119,7 @@ public class LostService {
             try{
                 imageUrl = s3Service.upload(request.getImage(), "lost");
             }catch (IOException e){
-                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+                throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }
 
@@ -112,7 +132,7 @@ public class LostService {
         // Role 체크하기
         
         Lost lost = lostRepository.findById(lostId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 분실물입니다 : " + lostId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.LOST_NOT_FOUND));
 
         lostRepository.delete(lost);
     }
