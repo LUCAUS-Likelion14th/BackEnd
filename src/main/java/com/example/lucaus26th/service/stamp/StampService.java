@@ -46,7 +46,7 @@ public class StampService {
     // 이름&학번 조회
     public StampMemberInfoResponseDto.Info getMemberInfo(Long memberId){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         return StampMemberInfoResponseDto.Info.from(member);
     }
@@ -54,7 +54,7 @@ public class StampService {
     // 이름&학번 체크
     public StampMemberInfoResponseDto.Check checkMemberInfo(Long memberId){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         Boolean check = true;
         if (member.getName() == null || member.getStudentID() == null){
@@ -75,11 +75,11 @@ public class StampService {
     public StampResponseDto.Stamp getStamp(Long memberId){
         // 사용자 정보 조회
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
         
         // 도장판 정보 입력 안했을 때
         if (member.getName() == null || member.getStudentID() == null){
-            throw new IllegalStateException("학생 정보(이름&학번) 을 입력하지 않았습니다.");
+            throw new BusinessException(ErrorCode.NO_MEMBER_INFO);
         }
 
         // 전체 스탬프 대상 부스 목록
@@ -106,24 +106,24 @@ public class StampService {
     // 혹시 모를 상황에 대해 도장판에 해당하는 부스인지 체크하기
     public void createStamp(Long memberId, Long boothId, StampRequestDto request){
         if (!stampBoothRepository.existsByBoothId(boothId)){
-            throw new IllegalStateException(("도장을 찍을 수 없는 부스입니다." + boothId));
+            throw new BusinessException(ErrorCode.UNSTAMPABLE_BOOTH);
         }
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         Booth booth = boothRepository.findById(boothId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 부스가 존재하지 않습니다. ID: " + boothId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
 
         if(booth.getStampPwd() == null){
-            throw new IllegalStateException("부스에 도장 비밀번호가 등록되어 있지 않습니다.");
+            throw new BusinessException(ErrorCode.NO_STAMP_PASSWORD);
         }
         String password = request.getPassword();
         if (!password.equals(booth.getStampPwd())){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new BusinessException(ErrorCode.INVALID_PASSWORD);
         }
 
         if (stampRepository.existsByBoothAndMember(booth, member)){
-            throw new IllegalStateException("이미 찍은 도장입니다.");
+            throw new BusinessException(ErrorCode.ALREADY_STAMPED);
         }
 
         stampRepository.save(Stamp.builder()
@@ -138,7 +138,7 @@ public class StampService {
     // 도장 - 마이페이지
     public StampResponseDto.My getMyStamp(Long memberId){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         Long stampCount =  getStampCount(member);
         Long stampAll = getStampAll();
@@ -151,23 +151,23 @@ public class StampService {
         String password = request.getPassword();
         // 비번 체크
         if (!applyPassword.equals(password)){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new BusinessException(ErrorCode.INVALID_PASSWORD);
         }
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다. ID: " + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
         
         // 중복 응모 방지
         if (member.isApplied()) {
-            throw new IllegalStateException("이미 응모하셨습니다.");
+            throw new BusinessException(ErrorCode.ALREADY_APPLIED);
         }
 
         Long stampCount =  getStampCount(member);
         Long stampAll = getStampAll();
         
-        // 스탬프 다 안채움 방지
+        // 스탬프 다 안채움 방지 -> 나중에 6개로 고쳐야함
         if (stampCount < stampAll){
-            throw new IllegalStateException("모든 스탬프를 모아야 응모할 수 있습니다. (현재: " + stampCount + "/" + stampAll + ")");
+            throw new BusinessException(ErrorCode.NOT_ENOUGH_STAMPS);
         }
         member.apply();
     }

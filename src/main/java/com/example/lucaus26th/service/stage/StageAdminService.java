@@ -8,6 +8,8 @@ import com.example.lucaus26th.dto.request.stage.StageRequestDTO;
 import com.example.lucaus26th.dto.response.stage.SongResponseDTO;
 import com.example.lucaus26th.dto.response.stage.StageResponseDTO;
 import com.example.lucaus26th.global.S3Service;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.stage.SongRepository;
 import com.example.lucaus26th.repository.stage.StageInfoRepository;
 import com.example.lucaus26th.repository.stage.StageRepository;
@@ -33,11 +35,13 @@ public class StageAdminService {
     @Transactional
     @CacheEvict(value = "performance", allEntries = true)
     public StageResponseDTO createStage(StageRequestDTO request) {
+        validateStageTime(request);
+
         String logoImageUrl;
         try{
             logoImageUrl = s3Service.upload(request.getLogoImage(), "stage/logo");
         } catch(IOException e){
-            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+            throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
         }
         Stage stage = Stage.create(
                 request.getCategory(),
@@ -55,7 +59,7 @@ public class StageAdminService {
             try{
                 performerImageUrl = s3Service.upload(request.getPerformerImage(), "stage/performer");
             } catch(IOException e){
-                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+                throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
             }
 
             StageInfo stageInfo = StageInfo.create(
@@ -73,6 +77,8 @@ public class StageAdminService {
     @Transactional
     @CacheEvict(value = "performance", allEntries = true)
     public StageResponseDTO updateStage(Long stageId, StageRequestDTO request){
+        validateStageTime(request);
+
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
 
@@ -117,7 +123,7 @@ public class StageAdminService {
     @CacheEvict(value = "performance", allEntries = true)
     public void deleteStage(Long stageId) {
         Stage stage = stageRepository.findById(stageId)
-                .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.STAGE_NOT_FOUND));
         stageRepository.delete(stage);
     }
 
@@ -125,7 +131,7 @@ public class StageAdminService {
     @CacheEvict(value = "performance", allEntries = true)
     public void deleteStageInfo(Long stageId) {
         StageInfo stageInfo = stageInfoRepository.findById(stageId)
-                .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.STAGE_INFO_NOT_FOUND));
         Stage stage = stageInfo.getStage();
         stage.disconnectStageInfo();
         stageInfoRepository.delete(stageInfo);
@@ -135,7 +141,7 @@ public class StageAdminService {
     @CacheEvict(value = "performance", allEntries = true)
     public SongResponseDTO createSong(Long stageId, SongRequestDTO request) {
         Stage stage = stageRepository.findById(stageId)
-                .orElseThrow(() -> new EntityNotFoundException("no stage found with id: " + stageId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.STAGE_NOT_FOUND));
         Song song = Song.create(request.getTitle(), request.getPlayOrder());
         stage.addSong(song);
         Song savedSong = songRepository.save(song);
@@ -146,7 +152,7 @@ public class StageAdminService {
     @CacheEvict(value = "performance", allEntries = true)
     public SongResponseDTO updateSong(Long stageId, Long songId, SongRequestDTO request) {
         Song song = songRepository.findByIdAndStageId(songId, stageId)
-                .orElseThrow(() -> new EntityNotFoundException("no song found with id: " + songId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SONG_NOT_FOUND));
         song.updateSong(request.getTitle(), request.getPlayOrder());
         return SongResponseDTO.from(song);
     }
@@ -155,7 +161,18 @@ public class StageAdminService {
     @CacheEvict(value = "performance", allEntries = true)
     public void deleteSong(Long stageId, Long songId) {
         Song song = songRepository.findByIdAndStageId(songId, stageId)
-                .orElseThrow(() -> new EntityNotFoundException("no song found with id: " + songId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SONG_NOT_FOUND));
         songRepository.delete(song);
     }
+
+    private void validateStageTime(StageRequestDTO request){
+        if (request.getStartAt() == null || request.getEndAt() == null) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "공연 시작 시각과 종료 시각은 필수입니다.");
+        }
+
+        if(!request.getStartAt().isBefore(request.getEndAt())){
+            throw new BusinessException(ErrorCode.INVALID_STAGE_TIME);
+        }
+    }
+
 }

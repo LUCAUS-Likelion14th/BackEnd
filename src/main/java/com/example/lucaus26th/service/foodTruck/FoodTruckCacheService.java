@@ -5,17 +5,22 @@ import com.example.lucaus26th.domain.foodTruck.FoodTruck;
 import com.example.lucaus26th.dto.response.foodTruck.FoodTruckDetailResponseDto;
 import com.example.lucaus26th.dto.response.foodTruck.FoodTruckResponseDto;
 import com.example.lucaus26th.dto.response.foodTruck.HotFoodTruckResponseDto;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.foodTruck.FoodTruckRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true) // 이거 추가!
 public class FoodTruckCacheService {
 
     private final FoodTruckRepository foodTruckRepository;
@@ -33,7 +38,7 @@ public class FoodTruckCacheService {
     @Cacheable(value = "foodtruck", key = "'detail_' + #foodTruckId")
     public FoodTruckDetailResponseDto getFoodTruckDetail(Long foodTruckId) {
         FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 푸드트럭입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.FOOD_TRUCK_NOT_FOUND));
 
         List<String> dates = foodTruck.getSettings().stream()
                 .map(setting ->
@@ -81,8 +86,14 @@ public class FoodTruckCacheService {
 
     private boolean dateFilter(FoodTruck foodTruck, String date) {
         if (date == null || date.isBlank()) return true;
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMdd");
-        MonthDay monthDay = MonthDay.parse(date, formatter);
+        MonthDay monthDay;
+        try {
+            monthDay = MonthDay.parse(date, formatter);
+        } catch (DateTimeParseException e) {
+            throw new BusinessException(ErrorCode.WRONG_DATE_FORMAT);
+        }
         return foodTruck.getSettings().stream()
                 .anyMatch(setting -> MonthDay.from(setting.getDate()).equals(monthDay));
     }
