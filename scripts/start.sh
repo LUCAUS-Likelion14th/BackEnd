@@ -5,8 +5,9 @@ echo "> lucaus 서비스 재시작"
 sudo systemctl restart lucaus
 
 echo "> health check 시작"
+sleep 20
 
-for i in {1..24}
+for i in {1..30}
 do
   STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health)
 
