@@ -46,8 +46,18 @@ public enum ErrorCode {
 
     // lost
     WRONG_LOST_CATEGORY(HttpStatus.BAD_REQUEST, "LOST_4001", "카테고리는 '전자기기, 지갑/카드, 화장품, 우산, 기타' 에 속해야 합니다."),
-    LOST_NOT_FOUND(HttpStatus.NOT_FOUND, "LOST_4041", "존재하지 않는 분실물입니다.");
+    LOST_NOT_FOUND(HttpStatus.NOT_FOUND, "LOST_4041", "존재하지 않는 분실물입니다."),
 
+    // food truck
+    FOOD_TRUCK_NOT_FOUND(HttpStatus.NOT_FOUND, "FOOD_TRUCK_4041", "해당 푸드트럭을 찾을 수 없습니다."),
+    FOOD_TRUCK_SETTING_NOT_FOUND(HttpStatus.NOT_FOUND, "FOOD_TRUCK_4042", "해당 푸드트럭 설정 정보를 찾을 수 없습니다."),
+    MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "MENU_4041", "해당 메뉴를 찾을 수 없습니다."),
+    ALREADY_LIKED_FOOD_TRUCK(HttpStatus.CONFLICT, "FOOD_TRUCK_4091", "이미 좋아요한 푸드트럭입니다."),
+    NOT_LIKED_FOOD_TRUCK(HttpStatus.BAD_REQUEST, "FOOD_TRUCK_4001", "좋아요하지 않은 푸드트럭입니다."),
+
+    // notice
+    NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE_4041", "해당 공지사항을 찾을 수 없습니다."),
+    ACTIVE_NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE_4042", "현재 활성화된 공지사항이 없습니다.");
 
     private final HttpStatus status;
     private final String code;

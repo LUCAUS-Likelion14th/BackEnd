@@ -4,8 +4,10 @@ import com.example.lucaus26th.domain.notice.Notice;
 import com.example.lucaus26th.dto.request.notice.NoticeRequestDto;
 import com.example.lucaus26th.dto.response.notice.ActiveNoticeResponseDto;
 import com.example.lucaus26th.dto.response.notice.NoticeResponseDto;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.notice.NoticeRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -32,7 +34,7 @@ public class NoticeService {
         return NoticeResponseDto.from(savedNotice);
     }
 
-
+    @Transactional(readOnly = true)
     public Page<NoticeResponseDto> getALlNotice(Pageable pageable) {
         return noticeRepository.findAllByOrderByImportantDescCreatedAtDesc(pageable)
                 .map(NoticeResponseDto::from);
@@ -40,7 +42,7 @@ public class NoticeService {
 
     public NoticeResponseDto patchNotice(Long noticeId, NoticeRequestDto request) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOTICE_NOT_FOUND));
 
         notice.update(
                 request.getTitle() != null ? request.getTitle() : notice.getTitle(),
@@ -54,21 +56,22 @@ public class NoticeService {
 
     public void deleteNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOTICE_NOT_FOUND));
 
         noticeRepository.delete(notice);
     }
 
+    @Transactional(readOnly = true)
     public NoticeResponseDto getNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOTICE_NOT_FOUND));
 
         return NoticeResponseDto.from(notice);
     }
 
     public NoticeResponseDto toggleImportant(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOTICE_NOT_FOUND));
 
         notice.toggleImportant();
 
@@ -77,7 +80,7 @@ public class NoticeService {
 
     public NoticeResponseDto activateNotice(Long noticeId) {
         Notice target = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOTICE_NOT_FOUND));
 
         // 기존 active 공지 있으면 해제
         noticeRepository.findByActiveTrue()
@@ -91,17 +94,18 @@ public class NoticeService {
 
     public NoticeResponseDto deactivateNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOTICE_NOT_FOUND));
 
         notice.deactivate();
 
         return NoticeResponseDto.from(notice);
     }
 
+    @Transactional(readOnly = true)
     public ActiveNoticeResponseDto getActiveNotice() {
         Notice notice = noticeRepository
                 .findFirstByActiveTrueOrderByCreatedAtDesc()
-                .orElseThrow(() -> new IllegalArgumentException("현재 활성화된 공지사항이 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ACTIVE_NOTICE_NOT_FOUND));
 
         return ActiveNoticeResponseDto.from(notice);
     }
