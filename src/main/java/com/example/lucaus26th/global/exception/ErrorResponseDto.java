@@ -4,10 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class ErrorResponseDto {
-    private String code;
-    private String message;
+    private final boolean success;
+    private final String code;
+    private final String message;
+
+    private ErrorResponseDto(String code, String message) {
+        this.success = false;
+        this.code = code;
+        this.message = message;
+    }
 
     // 커스텀 에러코드 + 메시지 반환
     public static ErrorResponseDto of(ErrorCode errorCode) {
