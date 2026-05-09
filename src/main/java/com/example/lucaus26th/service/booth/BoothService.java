@@ -9,6 +9,8 @@ import com.example.lucaus26th.dto.request.booth.BoothRequestDto;
 import com.example.lucaus26th.dto.request.booth.BoothUpdateRequestDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
 import com.example.lucaus26th.global.S3Service;
+import com.example.lucaus26th.global.exception.BusinessException;
+import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.foodTruck.MemberRepository;
 import com.example.lucaus26th.repository.booth.BoothCategoryRepository;
 import com.example.lucaus26th.repository.booth.BoothLikeRepository;
@@ -54,7 +56,7 @@ public class BoothService {
                 boothLocationImageUrl = s3Service.upload(request.getLocationImage(), "boothLocation");
             }
         }catch(IOException e){
-            throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+            throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
         }
 
         // Booth 생성
@@ -76,7 +78,7 @@ public class BoothService {
         if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
             for (Long categoryId : request.getCategoryIds()){
                 Category category = categoryRepository.findById(categoryId)
-                        .orElseThrow(() -> new IllegalArgumentException(("존재하지 않는 카테고리 id :") + categoryId));
+                        .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
                 boothCategoryRepository.save(BoothCategory.builder()
                         .booth(booth)
                         .category(category)
@@ -87,7 +89,7 @@ public class BoothService {
         entityManager.flush();
         entityManager.clear();
         Booth savedBooth = boothRepository.findById(booth.getId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다/create 실패 :" + booth.getId()));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
         return BoothResponseDto.All.fromEntity(savedBooth);
     }
 
@@ -99,7 +101,7 @@ public class BoothService {
             boothList = boothList.stream()
                     .map(dto -> {
                         Booth booth = boothRepository.findById(dto.getBooth_id())
-                                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 :" + dto.getBooth_id()));
+                                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
                         boolean liked = boothLikeRepository.existsByBoothAndMember(booth, member);
                         return dto.withLiked(liked);
@@ -110,6 +112,10 @@ public class BoothService {
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), boothList.size());
 
+        // 페이지 범위 초과 처리
+        if (start >= boothList.size()) {
+            return new PageImpl<>(List.of(), pageable, boothList.size());
+        }
         return new PageImpl<>(boothList.subList(start, end), pageable, boothList.size());
     }
 
@@ -122,7 +128,7 @@ public class BoothService {
         }
 
         Booth booth = boothRepository.findById(boothId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 :" + boothId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
 
         boolean liked = boothLikeRepository.existsByBoothAndMember(booth, member);
 
@@ -143,7 +149,7 @@ public class BoothService {
         return hotBooths.stream()
                 .map(dto -> {
                     Booth booth = boothRepository.findById(dto.getBooth_id())
-                            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 :" + dto.getBooth_id()));
+                            .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
 
                     boolean liked = boothLikeRepository.existsByBoothAndMember(booth, member);
                     return dto.withLiked(liked);
@@ -158,7 +164,7 @@ public class BoothService {
         // adminValidater.validate(memberId);
 
         Booth booth = boothRepository.findById(boothId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 : " + boothId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
 
         // s3 업로드 처리
         String boothImageUrl = null;
@@ -166,7 +172,7 @@ public class BoothService {
             try{
                 boothImageUrl = s3Service.upload(request.getImage(), "booth");
             }catch (IOException e){
-                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+                throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }
         String boothLocationImageUrl = null;
@@ -174,7 +180,7 @@ public class BoothService {
             try{
                 boothLocationImageUrl = s3Service.upload(request.getLocationImage(), "boothLocation");
             }catch (IOException e){
-                throw new RuntimeException("S3 이미지 업로드에 실패했습니다.", e);
+                throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }
 
@@ -189,7 +195,7 @@ public class BoothService {
         // 권한 검사할것
 
         Booth booth = boothRepository.findById(boothId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다. :" + boothId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
 
         // BoothLike 먼저 삭제
         boothLikeRepository.deleteAllByBooth(booth);
@@ -203,13 +209,13 @@ public class BoothService {
     public void createBoothLike(Long boothId, Long memberId){
 
         Booth booth = boothRepository.findById(boothId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다 :" + boothId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다. :" + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 중복 좋아요 체크
         if (boothLikeRepository.existsByBoothAndMember(booth,member)){
-            throw new IllegalStateException("이미 좋아요를 눌렀습니다."); // 이런거 다 400 같이 처리하고싶은데.
+            throw new BusinessException(ErrorCode.ALREADY_BOOTH_LIKE); // 이런거 다 400 같이 처리하고싶은데.
         }
         // BoothLike 생성 및 저장
         boothLikeRepository.save(BoothLike.builder()
@@ -224,12 +230,12 @@ public class BoothService {
     @CacheEvict(value = "booth", allEntries = true)
     public void deleteBoothLike(Long boothId, Long memberId){
         Booth booth = boothRepository.findById(boothId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다." + boothId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다." + memberId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         BoothLike boothLike = boothLikeRepository.findByBoothAndMember(booth, member)
-                .orElseThrow(() -> new IllegalStateException("좋아요를 누르지 않았습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NO_BOOTH_LIKE));
 
         boothLikeRepository.delete(boothLike);
         booth.decreaseLikeCount();
