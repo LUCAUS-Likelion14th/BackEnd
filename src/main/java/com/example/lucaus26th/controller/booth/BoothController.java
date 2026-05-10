@@ -44,6 +44,16 @@ public class BoothController {
         //return ResponseEntity.ok(ApiResponse.of(response)); // 만약 메타데이터 필요없으면 response.getContent()
         return ResponseEntity.ok(ApiResponse.success(response.getContent()));
     }
+
+    @GetMapping("/stamp")
+    public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getBoothStamp(@RequestParam(defaultValue = "0") int page, @AuthenticationPrincipal CustomUserDetails userDetails){
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
+        Pageable pageable = PageRequest.of(page,8);
+        Page<BoothResponseDto.Lists> response = boothService.getBoothStamp(pageable,member);
+        return ResponseEntity.ok(ApiResponse.success(response.getContent()));
+    }
+
     @GetMapping("/{boothId}")
     public ResponseEntity<ApiResponse<BoothResponseDto.Detail>> getBoothDetail(@PathVariable Long boothId, @AuthenticationPrincipal CustomUserDetails userDetails){
         Member member = (userDetails != null) ? userDetails.getMember() : null;
