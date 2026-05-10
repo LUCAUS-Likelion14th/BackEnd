@@ -5,6 +5,7 @@ import com.example.lucaus26th.domain.booth.Booth;
 import com.example.lucaus26th.domain.booth.BoothCategory;
 import com.example.lucaus26th.domain.booth.BoothLike;
 import com.example.lucaus26th.domain.booth.Category;
+import com.example.lucaus26th.domain.stamp.StampBooth;
 import com.example.lucaus26th.dto.request.booth.BoothRequestDto;
 import com.example.lucaus26th.dto.request.booth.BoothUpdateRequestDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
@@ -16,6 +17,7 @@ import com.example.lucaus26th.repository.booth.BoothCategoryRepository;
 import com.example.lucaus26th.repository.booth.BoothLikeRepository;
 import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.booth.CategoryRepository;
+import com.example.lucaus26th.repository.stamp.StampBoothRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,6 +39,7 @@ public class BoothService {
     private final BoothCategoryRepository boothCategoryRepository;
     private final MemberRepository memberRepository;
     private final BoothLikeRepository boothLikeRepository;
+    private final StampBoothRepository stampBoothRepository;
     private final S3Service s3Service;
     private final EntityManager entityManager;
     private final BoothCacheService boothCacheService;
@@ -133,6 +136,32 @@ public class BoothService {
         boolean liked = boothLikeRepository.existsByBoothAndMember(booth, member);
 
         return detail.withLiked(liked);
+    }
+
+    // 도장판 대상 부스
+    public Page<BoothResponseDto.Lists> getBoothStamp(Pageable pageable,Member member){
+        List<Booth> stampBooths = stampBoothRepository.findAll().stream()
+                .map(StampBooth::getBooth)
+                .toList();
+
+        List<BoothResponseDto.Lists> stampBoothList = stampBooths.stream()
+                .map(booth-> {
+                    boolean isLiked = false;
+                    if(member != null){
+                        isLiked =  boothLikeRepository.existsByBoothAndMember(booth, member);
+                    }
+                    return BoothResponseDto.Lists.fromEntity(booth,isLiked);
+                })
+                .toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), stampBoothList.size());
+
+        // 페이지 범위 초과 처리
+        if (start >= stampBoothList.size()) {
+            return new PageImpl<>(List.of(), pageable, stampBoothList.size());
+        }
+        return new PageImpl<>(stampBoothList.subList(start, end), pageable, stampBoothList.size());
     }
 
 
