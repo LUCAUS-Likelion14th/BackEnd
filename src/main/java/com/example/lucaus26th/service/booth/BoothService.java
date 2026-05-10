@@ -104,7 +104,7 @@ public class BoothService {
             boothList = boothList.stream()
                     .map(dto -> {
                         Booth booth = boothRepository.findById(dto.getBooth_id())
-                                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+                                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
 
                         boolean liked = boothLikeRepository.existsByBoothAndMember(booth, member);
                         return dto.withLiked(liked);
@@ -140,19 +140,19 @@ public class BoothService {
 
     // 도장판 대상 부스
     public Page<BoothResponseDto.Lists> getBoothStamp(Pageable pageable,Member member){
-        List<Booth> stampBooths = stampBoothRepository.findAll().stream()
-                .map(StampBooth::getBooth)
-                .toList();
 
-        List<BoothResponseDto.Lists> stampBoothList = stampBooths.stream()
-                .map(booth-> {
-                    boolean isLiked = false;
-                    if(member != null){
-                        isLiked =  boothLikeRepository.existsByBoothAndMember(booth, member);
-                    }
-                    return BoothResponseDto.Lists.fromEntity(booth,isLiked);
-                })
-                .toList();
+        List<BoothResponseDto.Lists> stampBoothList = boothCacheService.getBoothStamp();
+
+        if (member != null){
+            stampBoothList = stampBoothList.stream()
+                    .map(dto -> {
+                        Booth booth = boothRepository.findById(dto.getBooth_id())
+                                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
+                        boolean liked = boothLikeRepository.existsByBoothAndMember(booth, member);
+                        return dto.withLiked(liked);
+                    })
+                    .toList();
+        }
 
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), stampBoothList.size());

@@ -1,12 +1,14 @@
 package com.example.lucaus26th.service.booth;
 
 import com.example.lucaus26th.domain.booth.Booth;
+import com.example.lucaus26th.domain.stamp.StampBooth;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
 import com.example.lucaus26th.enums.BoothLocation;
 import com.example.lucaus26th.global.exception.BusinessException;
 import com.example.lucaus26th.global.exception.ErrorCode;
 import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.booth.CategoryRepository;
+import com.example.lucaus26th.repository.stamp.StampBoothRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class BoothCacheService {
 
     private final BoothRepository boothRepository;
     private final CategoryRepository categoryRepository;
+    private final StampBoothRepository stampBoothRepository;
 
     @Cacheable(value = "booth", key = "'list_' + #date + '_' + #location + '_' + #category + '_' + #search")
     public List<BoothResponseDto.Lists> getBoothList(String date, String location, String category, String search) {
@@ -34,6 +37,15 @@ public class BoothCacheService {
                 .map(booth -> BoothResponseDto.Lists.fromEntity(booth, false))
                 .toList();
     }
+
+    @Cacheable(value = "booth", key = "'stamp_' + #boothId")
+    public List<BoothResponseDto.Lists> getBoothStamp(){
+        return stampBoothRepository.findAll().stream()
+                .map(StampBooth::getBooth)
+                .map(booth -> BoothResponseDto.Lists.fromEntity(booth, false))
+                .toList();
+    }
+
 
     @Cacheable(value = "booth", key = "'detail_' + #boothId")
     public BoothResponseDto.Detail getBoothDetail(Long boothId) {
