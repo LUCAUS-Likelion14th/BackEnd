@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum BoothLocation {
-    SQUARE("해방광장"),
-    BACKGATE("후문"),
-    FIELD("운동장");
+    SQUARE("서라벌홀 일대"),
+    BACKGATE("후문 일대"),
+    FIELD("대운동장");
 
     private final String description;
 
