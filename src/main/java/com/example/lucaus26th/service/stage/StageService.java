@@ -45,7 +45,10 @@ public class StageService {
     @Cacheable(value = "performance", key = "'stage_info_' + #stageId")
     public StageInfoResponseDTO getStageInfo(Long stageId) {
         Stage stage = stageRepository.findById(stageId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.STAGE_NOT_FOUND));;
+                .orElseThrow(() -> new BusinessException(ErrorCode.STAGE_NOT_FOUND));
+        if (stage.getCategory() == StageCategory.EVENT) {
+            throw new BusinessException(ErrorCode.STAGE_NOT_FOUND);
+        }
         return StageInfoResponseDTO.from(stage);
     }
 
@@ -53,12 +56,9 @@ public class StageService {
     public LiveStageResponseDTO getLiveStage() {
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
-        Stage stage = stageRepository
-                .findByDateAndStartAtLessThanEqualAndEndAtGreaterThanEqual(
-                        today, now, now
-                ).orElseThrow(() -> new BusinessException(ErrorCode.STAGE_NOT_FOUND));
-
-
-        return LiveStageResponseDTO.from(stage);
+        return stageRepository
+                .findByDateAndStartAtLessThanEqualAndEndAtGreaterThanEqual(today, now, now)
+                .map(LiveStageResponseDTO::from)
+                .orElse(null);
     }
 }
