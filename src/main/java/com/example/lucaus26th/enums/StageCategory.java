@@ -9,7 +9,8 @@ public enum StageCategory {
     STUDENT_PERFORMANCE("학생 공연"), //학생 공연
     CHEONGRYONG_FESTIVAL("청룡 가요제"), //청룡 가요제
     ARTIST_PERFORMANCE("아티스트 공연"), //아티스트 공연
-    STAGE_EXHIBITION("무대 기획전"); //무대 기획전
+    STAGE_EXHIBITION("무대 기획전"), //무대 기획전
+    EVENT("행사"); //타임테이블 전용 행사 (개막식, MC, 인터미션 등)
 
     private final String displayName;
 }
