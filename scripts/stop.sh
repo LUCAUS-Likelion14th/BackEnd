@@ -17,3 +17,6 @@ else
     echo "> 강제 종료 수행: $CURRENT_PID"
     sudo kill -9 "$CURRENT_PID"
 fi
+
+echo "> 기존 배포 파일 삭제"
+sudo rm -f /home/ubuntu/app/application.jar
