@@ -7,8 +7,10 @@ chown ubuntu:ubuntu /var/log/lucaus
 mkdir -p /var/log/redis
 chown redis:redis /var/log/redis
 
-echo "> lucaus 서비스 재시작"
+echo "> redis 재시작"
+sudo systemctl restart redis
 
+echo "> lucaus 서비스 재시작"
 sudo systemctl restart lucaus
 
 echo "> health check 시작"
