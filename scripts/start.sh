@@ -1,5 +1,12 @@
 #!/bin/bash
 
+echo "> 로그 디렉토리 생성"
+mkdir -p /var/log/lucaus
+chown ubuntu:ubuntu /var/log/lucaus
+
+mkdir -p /var/log/redis
+chown redis:redis /var/log/redis
+
 echo "> lucaus 서비스 재시작"
 
 sudo systemctl restart lucaus
