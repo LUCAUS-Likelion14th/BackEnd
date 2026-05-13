@@ -13,9 +13,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.MonthDay;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -73,9 +74,21 @@ public class FoodTruckCacheService {
 
     @Cacheable(value = "foodtruck", key = "'hot'")
     public List<HotFoodTruckResponseDto> getHotFoodTrucks() {
-        List<FoodTruck> foodTrucks = foodTruckRepository.findTop3ByOrderByLikeCountDesc();
-        return foodTrucks.stream()
-                .map(ft -> HotFoodTruckResponseDto.from(ft, false)) // liked는 false로 저장
+        ZonedDateTime nowSeoul = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDate today = nowSeoul.toLocalDate();
+        LocalTime nowTime = nowSeoul.toLocalTime();
+
+        return foodTruckRepository.findAll().stream()
+                .filter(ft -> ft.getSettings().stream()
+                        .anyMatch(setting ->
+                                setting.getDate().equals(today) &&
+                                        !nowTime.isBefore(setting.getStartAt()) &&
+                                        !nowTime.isAfter(setting.getEndAt())
+                        )
+                )
+                .sorted(Comparator.comparing(FoodTruck::getLikeCount).reversed())
+                .limit(3)
+                .map(ft -> HotFoodTruckResponseDto.from(ft, false))
                 .toList();
     }
 
