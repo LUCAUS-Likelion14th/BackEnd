@@ -31,7 +31,7 @@ public class BoothController {
     private final BoothService boothService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getBooth(@RequestParam(required = false) String date,
+    public ResponseEntity<ApiResponse<Page<BoothResponseDto.Lists>>> getBooth(@RequestParam(required = false) String date,
                                                                               @RequestParam(required = false) String location,
                                                                               @RequestParam(required = false) String category,
                                                                               @RequestParam(required = false) String search,
@@ -42,7 +42,7 @@ public class BoothController {
         Pageable pageable = PageRequest.of(page,8);
         Page<BoothResponseDto.Lists> response = boothService.getBooth(date, location, category,search, pageable,member);
         //return ResponseEntity.ok(ApiResponse.of(response)); // 만약 메타데이터 필요없으면 response.getContent()
-        return ResponseEntity.ok(ApiResponse.success(response.getContent()));
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/stamp")
