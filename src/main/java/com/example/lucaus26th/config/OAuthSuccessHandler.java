@@ -1,6 +1,7 @@
 package com.example.lucaus26th.config;
 
 import com.example.lucaus26th.domain.Member;
+import com.example.lucaus26th.enums.MemberRole;
 import com.example.lucaus26th.jwt.JwtTokenProvider;
 import com.example.lucaus26th.repository.foodTruck.MemberRepository;
 import jakarta.servlet.ServletException;
@@ -49,7 +50,8 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         String redirectUrl = "https://lucaus-liart.vercel.app/login/success"
                 + "?accessToken=" + accessToken
-                + "&refreshToken=" + refreshToken;
+                + "&refreshToken=" + refreshToken
+                + "&isAdmin=" + (member.getRole() == MemberRole.ADMIN || member.getRole() == MemberRole.STUDENT_COUNCIL);
 
         response.sendRedirect(redirectUrl);
     }
