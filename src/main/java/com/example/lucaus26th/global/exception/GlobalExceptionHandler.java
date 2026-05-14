@@ -31,6 +31,12 @@ public class GlobalExceptionHandler {
                         e.getMessage()
                 ));
     }
+    
+    // 봇 노이즈 404 처리 -> 500 으로 알림 안오도록
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<Void> handleNoResourceFound(org.springframework.web.servlet.resource.NoResourceFoundException e) {
+        return ResponseEntity.notFound().build();
+    }
 
     // 예상하지 못한 모든 예외 처리
     @ExceptionHandler(Exception.class)
