@@ -29,6 +29,8 @@ public class BoothSettingService {
 
         BoothSetting setting = BoothSetting.builder()
                 .booth(booth)
+                .locationId(request.getLocationId())
+                .location(request.getLocation())
                 .date(request.getDate())
                 .day(request.getDay())
                 .startAt(request.getStartAt())

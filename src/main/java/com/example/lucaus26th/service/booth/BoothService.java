@@ -50,13 +50,9 @@ public class BoothService {
 
         // s3 업로드 처리
         String boothImageUrl = null;
-        String boothLocationImageUrl = null;
         try {
             if (request.getImage() != null && !request.getImage().isEmpty()) {
                 boothImageUrl = s3Service.upload(request.getImage(), "booth");
-            }
-            if (request.getLocationImage() != null && !request.getLocationImage().isEmpty()) {
-                boothLocationImageUrl = s3Service.upload(request.getLocationImage(), "boothLocation");
             }
         }catch(IOException e){
             throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
@@ -64,13 +60,10 @@ public class BoothService {
 
         // Booth 생성
         Booth booth = Booth.builder()
-                .locationId(request.getLocationId())
                 .name(request.getName())
                 .owner(request.getOwner())
-                .locations(request.getLocations())
                 .info(request.getInfo())
                 .image(boothImageUrl)
-                .locationImage(boothLocationImageUrl)
                 .instagram(request.getInstagram())
                 .stampPwd(request.getStampPwd())
                 .build();
@@ -204,16 +197,7 @@ public class BoothService {
                 throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
             }
         }
-        String boothLocationImageUrl = null;
-        if (request.getLocationImage() != null && !request.getLocationImage().isEmpty()){
-            try{
-                boothLocationImageUrl = s3Service.upload(request.getLocationImage(), "boothLocation");
-            }catch (IOException e){
-                throw new BusinessException(ErrorCode.FILE_UPLOAD_FAILED);
-            }
-        }
-
-        booth.update(boothImageUrl, boothLocationImageUrl,request);
+        booth.update(boothImageUrl, request);
 
         return BoothResponseDto.All.fromEntity(booth);
 
