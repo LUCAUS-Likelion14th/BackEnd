@@ -48,6 +48,8 @@ public class Booth extends BaseTimeEntity {
     private String instagram; // 인스타 링크
     
     private String stampPwd; // 부스 비번
+    
+    //배포 다시
 
     // 부스가 삭제될 때 연결 데이터도 함께 지워지도록 설정
     @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
