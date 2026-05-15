@@ -39,23 +39,35 @@ public class BoothSettingService {
 
         boothSettingRepository.save(setting);
 
-        return BoothSettingResponseDto.fromEntity(setting,booth);
+        return BoothSettingResponseDto.fromEntity(setting);
     }
 
     @CacheEvict(value = "booth", allEntries = true)
-    public BoothSettingResponseDto updateBoothSetting(BoothSettingRequestDto request, Long settingId){
-        BoothSetting boothSetting = boothSettingRepository.findById(settingId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 부스 운영정보 : " + settingId));
+    public BoothSettingResponseDto updateBoothSetting(
+            BoothSettingRequestDto request,
+            Long settingId
+    ){
+        BoothSetting boothSetting = boothSettingRepository.findById(settingId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "존재하지 않는 부스 운영정보 : " + settingId
+                        )
+                );
+
         Long boothId = request.getBoothId();
-        if(boothId != null){
+        if (boothId != null) {
             Booth booth = boothRepository.findById(boothId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부스입니다. : " + boothId));
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "존재하지 않는 부스입니다. : " + boothId
+                            )
+                    );
             boothSetting.update(request, booth);
-            boothSettingRepository.save(boothSetting);
-            return BoothSettingResponseDto.fromEntity(boothSetting,boothSetting.getBooth());
+        } else {
+            boothSetting.update(request, null);
         }
-        boothSetting.update(request,null);
         boothSettingRepository.save(boothSetting);
-        return BoothSettingResponseDto.fromEntity(boothSetting,boothSetting.getBooth());
+        return BoothSettingResponseDto.fromEntity(boothSetting);
     }
 
     @CacheEvict(value = "booth", allEntries = true)
