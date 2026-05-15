@@ -18,7 +18,7 @@ public interface StageRepository extends JpaRepository<Stage, Long> {
 
     List<Stage> findByDateOrderByStartAtAsc(LocalDate date);
 
-    Optional<Stage> findByDateAndStartAtLessThanEqualAndEndAtGreaterThanEqual(
+    Optional<Stage> findByDateAndStartAtLessThanEqualAndEndAtGreaterThan(
             LocalDate date,
             LocalTime now1,
             LocalTime now2

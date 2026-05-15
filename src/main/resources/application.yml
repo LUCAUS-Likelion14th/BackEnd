@@ -35,6 +35,9 @@ cloud:
     region:
       static: ${S3_REGION}
 
+stage:
+  artist-group-logo-url: ${ARTIST_GROUP_LOGO_URL:}
+
 server:
   forward-headers-strategy: framework
 
