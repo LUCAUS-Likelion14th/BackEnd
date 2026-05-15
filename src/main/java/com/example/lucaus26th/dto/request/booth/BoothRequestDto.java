@@ -20,7 +20,7 @@ public class BoothRequestDto {
     private String name;
     private String owner;
     private String info;
-    private BoothLocation location;
+    private List<BoothLocation> locations = new ArrayList<>();
     //private long likeCount;
 
     @Schema(type = "string", format = "binary", description = "부스 이미지 파일")
