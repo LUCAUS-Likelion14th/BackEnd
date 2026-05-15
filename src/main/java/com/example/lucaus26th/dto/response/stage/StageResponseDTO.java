@@ -84,14 +84,16 @@ public class StageResponseDTO {
                 .build();
     }
 
+    // endAt은 배타적(exclusive)으로 처리: 정확히 endAt 시점은 이미 끝난 것으로 본다.
+    // (예: A=18:00-19:30, B=19:30-20:00인 경우 19:30에는 A=PAST, B=CURRENT)
     private static String calculateStatus(LocalDateTime startAt, LocalDateTime endAt){
         LocalDateTime now = LocalDateTime.now(KOREA_ZONE);
 
-        if(now.isAfter(endAt)){
+        if(!now.isBefore(endAt)){
             return "PAST";
         }
 
-        if(!now.isBefore(startAt) && now.isBefore(endAt)){
+        if(!now.isBefore(startAt)){
             return "CURRENT";
         }
 

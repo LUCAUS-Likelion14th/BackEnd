@@ -86,7 +86,7 @@ public class StageService {
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
         return stageRepository
-                .findByDateAndStartAtLessThanEqualAndEndAtGreaterThanEqual(today, now, now)
+                .findByDateAndStartAtLessThanEqualAndEndAtGreaterThan(today, now, now)
                 .map(LiveStageResponseDTO::from)
                 .orElse(null);
     }
