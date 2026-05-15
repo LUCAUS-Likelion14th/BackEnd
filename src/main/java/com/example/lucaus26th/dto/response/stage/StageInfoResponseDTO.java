@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -18,13 +19,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ "stage_id", "time", "stage_info", "performer", "performer_image", "instagram", "youtube", "songs" })
+@JsonPropertyOrder({ "stage_id", "date", "time", "stage_info", "performer", "performer_image", "instagram", "youtube", "songs" })
 public class StageInfoResponseDTO {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     @JsonProperty("stage_id")
     private Long stageId;
+
+    private LocalDate date;
 
     // 아티스트 공연은 타임테이블에서 묶음으로 표시되므로 상세에서는 time 미반환
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -56,6 +59,7 @@ public class StageInfoResponseDTO {
 
         return StageInfoResponseDTO.builder()
                 .stageId(stage.getId())
+                .date(stage.getDate())
                 .time(time)
                 .stageInfo(info.getInfo())
                 .performer(stage.getPerformer())
