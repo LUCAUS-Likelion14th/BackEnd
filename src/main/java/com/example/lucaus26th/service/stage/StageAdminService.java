@@ -49,7 +49,8 @@ public class StageAdminService {
                 request.getEndAt(),
                 request.getDate(),
                 request.getPerformer(),
-                logoImageUrl
+                logoImageUrl,
+                request.getVisibility()
         );
 
         Stage savedStage = stageRepository.save(stage);
@@ -89,7 +90,8 @@ public class StageAdminService {
                 request.getEndAt(),
                 request.getDate(),
                 request.getPerformer(),
-                logoImageUrl
+                logoImageUrl,
+                request.getVisibility()
         );
 
         StageInfo stageInfo = stageInfoRepository.findById(stageId).orElse(null);

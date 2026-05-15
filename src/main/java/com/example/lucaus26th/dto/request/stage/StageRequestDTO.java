@@ -1,6 +1,7 @@
 package com.example.lucaus26th.dto.request.stage;
 
 import com.example.lucaus26th.enums.StageCategory;
+import com.example.lucaus26th.enums.StageVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,15 @@ public class StageRequestDTO {
     private MultipartFile performerImage;
 
     private String info;
+
+    @Schema(
+            description = "공연 가시성 범위. " +
+                    "DEFAULT: 전체 노출(기본), " +
+                    "TIMETABLE_ONLY: 타임테이블·라이브만(예: 청룡가요제 예선/본선·EVENT·특수 학생무대), " +
+                    "LINEUP_ONLY: 라인업·상세만(예: 청룡가요제 참가팀)",
+            example = "DEFAULT"
+    )
+    private StageVisibility visibility;
 
     //TODO: stageinfo 따로 입력받는 버전으로 수정 고려
     public boolean hasStageInfoField(){
