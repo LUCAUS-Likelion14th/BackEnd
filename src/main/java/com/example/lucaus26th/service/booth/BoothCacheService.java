@@ -12,6 +12,7 @@ import com.example.lucaus26th.repository.stamp.StampBoothRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import com.example.lucaus26th.domain.booth.BoothSetting;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -27,22 +28,87 @@ public class BoothCacheService {
     private final CategoryRepository categoryRepository;
     private final StampBoothRepository stampBoothRepository;
 
+    public BoothSetting getDisplaySetting(Booth booth, String date) {
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("MMdd");
+
+        MonthDay monthDay =
+                MonthDay.parse(date, formatter);
+
+        return booth.getSettings().stream()
+                .filter(setting ->
+                        MonthDay.from(setting.getDate())
+                                .equals(monthDay)
+                )
+                .findFirst()
+                .orElse(null);
+    }
+
     @Cacheable(value = "booth", key = "'list_' + #date + '_' + #location + '_' + #category + '_' + #search")
     public List<BoothResponseDto.Lists> getBoothList(String date, String location, String category, String search) {
+
+        final String targetDate;
+
+        if (date == null) {
+            targetDate = LocalDate.now(ZoneId.of("Asia/Seoul"))
+                    .format(DateTimeFormatter.ofPattern("MMdd"));
+        } else {
+            targetDate = date;
+        }
+
         return boothRepository.findAll().stream()
-                .filter(booth -> locationFilter(booth, location))
-                .filter(booth -> categoryFilter(booth, category))
-                .filter(booth -> dateFilter(booth, date))
-                .filter(booth -> searchFilter(booth, search))
-                .map(booth -> BoothResponseDto.Lists.fromEntity(booth, false))
+                .map(booth -> {
+                    BoothSetting setting =
+                            getDisplaySetting(booth, targetDate);
+
+                    return new Object[]{booth, setting};
+                })
+                .filter(arr -> arr[1] != null)
+                .filter(arr -> {
+                    BoothSetting setting = (BoothSetting) arr[1];
+                    return location == null ||
+                            (
+                                    setting.getLocation() != null &&
+                                            setting.getLocation()
+                                                    .getDescription()
+                                                    .equals(location)
+                            );
+                })
+
+                .filter(arr -> {
+                    Booth booth = (Booth) arr[0];
+                    return categoryFilter(booth, category);
+                })
+
+                .filter(arr -> {
+                    Booth booth = (Booth) arr[0];
+                    return searchFilter(booth, search);
+                })
+
+                .map(arr -> {
+                    Booth booth = (Booth) arr[0];
+                    BoothSetting setting = (BoothSetting) arr[1];
+
+                    return BoothResponseDto.Lists.fromEntity(
+                            booth,
+                            setting,
+                            false
+                    );
+                })
+
                 .toList();
     }
 
-    @Cacheable(value = "booth", key = "'stamp_' + #boothId")
+    @Cacheable(value = "booth", key = "'stamp'")
     public List<BoothResponseDto.Lists> getBoothStamp(){
+        String today = LocalDate.now(ZoneId.of("Asia/Seoul"))
+                .format(DateTimeFormatter.ofPattern("MMdd"));
         return stampBoothRepository.findAll().stream()
                 .map(StampBooth::getBooth)
-                .map(booth -> BoothResponseDto.Lists.fromEntity(booth, false))
+                .map(booth -> {
+                    BoothSetting setting = getDisplaySetting(booth, today);
+                    return BoothResponseDto.Lists.fromEntity(booth, setting, false);
+                })
                 .toList();
     }
 
@@ -57,9 +123,14 @@ public class BoothCacheService {
 
     @Cacheable(value = "booth", key = "'hot'")
     public List<BoothResponseDto.Hot> getBoothHot() {
+
         ZonedDateTime nowSeoul = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDate today = nowSeoul.toLocalDate();
         LocalTime nowTime = nowSeoul.toLocalTime();
+
+        String todayStr = today.format(
+                DateTimeFormatter.ofPattern("MMdd")
+        );
 
         return boothRepository.findAll().stream()
                 .filter(booth -> booth.getSettings().stream()
@@ -71,20 +142,38 @@ public class BoothCacheService {
                 )
                 .sorted(Comparator.comparing(Booth::getLikeCount).reversed())
                 .limit(3)
-                .map(booth -> BoothResponseDto.Hot.fromEntity(booth, false))
+                .map(booth -> {
+                    BoothSetting setting =
+                            getDisplaySetting(booth, todayStr);
+
+                    return BoothResponseDto.Hot.fromEntity(
+                            booth,
+                            setting,
+                            false
+                    );
+                })
                 .toList();
     }
 
-    private boolean locationFilter(Booth booth, String location) {
-        if (location == null) return true;
+    private boolean settingFilter(Booth booth, String date, String location) {
 
-        // 유효한 location 값인지 검증
-        boolean validLocation = Arrays.stream(BoothLocation.values())
-                .anyMatch(bl -> bl.getDescription().equals(location));
-        if (!validLocation) throw new BusinessException(ErrorCode.WRONG_BOOTH_LOCATION);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMdd");
+        MonthDay monthDay = MonthDay.parse(date, formatter);
 
-        return booth.getLocations().stream()
-                .anyMatch(bl -> bl.getDescription().equals(location));
+        return booth.getSettings().stream()
+                .anyMatch(setting -> {
+                    boolean dateMatch = MonthDay.from(setting.getDate()).equals(monthDay);
+
+                    boolean locationMatch = location == null ||
+                                    (
+                                            setting.getLocation() != null &&
+                                                    setting.getLocation()
+                                                            .getDescription()
+                                                            .equals(location)
+                                    );
+
+                    return dateMatch && locationMatch;
+                });
     }
 
     private boolean categoryFilter(Booth booth, String category) {
@@ -97,20 +186,6 @@ public class BoothCacheService {
         return booth.getCategoryNames().contains(category);
     }
 
-    private boolean dateFilter(Booth booth, String date) {
-        if (date == null) return true;
-
-        // "MMDD" 형식 검증
-        if (date.length() != 4 || !date.matches("\\d{4}")) {
-            throw new BusinessException(ErrorCode.WRONG_DATE_FORMAT);
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMdd");
-        MonthDay monthDay = MonthDay.parse(date, formatter);
-
-        return booth.getSettings().stream()
-                .anyMatch(s -> MonthDay.from(s.getDate()).equals(monthDay));
-    }
 
     private boolean searchFilter(Booth booth, String search) {
         if (search == null) return true;

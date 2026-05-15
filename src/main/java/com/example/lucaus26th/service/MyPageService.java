@@ -2,7 +2,9 @@ package com.example.lucaus26th.service;
 
 
 import com.example.lucaus26th.domain.Member;
+import com.example.lucaus26th.domain.booth.Booth;
 import com.example.lucaus26th.domain.booth.BoothLike;
+import com.example.lucaus26th.domain.booth.BoothSetting;
 import com.example.lucaus26th.domain.foodTruck.FoodTruckLike;
 import com.example.lucaus26th.dto.response.MyPageResponseDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
@@ -12,7 +14,7 @@ import com.example.lucaus26th.repository.booth.BoothLikeRepository;
 import com.example.lucaus26th.repository.booth.BoothRepository;
 import com.example.lucaus26th.repository.foodTruck.FoodTruckLikeRepository;
 import com.example.lucaus26th.repository.foodTruck.FoodTruckRepository;
-import com.example.lucaus26th.security.CustomUserDetails;
+import com.example.lucaus26th.service.booth.BoothCacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +31,8 @@ public class MyPageService {
     private final BoothLikeRepository boothLikeRepository;
     private final BoothRepository boothRepository;
     private final FoodTruckLikeRepository foodTruckLikeRepository;
-    private final FoodTruckRepository foodTruckRepository; 
+    private final FoodTruckRepository foodTruckRepository;
+    private final BoothCacheService boothCacheService;
     //아니 왜 뭐는 푸드트럭이고 왜 뭐는 푸드에요 넘 헷갈링댕 ㅜ
     // 나중에 도장판 개수 알려주는거 추가하는거 잊지말기
 
@@ -72,13 +75,14 @@ public class MyPageService {
 
     // 내 좋아요 조회 - 부스
     public List<BoothResponseDto.Lists> getMyBoothLikes(Member member) {
-        //Member member = userDetails.getMember();
-
         List<BoothLike> boothLikes = boothLikeRepository.findByMember(member);
-
         return boothLikes.stream()
                 .sorted(Comparator.comparing(BoothLike::getId).reversed())
-                .map(boothLike -> BoothResponseDto.Lists.fromEntity(boothLike.getBooth(), true))
+                .map(boothLike -> {
+                    Booth booth = boothLike.getBooth();
+                    BoothSetting setting = boothCacheService.getDisplaySetting(booth, null);
+                    return BoothResponseDto.Lists.fromEntity(booth, setting, true);
+                })
                 .toList();
     }
 

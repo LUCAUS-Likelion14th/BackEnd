@@ -2,6 +2,7 @@ package com.example.lucaus26th.dto.response.booth;
 
 import com.example.lucaus26th.domain.booth.Booth;
 import com.example.lucaus26th.domain.booth.BoothSetting;
+import com.example.lucaus26th.enums.BoothLocation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,8 @@ import java.time.LocalTime;
 public class BoothSettingResponseDto {
     private Long boothId;
     private String boothName;
+    private String locationId;
+    private BoothLocation location;
     private LocalDate date;
     private String day;
     @JsonFormat(pattern = "HH:mm")
@@ -29,6 +32,8 @@ public class BoothSettingResponseDto {
         return  BoothSettingResponseDto.builder()
                 .boothId(booth.getId())
                 .boothName(booth.getName())
+                .locationId(setting.getLocationId())
+                .location(setting.getLocation())
                 .date(setting.getDate())
                 .day(setting.getDay())
                 .startAt(setting.getStartAt())
