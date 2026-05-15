@@ -22,7 +22,7 @@ public class BoothResponseDto {
         private String booth_image;
         private String booth_name;
         private String booth_owner;
-        private String booth_location;
+        private List<String> locations;
         private Boolean is_liked;
         private Long like_count;
 
@@ -33,7 +33,7 @@ public class BoothResponseDto {
                     .booth_image(booth.getImage())
                     .booth_name(booth.getName())
                     .booth_owner(booth.getOwner())
-                    .booth_location(booth.getLocation().getDescription())
+                    .locations(booth.getLocationDescriptions())
                     .is_liked(isLiked)
                     .like_count(booth.getLikeCount())
                     .build();
@@ -45,7 +45,7 @@ public class BoothResponseDto {
                     .booth_image(this.booth_image)
                     .booth_name(this.booth_name)
                     .booth_owner(this.booth_owner)
-                    .booth_location(this.booth_location)
+                    .locations(this.locations)
                     .is_liked(isLiked)
                     .like_count(this.like_count)
                     .build();
@@ -66,7 +66,7 @@ public class BoothResponseDto {
         private String owner_insta;
         private Boolean is_liked;
         private Long like_count;
-        private String location;
+        private List<String> locations;
         private List<String> date;
         private String location_image;
 
@@ -81,7 +81,7 @@ public class BoothResponseDto {
                     .owner_insta(booth.getInstagram())
                     .is_liked(isLiked)
                     .like_count(booth.getLikeCount())
-                    .location(booth.getLocation().getDescription())
+                    .locations(booth.getLocationDescriptions())
                     .date(booth.getDays())
                     .location_image(booth.getLocationImage())
                     .build();
@@ -98,7 +98,7 @@ public class BoothResponseDto {
                     .owner_insta(this.owner_insta)
                     .is_liked(isLiked)
                     .like_count(this.like_count)
-                    .location(this.location)
+                    .locations(this.locations)
                     .date(this.date)
                     .location_image(this.location_image)
                     .build();
@@ -113,7 +113,7 @@ public class BoothResponseDto {
         private Long booth_id;
         private Long location_id;
         private String booth_image;
-        private String location;
+        private List<String> locations;
         private String booth_name;
         private String owner;
         private Long like_count;
@@ -124,7 +124,7 @@ public class BoothResponseDto {
                     .booth_id(booth.getId())
                     .location_id(booth.getLocationId())
                     .booth_image(booth.getImage())
-                    .location(booth.getLocation().getDescription())
+                    .locations(booth.getLocationDescriptions())
                     .booth_name(booth.getName())
                     .owner(booth.getOwner())
                     .is_liked(isLiked)
@@ -137,7 +137,7 @@ public class BoothResponseDto {
                     .booth_id(this.booth_id)
                     .location_id(this.location_id)
                     .booth_image(this.booth_image)
-                    .location(this.location)
+                    .locations(this.locations)
                     .booth_name(this.booth_name)
                     .owner(this.owner)
                     .like_count(this.like_count)
@@ -181,7 +181,7 @@ public class BoothResponseDto {
         private String owner_insta;
         private Boolean is_liked;
         private Long like_count;
-        private String location;
+        private List<String> locations;
         //private List<String> date;
         private String location_image;
 
@@ -196,7 +196,7 @@ public class BoothResponseDto {
                     .booth_info(booth.getInfo())
                     .owner_insta(booth.getInstagram())
                     .like_count(booth.getLikeCount())
-                    .location(booth.getLocation().getDescription())
+                    .locations(booth.getLocationDescriptions())
                     //.date(booth.getDays())
                     .location_image(booth.getLocationImage())
                     .build();
