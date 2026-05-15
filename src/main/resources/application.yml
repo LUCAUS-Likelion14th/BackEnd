@@ -40,6 +40,8 @@ stage:
 
 server:
   forward-headers-strategy: framework
+  tomcat:
+    max-part-count: 50    # Tomcat 11 기본값 10 → multipart 필드 11개 이상 폼에서 막히는 것 방지
 
 logging:
   file:
