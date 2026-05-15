@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:application-secret.yml
   profiles:
-    active: local
+    active: dev
   jpa:
     hibernate:
       ddl-auto: update
@@ -34,6 +34,9 @@ cloud:
       bucket: ${S3_BUCKET}
     region:
       static: ${S3_REGION}
+
+stage:
+  artist-group-logo-url: ${ARTIST_GROUP_LOGO_URL:}
 
 server:
   forward-headers-strategy: framework

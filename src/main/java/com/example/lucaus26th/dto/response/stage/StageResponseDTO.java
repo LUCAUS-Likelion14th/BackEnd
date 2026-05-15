@@ -1,6 +1,7 @@
 package com.example.lucaus26th.dto.response.stage;
 
 import com.example.lucaus26th.domain.stage.Stage;
+import com.example.lucaus26th.enums.StageCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @Builder
@@ -56,6 +58,29 @@ public class StageResponseDTO {
                 .logoImage(stage.getLogoImage())
                 .performer(stage.getPerformer())
                 .category(stage.getCategory().getDisplayName())
+                .build();
+    }
+
+    // 연속된 아티스트 공연들을 하나의 묶음 응답으로 변환
+    public static StageResponseDTO fromArtistGroup(List<Stage> group, String groupLogoImage){
+        Stage first = group.get(0);
+        Stage last = group.get(group.size() - 1);
+
+        LocalDateTime startDateTime = LocalDateTime.of(first.getDate(), first.getStartAt());
+        LocalDateTime endDateTime = LocalDateTime.of(last.getDate(), last.getEndAt());
+
+        String formattedStartAt = first.getStartAt().format(TIME_FORMATTER);
+        String formattedEndAt = last.getEndAt().format(TIME_FORMATTER);
+
+        return StageResponseDTO.builder()
+                .stageId(null)
+                .startAt(startDateTime)
+                .endAt(endDateTime)
+                .time(formattedStartAt + " - " + formattedEndAt)
+                .status(calculateStatus(startDateTime, endDateTime))
+                .logoImage(groupLogoImage)
+                .performer(StageCategory.ARTIST_PERFORMANCE.getDisplayName())
+                .category(StageCategory.ARTIST_PERFORMANCE.getDisplayName())
                 .build();
     }
 
