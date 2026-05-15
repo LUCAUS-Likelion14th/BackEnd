@@ -17,8 +17,8 @@ import java.util.*;
 public class JwtTokenProvider {
     // ACCESS_TOKEN : 1시간
     private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60;
-    // REFRESH_TOKEN : 7일
-    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 7;
+    // REFRESH_TOKEN : 1일
+    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;

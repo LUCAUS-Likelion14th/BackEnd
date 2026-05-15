@@ -87,7 +87,7 @@ public class BoothResponseDto {
                     .settings(
                             booth.getSettings().stream()
                                     .sorted(Comparator.comparing(BoothSetting::getDate))
-                                    .map(setting -> BoothSettingResponseDto.fromEntity(setting, booth))
+                                    .map(BoothSettingResponseDto::fromEntity)
                                     .toList()
                     )
                     .build();

@@ -17,10 +17,8 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoothSettingResponseDto {
-    private Long boothId;
-    private String boothName;
     private String locationId;
-    private BoothLocation location;
+    private String location;
     private LocalDate date;
     private String day;
     @JsonFormat(pattern = "HH:mm")
@@ -28,12 +26,11 @@ public class BoothSettingResponseDto {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endAt;
 
-    public static BoothSettingResponseDto fromEntity(BoothSetting setting, Booth booth){
-        return  BoothSettingResponseDto.builder()
-                .boothId(booth.getId())
-                .boothName(booth.getName())
+    public static BoothSettingResponseDto fromEntity(BoothSetting setting){
+
+        return BoothSettingResponseDto.builder()
                 .locationId(setting.getLocationId())
-                .location(setting.getLocation())
+                .location(setting.getLocation().getDescription())
                 .date(setting.getDate())
                 .day(setting.getDay())
                 .startAt(setting.getStartAt())
