@@ -67,7 +67,7 @@ public class BoothService {
                 .locationId(request.getLocationId())
                 .name(request.getName())
                 .owner(request.getOwner())
-                .location(request.getLocation())
+                .locations(request.getLocations())
                 .info(request.getInfo())
                 .image(boothImageUrl)
                 .locationImage(boothLocationImageUrl)

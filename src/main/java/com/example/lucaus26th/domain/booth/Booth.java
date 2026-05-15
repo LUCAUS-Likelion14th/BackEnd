@@ -33,9 +33,11 @@ public class Booth extends BaseTimeEntity {
     private String name;
     @Column(nullable = false)
     private String owner;
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private BoothLocation location;
+    @CollectionTable(name = "booth_location_mapping", joinColumns = @JoinColumn(name = "booth_id"))
+    @Column(name = "location")
+    private List<BoothLocation> locations = new ArrayList<>();
     @Column(nullable = false)
     private Long likeCount;
     @Column(nullable = false)
@@ -55,11 +57,11 @@ public class Booth extends BaseTimeEntity {
     private StampBooth stampBooth;
 
     @Builder
-    public Booth(Long locationId, String name, String owner, BoothLocation location, String info, String image, String locationImage, String instagram, String stampPwd) {
+    public Booth(Long locationId, String name, String owner, List<BoothLocation> locations, String info, String image, String locationImage, String instagram, String stampPwd) {
         this.locationId = locationId;
         this.name = name;
         this.owner = owner;
-        this.location = location;
+        this.locations = locations != null ? locations : new ArrayList<>();
         this.likeCount = 0L;
         this.info = info;
         this.image = image;
@@ -78,7 +80,7 @@ public class Booth extends BaseTimeEntity {
         if (request.getName() != null) this.name = request.getName();
         if (request.getOwner() != null) this.owner = request.getOwner();
         if (request.getInfo() != null) this.info = request.getInfo();
-        if (request.getLocation() != null) this.location = request.getLocation();
+        if (request.getLocations() != null && !request.getLocations().isEmpty()) this.locations = request.getLocations();
         if (boothImageUrl != null) this.image = boothImageUrl;
         if (boothLocationImageUrl != null) this.locationImage = boothLocationImageUrl;
         if (request.getInstagram() != null) this.instagram = request.getInstagram();
@@ -97,6 +99,13 @@ public class Booth extends BaseTimeEntity {
     public List<String> getCategoryNames(){
         return categories.stream()
                 .map(boothCategory -> boothCategory.getCategory().getName())
+                .toList();
+    }
+
+    // 카테고리 관련
+    public List<String> getLocationDescriptions() {
+        return locations.stream()
+                .map(BoothLocation::getDescription)
                 .toList();
     }
     /*public List<String> getDates(){
