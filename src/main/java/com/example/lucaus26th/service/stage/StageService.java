@@ -2,6 +2,7 @@ package com.example.lucaus26th.service.stage;
 
 import com.example.lucaus26th.domain.stage.Stage;
 import com.example.lucaus26th.enums.StageCategory;
+import com.example.lucaus26th.enums.StageVisibility;
 import com.example.lucaus26th.dto.response.stage.LiveStageResponseDTO;
 import com.example.lucaus26th.dto.response.stage.PerformerSimpleResponseDTO;
 import com.example.lucaus26th.dto.response.stage.StageInfoResponseDTO;
@@ -31,18 +32,23 @@ public class StageService {
     private String artistGroupLogoUrl;
 
     // 공연자 목록 조회
+    // visibility=TIMETABLE_ONLY인 항목(예: 청룡가요제 예선/본선·EVENT·특수 학생무대)은 라인업에서 제외
     @Cacheable(value = "performance", key = "'performers_' + #date + '_' + #category")
     public List<PerformerSimpleResponseDTO> getPerformerList(LocalDate date, StageCategory category) {
         return stageRepository.findByDateAndCategoryOrderByStartAtAsc(date, category).stream()
+                .filter(StageService::isVisibleInLineup)
                 .map(PerformerSimpleResponseDTO::from)
                 .toList();
     }
 
     // 타임테이블 조회
-    // 연속된 아티스트 공연(앞 공연의 endAt == 다음 공연의 startAt)은 하나의 묶음 응답으로 합쳐서 반환함
+    // - visibility=LINEUP_ONLY인 항목(예: 청룡가요제 참가팀)은 제외
+    // - 연속된 아티스트 공연(앞 공연의 endAt == 다음 공연의 startAt)은 하나의 묶음 응답으로 합쳐서 반환함
     @Cacheable(value = "performance", key = "'stage_list_' + #date")
     public List<StageResponseDTO> getStageList(LocalDate date) {
-        List<Stage> stages = stageRepository.findByDateOrderByStartAtAsc(date);
+        List<Stage> stages = stageRepository.findByDateOrderByStartAtAsc(date).stream()
+                .filter(StageService::isVisibleInTimetable)
+                .toList();
         List<StageResponseDTO> result = new ArrayList<>();
         List<Stage> artistGroup = new ArrayList<>();
 
@@ -71,23 +77,37 @@ public class StageService {
     }
 
     // 공연 정보 상세 조회
+    // visibility=TIMETABLE_ONLY인 항목은 상세 페이지에서 막음 (EVENT/본선/응원단 등)
     @Cacheable(value = "performance", key = "'stage_info_' + #stageId")
     public StageInfoResponseDTO getStageInfo(Long stageId) {
         Stage stage = stageRepository.findById(stageId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.STAGE_NOT_FOUND));
-        if (stage.getCategory() == StageCategory.EVENT) {
+        if (!isVisibleInLineup(stage)) {
             throw new BusinessException(ErrorCode.STAGE_NOT_FOUND);
         }
         return StageInfoResponseDTO.from(stage);
     }
 
     // 메인 홈 실시간 공연 조회
+    // 타임테이블과 동일한 필터 적용 → 청룡가요제 시간대엔 통합 블록이 라이브로 반환됨
     public LiveStageResponseDTO getLiveStage() {
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
-        return stageRepository
-                .findByDateAndStartAtLessThanEqualAndEndAtGreaterThan(today, now, now)
+        return stageRepository.findByDateOrderByStartAtAsc(today).stream()
+                .filter(StageService::isVisibleInTimetable)
+                .filter(stage -> !stage.getStartAt().isAfter(now) && stage.getEndAt().isAfter(now))
+                .findFirst()
                 .map(LiveStageResponseDTO::from)
                 .orElse(null);
+    }
+
+    // 타임테이블/라이브 노출 대상 — LINEUP_ONLY만 제외
+    private static boolean isVisibleInTimetable(Stage stage) {
+        return stage.getVisibility() != StageVisibility.LINEUP_ONLY;
+    }
+
+    // 라인업/상세 노출 대상 — TIMETABLE_ONLY만 제외
+    private static boolean isVisibleInLineup(Stage stage) {
+        return stage.getVisibility() != StageVisibility.TIMETABLE_ONLY;
     }
 }
