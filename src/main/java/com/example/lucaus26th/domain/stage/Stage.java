@@ -1,6 +1,7 @@
 package com.example.lucaus26th.domain.stage;
 
 import com.example.lucaus26th.enums.StageCategory;
+import com.example.lucaus26th.enums.StageVisibility;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,6 +40,12 @@ public class Stage {
     @Column(name = "logo_image")
     private String logoImage;
 
+    // 공연 가시성 범위 — 어떤 엔드포인트에 노출할지 결정
+    // DEFAULT: 전체 노출 / TIMETABLE_ONLY: 타임테이블·라이브만 / LINEUP_ONLY: 라인업·상세만
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
+    private StageVisibility visibility;
+
     @OneToMany(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("playOrder ASC")
     private List<Song> songs = new ArrayList<>();
@@ -53,7 +60,8 @@ public class Stage {
             LocalTime endAt,
             LocalDate date,
             String performer,
-            String logoImage
+            String logoImage,
+            StageVisibility visibility
     ) {
         this.category = category;
         this.startAt = startAt;
@@ -61,6 +69,7 @@ public class Stage {
         this.date = date;
         this.performer = performer;
         this.logoImage = logoImage;
+        this.visibility = visibility;
     }
 
     //필수정보 검증 후 공연 생성
@@ -70,12 +79,14 @@ public class Stage {
             LocalTime endAt,
             LocalDate date,
             String performer,
-            String logoImage
+            String logoImage,
+            StageVisibility visibility
     ) {
         validateRequiredFields(category, startAt, endAt, date, performer);
         validateTime(startAt, endAt);
 
-        return new Stage(category, startAt, endAt, date, performer, logoImage);
+        StageVisibility resolvedVisibility = (visibility != null) ? visibility : StageVisibility.DEFAULT;
+        return new Stage(category, startAt, endAt, date, performer, logoImage, resolvedVisibility);
     }
 
     public void updateStage(
@@ -84,12 +95,14 @@ public class Stage {
             LocalTime endAt,
             LocalDate date,
             String performer,
-            String logoImage
+            String logoImage,
+            StageVisibility visibility
     ) {
         if (category != null) this.category = category;
         if (date != null) this.date = date;
         if (performer != null && !performer.isBlank()) this.performer = performer;
         if (logoImage != null) this.logoImage = logoImage;
+        if (visibility != null) this.visibility = visibility;
 
         LocalTime newStartAt = (startAt != null) ? startAt : this.startAt;
         LocalTime newEndAt = (endAt != null) ? endAt : this.endAt;

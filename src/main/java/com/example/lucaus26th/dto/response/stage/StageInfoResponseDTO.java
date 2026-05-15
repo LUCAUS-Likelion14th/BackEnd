@@ -2,6 +2,8 @@ package com.example.lucaus26th.dto.response.stage;
 
 import com.example.lucaus26th.domain.stage.Stage;
 import com.example.lucaus26th.domain.stage.StageInfo;
+import com.example.lucaus26th.enums.StageCategory;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,8 @@ public class StageInfoResponseDTO {
     @JsonProperty("stage_id")
     private Long stageId;
 
+    // 아티스트 공연은 타임테이블에서 묶음으로 표시되므로 상세에서는 time 미반환
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String time;
 
     @JsonProperty("stage_info")
@@ -42,12 +46,17 @@ public class StageInfoResponseDTO {
     public static StageInfoResponseDTO from(Stage stage) {
         StageInfo info = stage.getStageInfo();
 
-        String formattedStartAt = stage.getStartAt().format(TIME_FORMATTER);
-        String formattedEndAt = stage.getEndAt().format(TIME_FORMATTER);
+        // 아티스트 공연은 타임테이블에서 묶음으로 표시되므로 상세에서 개별 시간은 노출하지 않음
+        String time = null;
+        if (stage.getCategory() != StageCategory.ARTIST_PERFORMANCE) {
+            String formattedStartAt = stage.getStartAt().format(TIME_FORMATTER);
+            String formattedEndAt = stage.getEndAt().format(TIME_FORMATTER);
+            time = formattedStartAt + " - " + formattedEndAt;
+        }
 
         return StageInfoResponseDTO.builder()
                 .stageId(stage.getId())
-                .time(formattedStartAt + " - " + formattedEndAt)
+                .time(time)
                 .stageInfo(info.getInfo())
                 .performer(stage.getPerformer())
                 .performerImage(info.getPerformerImage())
