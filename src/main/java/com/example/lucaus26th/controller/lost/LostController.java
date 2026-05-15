@@ -25,12 +25,12 @@ public class LostController {
     private final LostService lostService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<LostResponseDto>>> getLost(@RequestParam(required = false) String category,
+    public ResponseEntity<ApiResponse<Page<LostResponseDto>>> getLost(@RequestParam(required = false) String category,
                                                                       @RequestParam(required = false) String date,
                                                                       @RequestParam(defaultValue = "0") int page){
         Pageable pageable = PageRequest.of(page, 6);
         Page<LostResponseDto> response = lostService.getLost(category, date, pageable);
-        return ResponseEntity.ok(ApiResponse.success(response.getContent()));
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
 

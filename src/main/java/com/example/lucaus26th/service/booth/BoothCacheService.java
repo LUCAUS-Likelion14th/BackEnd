@@ -83,7 +83,8 @@ public class BoothCacheService {
                 .anyMatch(bl -> bl.getDescription().equals(location));
         if (!validLocation) throw new BusinessException(ErrorCode.WRONG_BOOTH_LOCATION);
 
-        return booth.getLocation().getDescription().equals(location);
+        return booth.getLocations().stream()
+                .anyMatch(bl -> bl.getDescription().equals(location));
     }
 
     private boolean categoryFilter(Booth booth, String category) {

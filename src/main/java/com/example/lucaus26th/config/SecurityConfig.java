@@ -55,8 +55,8 @@ public class SecurityConfig {
                 // 일단 임시로 모든 api 허용
                 .authorizeHttpRequests(auth -> auth
                         // 부스 좋아요는 로그인 필요
-                        .requestMatchers(HttpMethod.POST, "/booth/*/like/").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/booth/*/like/").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/booth/*/like").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/booth/*/like").authenticated()
                         .requestMatchers(HttpMethod.POST,"/foodTruck/*/like").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/foodTruck/*/like").authenticated()
                         // 마이페이지도 로그인 필요

@@ -37,3 +37,7 @@ cloud:
 
 server:
   forward-headers-strategy: framework
+
+logging:
+  file:
+    name: /var/log/lucaus/app.log
