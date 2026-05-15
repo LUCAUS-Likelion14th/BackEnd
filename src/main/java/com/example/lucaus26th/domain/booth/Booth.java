@@ -3,7 +3,6 @@ package com.example.lucaus26th.domain.booth;
 import com.example.lucaus26th.domain.BaseTimeEntity;
 import com.example.lucaus26th.domain.stamp.StampBooth;
 import com.example.lucaus26th.dto.request.booth.BoothUpdateRequestDto;
-import com.example.lucaus26th.enums.BoothLocation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,27 +23,20 @@ public class Booth extends BaseTimeEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long locationId; // 장소 아이디
     // 운영정보
     @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<BoothSetting> settings;
+    private List<BoothSetting> settings = new ArrayList<>();
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String owner;
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "booth_location_mapping", joinColumns = @JoinColumn(name = "booth_id"))
-    @Column(name = "location")
-    private List<BoothLocation> locations = new ArrayList<>();
+
     @Column(nullable = false)
     private Long likeCount;
     @Column(nullable = false)
     private String info;
 
     private String image; // 이미지 링크
-    private String locationImage; // 장소 이미지 링크
     private String instagram; // 인스타 링크
     
     private String stampPwd; // 부스 비번
@@ -59,15 +51,12 @@ public class Booth extends BaseTimeEntity {
     private StampBooth stampBooth;
 
     @Builder
-    public Booth(Long locationId, String name, String owner, List<BoothLocation> locations, String info, String image, String locationImage, String instagram, String stampPwd) {
-        this.locationId = locationId;
+    public Booth(String name, String owner, String info, String image, String instagram, String stampPwd) {
         this.name = name;
         this.owner = owner;
-        this.locations = locations != null ? locations : new ArrayList<>();
         this.likeCount = 0L;
         this.info = info;
         this.image = image;
-        this.locationImage = locationImage;
         this.instagram = instagram;
         this.stampPwd = stampPwd;
         this.categories = new ArrayList<>();
@@ -77,14 +66,11 @@ public class Booth extends BaseTimeEntity {
         //this.setting = setting;
     //}
 
-    public void update(String boothImageUrl,String boothLocationImageUrl,BoothUpdateRequestDto request){
-        if (request.getLocationId() != null) this.locationId = request.getLocationId();
+    public void update(String boothImageUrl,BoothUpdateRequestDto request){
         if (request.getName() != null) this.name = request.getName();
         if (request.getOwner() != null) this.owner = request.getOwner();
         if (request.getInfo() != null) this.info = request.getInfo();
-        if (request.getLocations() != null && !request.getLocations().isEmpty()) this.locations = request.getLocations();
         if (boothImageUrl != null) this.image = boothImageUrl;
-        if (boothLocationImageUrl != null) this.locationImage = boothLocationImageUrl;
         if (request.getInstagram() != null) this.instagram = request.getInstagram();
         if (request.getStampPwd() != null) this.stampPwd = request.getStampPwd();
     }
@@ -104,12 +90,7 @@ public class Booth extends BaseTimeEntity {
                 .toList();
     }
 
-    // 카테고리 관련
-    public List<String> getLocationDescriptions() {
-        return locations.stream()
-                .map(BoothLocation::getDescription)
-                .toList();
-    }
+
     /*public List<String> getDates(){
         List<String> dates = new ArrayList<>();
         String mon =setting.getMon();

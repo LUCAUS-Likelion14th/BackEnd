@@ -3,6 +3,7 @@ package com.example.lucaus26th.dto.request.booth;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.example.lucaus26th.enums.BoothLocation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,6 +13,8 @@ import java.time.LocalTime;
 public class BoothSettingRequestDto {
 
     private Long boothId;
+    private String locationId;
+    private BoothLocation location;
     private LocalDate date;
     private String day;
     @JsonFormat(pattern = "HH:mm")

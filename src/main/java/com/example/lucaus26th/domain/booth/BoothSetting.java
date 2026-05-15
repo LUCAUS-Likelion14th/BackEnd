@@ -1,6 +1,7 @@
 package com.example.lucaus26th.domain.booth;
 
 import com.example.lucaus26th.dto.request.booth.BoothSettingRequestDto;
+import com.example.lucaus26th.enums.BoothLocation;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,11 @@ public class BoothSetting {
     @ManyToOne
     @JoinColumn(name = "booth_id")
     private Booth booth;
+
+    private String locationId;
+    @Enumerated(EnumType.STRING)
+    private BoothLocation location;
+
     @Column(nullable = false)
     private LocalDate date;
     @Column(name = "day_of_week",nullable = false)
@@ -46,6 +52,12 @@ public class BoothSetting {
         }
         if(request.getEndAt() != null){
             this.endAt = request.getEndAt();
+        }
+        if(request.getLocationId() != null){
+            this.locationId = request.getLocationId();
+        }
+        if(request.getLocation() != null){
+            this.location = request.getLocation();
         }
     }
 
