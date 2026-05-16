@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "stage")
@@ -42,7 +43,8 @@ public class Stage {
     private String logoImage;
 
     // 공연 가시성 override
-    // DEFAULT: 카테고리 기본 노출 그대로 / TIMETABLE_ONLY: 라이브·라인업에서 숨기고 타임테이블만 노출
+    // DEFAULT: 카테고리 기본 노출 그대로
+    // LINEUP_ONLY / LIVE_AND_TIMETABLE / TIMETABLE_ONLY: 해당 엔드포인트 집합만 노출
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility", nullable = false)
     private StageVisibility visibility;
@@ -118,13 +120,12 @@ public class Stage {
     }
 
     // 해당 엔드포인트에 노출되어야 하는지 판단
-    // - TIMETABLE_ONLY visibility면 타임테이블만 허용
-    // - 그 외엔 카테고리의 기본 노출 범위(defaultEndpoints)를 따름
+    // - visibility가 명시적 endpoint 집합을 갖고 있으면 그 집합을 사용
+    // - visibility가 DEFAULT(endpoints == null)이면 카테고리 기본 노출(defaultEndpoints)을 사용
     public boolean isVisibleAt(StageEndpoint endpoint) {
-        if (this.visibility == StageVisibility.TIMETABLE_ONLY) {
-            return endpoint == StageEndpoint.TIMETABLE;
-        }
-        return this.category.getDefaultEndpoints().contains(endpoint);
+        Set<StageEndpoint> override = this.visibility.getEndpoints();
+        Set<StageEndpoint> effective = (override != null) ? override : this.category.getDefaultEndpoints();
+        return effective.contains(endpoint);
     }
 
     public void connectStageInfo(StageInfo stageInfo) {
