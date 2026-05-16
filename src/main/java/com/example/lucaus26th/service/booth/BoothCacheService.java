@@ -29,11 +29,19 @@ public class BoothCacheService {
     private final StampBoothRepository stampBoothRepository;
 
     public BoothSetting getDisplaySetting(Booth booth, String date) {
+
+        String targetDate;
+        if (date == null) {
+            targetDate = LocalDate.now(ZoneId.of("Asia/Seoul"))
+                    .format(DateTimeFormatter.ofPattern("MMdd"));
+        } else {
+            targetDate = date;
+        }
         DateTimeFormatter formatter =
                 DateTimeFormatter.ofPattern("MMdd");
 
         MonthDay monthDay =
-                MonthDay.parse(date, formatter);
+                MonthDay.parse(targetDate, formatter);
 
         return booth.getSettings().stream()
                 .filter(setting ->
