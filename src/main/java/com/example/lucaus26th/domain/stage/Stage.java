@@ -46,7 +46,7 @@ public class Stage {
     // DEFAULT: 카테고리 기본 노출 그대로
     // LINEUP_ONLY / LIVE_AND_TIMETABLE / TIMETABLE_ONLY: 해당 엔드포인트 집합만 노출
     @Enumerated(EnumType.STRING)
-    @Column(name = "visibility", nullable = false)
+    @Column(name = "visibility", nullable = false, length = 32)
     private StageVisibility visibility;
 
     @OneToMany(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)
