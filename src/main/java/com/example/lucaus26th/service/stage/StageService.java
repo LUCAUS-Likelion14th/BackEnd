@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.Cacheable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class StageService {
+
+    private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
 
     private final StageRepository stageRepository;
 
@@ -90,8 +93,8 @@ public class StageService {
     // 메인 홈 실시간 공연 조회
     // 카테고리 기본 노출이 LIVE를 포함하지 않거나, visibility=TIMETABLE_ONLY 인 항목은 제외
     public LiveStageResponseDTO getLiveStage() {
-        LocalDate today = LocalDate.now();
-        LocalTime now = LocalTime.now();
+        LocalDate today = LocalDate.now(KOREA_ZONE);
+        LocalTime now = LocalTime.now(KOREA_ZONE);
         return stageRepository.findByDateOrderByStartAtAsc(today).stream()
                 .filter(stage -> stage.isVisibleAt(StageEndpoint.LIVE))
                 .filter(stage -> !stage.getStartAt().isAfter(now) && stage.getEndAt().isAfter(now))
