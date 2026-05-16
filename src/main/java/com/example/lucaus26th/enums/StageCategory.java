@@ -16,7 +16,7 @@ public enum StageCategory {
     ARTIST_PERFORMANCE("아티스트 공연",
             EnumSet.of(StageEndpoint.LIVE, StageEndpoint.LINEUP, StageEndpoint.TIMETABLE)),
     STAGE_EXHIBITION("무대 기획전",
-            EnumSet.of(StageEndpoint.LIVE, StageEndpoint.TIMETABLE)),
+            EnumSet.of(StageEndpoint.LIVE, StageEndpoint.LINEUP, StageEndpoint.TIMETABLE)),
     EVENT("행사",
             EnumSet.of(StageEndpoint.TIMETABLE));
 
