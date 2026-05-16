@@ -41,10 +41,11 @@ public class StageRequestDTO {
     private String info;
 
     @Schema(
-            description = "공연 가시성 범위. " +
-                    "DEFAULT: 전체 노출(기본), " +
-                    "TIMETABLE_ONLY: 타임테이블·라이브만(예: 청룡가요제 예선/본선·EVENT·특수 학생무대), " +
-                    "LINEUP_ONLY: 라인업·상세만(예: 청룡가요제 참가팀)",
+            description = "공연 가시성 override. " +
+                    "DEFAULT: 카테고리 기본 노출 그대로(기본값), " +
+                    "LINEUP_ONLY: 라인업에만 노출(예: 청룡가요제 참가팀), " +
+                    "LIVE_AND_TIMETABLE: 라이브·타임테이블만 노출(예: 학생 공연 일부), " +
+                    "TIMETABLE_ONLY: 타임테이블에만 노출",
             example = "DEFAULT"
     )
     private StageVisibility visibility;

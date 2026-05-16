@@ -1,6 +1,7 @@
 package com.example.lucaus26th.domain.stage;
 
 import com.example.lucaus26th.enums.StageCategory;
+import com.example.lucaus26th.enums.StageEndpoint;
 import com.example.lucaus26th.enums.StageVisibility;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "stage")
@@ -40,10 +42,11 @@ public class Stage {
     @Column(name = "logo_image")
     private String logoImage;
 
-    // 공연 가시성 범위 — 어떤 엔드포인트에 노출할지 결정
-    // DEFAULT: 전체 노출 / TIMETABLE_ONLY: 타임테이블·라이브만 / LINEUP_ONLY: 라인업·상세만
+    // 공연 가시성 override
+    // DEFAULT: 카테고리 기본 노출 그대로
+    // LINEUP_ONLY / LIVE_AND_TIMETABLE / TIMETABLE_ONLY: 해당 엔드포인트 집합만 노출
     @Enumerated(EnumType.STRING)
-    @Column(name = "visibility", nullable = false)
+    @Column(name = "visibility", nullable = false, length = 32)
     private StageVisibility visibility;
 
     @OneToMany(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -114,6 +117,15 @@ public class Stage {
         if (endAt != null) {
             this.endAt = endAt;
         }
+    }
+
+    // 해당 엔드포인트에 노출되어야 하는지 판단
+    // - visibility가 명시적 endpoint 집합을 갖고 있으면 그 집합을 사용
+    // - visibility가 DEFAULT(endpoints == null)이면 카테고리 기본 노출(defaultEndpoints)을 사용
+    public boolean isVisibleAt(StageEndpoint endpoint) {
+        Set<StageEndpoint> override = this.visibility.getEndpoints();
+        Set<StageEndpoint> effective = (override != null) ? override : this.category.getDefaultEndpoints();
+        return effective.contains(endpoint);
     }
 
     public void connectStageInfo(StageInfo stageInfo) {
