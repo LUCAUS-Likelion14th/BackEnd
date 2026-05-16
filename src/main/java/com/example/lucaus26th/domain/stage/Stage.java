@@ -1,6 +1,7 @@
 package com.example.lucaus26th.domain.stage;
 
 import com.example.lucaus26th.enums.StageCategory;
+import com.example.lucaus26th.enums.StageEndpoint;
 import com.example.lucaus26th.enums.StageVisibility;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -40,8 +41,8 @@ public class Stage {
     @Column(name = "logo_image")
     private String logoImage;
 
-    // 공연 가시성 범위 — 어떤 엔드포인트에 노출할지 결정
-    // DEFAULT: 전체 노출 / TIMETABLE_ONLY: 타임테이블·라이브만 / LINEUP_ONLY: 라인업·상세만
+    // 공연 가시성 override
+    // DEFAULT: 카테고리 기본 노출 그대로 / TIMETABLE_ONLY: 라이브·라인업에서 숨기고 타임테이블만 노출
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility", nullable = false)
     private StageVisibility visibility;
@@ -114,6 +115,16 @@ public class Stage {
         if (endAt != null) {
             this.endAt = endAt;
         }
+    }
+
+    // 해당 엔드포인트에 노출되어야 하는지 판단
+    // - TIMETABLE_ONLY visibility면 타임테이블만 허용
+    // - 그 외엔 카테고리의 기본 노출 범위(defaultEndpoints)를 따름
+    public boolean isVisibleAt(StageEndpoint endpoint) {
+        if (this.visibility == StageVisibility.TIMETABLE_ONLY) {
+            return endpoint == StageEndpoint.TIMETABLE;
+        }
+        return this.category.getDefaultEndpoints().contains(endpoint);
     }
 
     public void connectStageInfo(StageInfo stageInfo) {
