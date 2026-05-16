@@ -45,7 +45,7 @@ public class MyPageService {
         List<BoothResponseDto.MyBooth> boothLikeList = allBoothLikes.stream()
                 .sorted(Comparator.comparing(BoothLike::getId).reversed())
                 .limit(3)
-                .map(boothLike -> BoothResponseDto.MyBooth.fromEntity(boothLike.getBooth()))
+                .map(boothLike -> BoothResponseDto.MyBooth.fromEntity(boothLike.getBooth(),true))
                 .toList();
 
         // 푸드트럭 관련
@@ -79,7 +79,7 @@ public class MyPageService {
                 .sorted(Comparator.comparing(BoothLike::getId).reversed())
                 .map(boothLike ->
                         BoothResponseDto.MyBooth.fromEntity(
-                                boothLike.getBooth()
+                                boothLike.getBooth(), true
                         )
                 )
                 .toList();
