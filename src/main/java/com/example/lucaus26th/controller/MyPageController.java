@@ -40,10 +40,17 @@ public class MyPageController {
 
     // 내가 좋아요 한 부스
     @GetMapping("/booth")
-    public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getMyBoothLikes(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        Member member = (userDetails != null) ? userDetails.getMember() : null;
+    public ResponseEntity<ApiResponse<List<BoothResponseDto.MyBooth>>> getMyBoothLikes(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Member member =
+                (userDetails != null)
+                        ? userDetails.getMember()
+                        : null;
 
-        List<BoothResponseDto.Lists> response =  myPageService.getMyBoothLikes(member);
+        List<BoothResponseDto.MyBooth> response =
+                myPageService.getMyBoothLikes(member);
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
