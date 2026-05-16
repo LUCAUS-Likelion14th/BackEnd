@@ -2,9 +2,7 @@ package com.example.lucaus26th.service;
 
 
 import com.example.lucaus26th.domain.Member;
-import com.example.lucaus26th.domain.booth.Booth;
 import com.example.lucaus26th.domain.booth.BoothLike;
-import com.example.lucaus26th.domain.booth.BoothSetting;
 import com.example.lucaus26th.domain.foodTruck.FoodTruckLike;
 import com.example.lucaus26th.dto.response.MyPageResponseDto;
 import com.example.lucaus26th.dto.response.booth.BoothResponseDto;
@@ -74,15 +72,16 @@ public class MyPageService {
 
 
     // 내 좋아요 조회 - 부스
-    public List<BoothResponseDto.Lists> getMyBoothLikes(Member member) {
-        List<BoothLike> boothLikes = boothLikeRepository.findByMember(member);
+    public List<BoothResponseDto.MyBooth> getMyBoothLikes(Member member) {
+        List<BoothLike> boothLikes =
+                boothLikeRepository.findByMember(member);
         return boothLikes.stream()
                 .sorted(Comparator.comparing(BoothLike::getId).reversed())
-                .map(boothLike -> {
-                    Booth booth = boothLike.getBooth();
-                    BoothSetting setting = boothCacheService.getDisplaySetting(booth, null);
-                    return BoothResponseDto.Lists.fromEntity(booth, setting, true);
-                })
+                .map(boothLike ->
+                        BoothResponseDto.MyBooth.fromEntity(
+                                boothLike.getBooth()
+                        )
+                )
                 .toList();
     }
 
