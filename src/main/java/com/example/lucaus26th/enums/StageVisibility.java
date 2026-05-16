@@ -3,15 +3,25 @@ package com.example.lucaus26th.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
  * 공연 가시성 override.
- * - DEFAULT: 카테고리 기본 노출(StageCategory.defaultEndpoints)을 그대로 따름
- * - TIMETABLE_ONLY: 라이브/라인업에서 추가로 숨김. 타임테이블에만 표시
- *   (예: 청룡가요제 예선/본선 블록, 특수 학생 무대)
+ * - DEFAULT: 카테고리 기본 노출(StageCategory.defaultEndpoints) 사용
+ * - LINEUP_ONLY: 라인업에만 노출 (예: 청룡가요제 참가팀)
+ * - LIVE_AND_TIMETABLE: 라이브/타임테이블에만 노출 (예: 학생 공연 일부)
+ * - TIMETABLE_ONLY: 타임테이블에만 노출
+ *
+ * endpoints가 null이면 카테고리 기본 노출을 사용한다.
  */
 @Getter
 @RequiredArgsConstructor
 public enum StageVisibility {
-    DEFAULT,
-    TIMETABLE_ONLY
+    DEFAULT(null),
+    LINEUP_ONLY(EnumSet.of(StageEndpoint.LINEUP)),
+    LIVE_AND_TIMETABLE(EnumSet.of(StageEndpoint.LIVE, StageEndpoint.TIMETABLE)),
+    TIMETABLE_ONLY(EnumSet.of(StageEndpoint.TIMETABLE));
+
+    private final Set<StageEndpoint> endpoints;
 }

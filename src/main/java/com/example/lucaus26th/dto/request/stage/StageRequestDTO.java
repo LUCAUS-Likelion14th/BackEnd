@@ -43,7 +43,9 @@ public class StageRequestDTO {
     @Schema(
             description = "공연 가시성 override. " +
                     "DEFAULT: 카테고리 기본 노출 그대로(기본값), " +
-                    "TIMETABLE_ONLY: 라이브·라인업에서 숨기고 타임테이블만 노출(예: 청룡가요제 예선/본선 블록, 특수 학생 무대)",
+                    "LINEUP_ONLY: 라인업에만 노출(예: 청룡가요제 참가팀), " +
+                    "LIVE_AND_TIMETABLE: 라이브·타임테이블만 노출(예: 학생 공연 일부), " +
+                    "TIMETABLE_ONLY: 타임테이블에만 노출",
             example = "DEFAULT"
     )
     private StageVisibility visibility;
