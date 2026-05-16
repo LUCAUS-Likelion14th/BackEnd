@@ -161,12 +161,16 @@ public class BoothResponseDto {
         private Long booth_id;
         private String booth_image;
         private String booth_name;
+        private Long likeCount;
+        private boolean liked;
 
-        public static BoothResponseDto.MyBooth fromEntity(Booth booth){
+        public static BoothResponseDto.MyBooth fromEntity(Booth booth, boolean isLiked){
             return MyBooth.builder()
                     .booth_id(booth.getId())
                     .booth_image(booth.getImage())
                     .booth_name(booth.getName())
+                    .likeCount(booth.getLikeCount())
+                    .liked(isLiked)
                     .build();
         }
     }
