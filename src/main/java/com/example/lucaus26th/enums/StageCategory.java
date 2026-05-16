@@ -3,14 +3,23 @@ package com.example.lucaus26th.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 @Getter
 @RequiredArgsConstructor
 public enum StageCategory {
-    STUDENT_PERFORMANCE("학생 공연"), //학생 공연
-    CHEONGRYONG_FESTIVAL("청룡 가요제"), //청룡 가요제
-    ARTIST_PERFORMANCE("아티스트 공연"), //아티스트 공연
-    STAGE_EXHIBITION("무대 기획전"), //무대 기획전
-    EVENT("행사"); //타임테이블 전용 행사 (개막식, MC, 인터미션 등)
+    STUDENT_PERFORMANCE("학생 공연",
+            EnumSet.of(StageEndpoint.LIVE, StageEndpoint.LINEUP, StageEndpoint.TIMETABLE)),
+    CHEONGRYONG_FESTIVAL("청룡 가요제",
+            EnumSet.of(StageEndpoint.LIVE, StageEndpoint.TIMETABLE)),
+    ARTIST_PERFORMANCE("아티스트 공연",
+            EnumSet.of(StageEndpoint.LIVE, StageEndpoint.LINEUP, StageEndpoint.TIMETABLE)),
+    STAGE_EXHIBITION("무대 기획전",
+            EnumSet.of(StageEndpoint.LIVE, StageEndpoint.TIMETABLE)),
+    EVENT("행사",
+            EnumSet.of(StageEndpoint.TIMETABLE));
 
     private final String displayName;
+    private final Set<StageEndpoint> defaultEndpoints;
 }
