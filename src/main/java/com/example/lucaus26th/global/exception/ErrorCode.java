@@ -14,6 +14,7 @@ public enum ErrorCode {
 
     // s3
     EMPTY_FILE(HttpStatus.BAD_REQUEST, "S3_4001", "빈 파일은 업로드할 수 없습니다."),
+    FILE_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "S3_4131", "파일 용량이 허용된 최대 크기를 초과했습니다."),
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3_5001", "파일 업로드에 실패했습니다."),
 
     // member
