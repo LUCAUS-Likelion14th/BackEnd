@@ -22,8 +22,8 @@ spring:
     property-ordering-strategy: DEFAULT
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 40MB
+      max-request-size: 40MB
 
 jwt:
   secret: ${JWT_SECRET}
