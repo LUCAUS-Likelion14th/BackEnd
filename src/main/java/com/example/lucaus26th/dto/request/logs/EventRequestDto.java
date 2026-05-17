@@ -8,9 +8,15 @@ import java.util.Map;
 @Getter
 public class EventRequestDto {
 
-    private String event_type;
-    private Long user_id;
-    private String session_id;
-    private LocalDateTime timestamp;
+    private String eventType;
+
+    private Long userId;
+
+    private String sessionId;
+
+    private String targetType;
+
+    private Long targetId;
+
     private Map<String, Object> payload;
 }

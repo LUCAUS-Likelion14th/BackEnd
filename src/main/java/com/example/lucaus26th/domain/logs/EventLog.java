@@ -1,14 +1,7 @@
 package com.example.lucaus26th.domain.logs;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Lob;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -29,8 +22,13 @@ public class EventLog {
 
     private String sessionId;
 
-    private LocalDateTime timestamp;
+    private String targetType;
 
-    @Lob
+    private Long targetId;
+
+    @Column(columnDefinition = "json")
     private String payload;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
