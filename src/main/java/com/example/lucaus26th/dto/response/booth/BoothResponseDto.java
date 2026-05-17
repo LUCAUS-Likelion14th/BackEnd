@@ -69,6 +69,7 @@ public class BoothResponseDto {
         private String booth_name;
         private List<String> booth_category;  // ["소개팅", "음식"]
         private String booth_info;
+        private String booth_owner;
         private String owner_insta;
         private Boolean is_liked;
         private Long like_count;
@@ -81,6 +82,7 @@ public class BoothResponseDto {
                     .booth_name(booth.getName())
                     .booth_category(booth.getCategoryNames())// 카테고리
                     .booth_info(booth.getInfo())
+                    .booth_owner(booth.getOwner())
                     .owner_insta(booth.getInstagram())
                     .is_liked(isLiked)
                     .like_count(booth.getLikeCount())
