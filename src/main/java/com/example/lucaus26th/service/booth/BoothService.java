@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -102,6 +103,16 @@ public class BoothService {
                         boolean liked = boothLikeRepository.existsByBoothAndMember(booth, member);
                         return dto.withLiked(liked);
                     })
+                    .sorted(Comparator.comparingInt(dto -> {
+                        String locationId = dto.getLocation_id();
+                        if (locationId == null) return Integer.MAX_VALUE;
+                        String first = locationId.split("-")[0].trim();
+                        try {
+                            return Integer.parseInt(first);
+                        } catch (NumberFormatException e) {
+                            return Integer.MAX_VALUE;
+                        }
+                    }))
                     .toList();
         }
 
