@@ -102,6 +102,7 @@ public class BoothResponseDto {
                     .booth_name(this.booth_name)
                     .booth_category(this.booth_category)
                     .booth_info(this.booth_info)
+                    .booth_owner(this.booth_owner)
                     .owner_insta(this.owner_insta)
                     .is_liked(isLiked)
                     .like_count(this.like_count)
