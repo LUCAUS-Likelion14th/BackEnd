@@ -16,6 +16,7 @@ import com.example.lucaus26th.domain.booth.BoothSetting;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -40,8 +41,12 @@ public class BoothCacheService {
         DateTimeFormatter formatter =
                 DateTimeFormatter.ofPattern("MMdd");
 
-        MonthDay monthDay =
-                MonthDay.parse(targetDate, formatter);
+        MonthDay monthDay;
+        try {
+            monthDay = MonthDay.parse(targetDate, formatter);
+        } catch (DateTimeParseException e) {
+            throw new BusinessException(ErrorCode.WRONG_DATE_FORMAT);
+        }
 
         return booth.getSettings().stream()
                 .filter(setting ->
@@ -108,18 +113,19 @@ public class BoothCacheService {
     }
 
     @Cacheable(value = "booth", key = "'stamp'")
+
     public List<BoothResponseDto.Lists> getBoothStamp(){
-        String today = LocalDate.now(ZoneId.of("Asia/Seoul"))
-                .format(DateTimeFormatter.ofPattern("MMdd"));
         return stampBoothRepository.findAll().stream()
                 .map(StampBooth::getBooth)
                 .map(booth -> {
-                    BoothSetting setting = getDisplaySetting(booth, today);
+                    BoothSetting setting = booth.getSettings().stream()
+                            .findFirst()
+                            .orElse(null);
+
                     return BoothResponseDto.Lists.fromEntity(booth, setting, false);
                 })
                 .toList();
     }
-
 
     @Cacheable(value = "booth", key = "'detail_' + #boothId")
     public BoothResponseDto.Detail getBoothDetail(Long boothId) {
