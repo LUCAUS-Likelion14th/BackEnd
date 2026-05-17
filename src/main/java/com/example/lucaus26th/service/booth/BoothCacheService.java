@@ -108,7 +108,16 @@ public class BoothCacheService {
                             false
                     );
                 })
-
+                .sorted(Comparator.comparingInt(dto -> {
+                    String locationId = dto.getLocation_id();
+                    if (locationId == null) return Integer.MAX_VALUE;
+                    String first = locationId.split("-")[0].trim();
+                    try {
+                        return Integer.parseInt(first);
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE;
+                    }
+                }))
                 .toList();
     }
 
