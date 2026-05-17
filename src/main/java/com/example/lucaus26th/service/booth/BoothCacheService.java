@@ -112,6 +112,14 @@ public class BoothCacheService {
                 .toList();
     }
 
+    @Cacheable(value = "booth", key = "'search_' + #search")
+    public List<BoothResponseDto.MyBooth> getBoothSearch(String search) {
+        return boothRepository.findAll().stream()
+                .filter(booth -> searchFilter(booth, search))
+                .map(booth -> BoothResponseDto.MyBooth.fromEntity(booth,false))
+                .toList();
+    }
+
     @Cacheable(value = "booth", key = "'stamp'")
 
     public List<BoothResponseDto.Lists> getBoothStamp(){
