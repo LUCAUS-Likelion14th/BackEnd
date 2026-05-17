@@ -108,18 +108,19 @@ public class BoothCacheService {
     }
 
     @Cacheable(value = "booth", key = "'stamp'")
+
     public List<BoothResponseDto.Lists> getBoothStamp(){
-        String today = LocalDate.now(ZoneId.of("Asia/Seoul"))
-                .format(DateTimeFormatter.ofPattern("MMdd"));
         return stampBoothRepository.findAll().stream()
                 .map(StampBooth::getBooth)
                 .map(booth -> {
-                    BoothSetting setting = getDisplaySetting(booth, today);
+                    BoothSetting setting = booth.getSettings().stream()
+                            .findFirst()
+                            .orElse(null);
+
                     return BoothResponseDto.Lists.fromEntity(booth, setting, false);
                 })
                 .toList();
     }
-
 
     @Cacheable(value = "booth", key = "'detail_' + #boothId")
     public BoothResponseDto.Detail getBoothDetail(Long boothId) {
