@@ -126,6 +126,31 @@ public class BoothService {
         return new PageImpl<>(boothList.subList(start, end), pageable, boothList.size());
     }
 
+    public Page<BoothResponseDto.MyBooth> getBoothSearch(String search,Pageable pageable, Member member){
+        List<BoothResponseDto.MyBooth> searchBoothList = boothCacheService.getBoothSearch(search);
+
+        if(member != null) {
+            searchBoothList = searchBoothList.stream()
+                    .map(dto -> {
+                        Booth booth = boothRepository.findById(dto.getBooth_id())
+                                .orElseThrow(() -> new BusinessException(ErrorCode.BOOTH_NOT_FOUND));
+
+                        boolean liked = boothLikeRepository.existsByBoothAndMember(booth, member);
+                        return dto.withLiked(liked);
+                    })
+                    .toList();
+        }
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), searchBoothList.size());
+
+        // 페이지 범위 초과 처리
+        if (start >= searchBoothList.size()) {
+            return new PageImpl<>(List.of(), pageable, searchBoothList.size());
+        }
+        return new PageImpl<>(searchBoothList.subList(start, end), pageable, searchBoothList.size());
+    }
+
     // 상세조회
     public BoothResponseDto.Detail getBoothDetail(Long boothId, Member member) {
         BoothResponseDto.Detail detail = boothCacheService.getBoothDetail(boothId);

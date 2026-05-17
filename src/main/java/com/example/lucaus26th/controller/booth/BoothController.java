@@ -45,6 +45,18 @@ public class BoothController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<Page<BoothResponseDto.MyBooth>>> getBoothSearch(@RequestParam(required = false) String search,
+                                                                                     @RequestParam(defaultValue = "0") int page,
+                                                                                     @AuthenticationPrincipal CustomUserDetails userDetails){
+        Member member = (userDetails != null) ? userDetails.getMember() : null;
+
+        Pageable pageable = PageRequest.of(page,8);
+        Page<BoothResponseDto.MyBooth> response = boothService.getBoothSearch(search,pageable,member);
+        return ResponseEntity.ok(ApiResponse.success(response));
+
+    }
+
     @GetMapping("/stamp")
     public ResponseEntity<ApiResponse<List<BoothResponseDto.Lists>>> getBoothStamp(@RequestParam(defaultValue = "0") int page, @AuthenticationPrincipal CustomUserDetails userDetails){
         Member member = (userDetails != null) ? userDetails.getMember() : null;

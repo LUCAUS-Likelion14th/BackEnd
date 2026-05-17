@@ -173,6 +173,16 @@ public class BoothResponseDto {
                     .liked(isLiked)
                     .build();
         }
+
+        public BoothResponseDto.MyBooth withLiked(boolean isLiked) {
+            return MyBooth.builder()
+                    .booth_id(this.booth_id)
+                    .booth_image(this.booth_image)
+                    .booth_name(this.booth_name)
+                    .likeCount(this.likeCount)
+                    .liked(isLiked)
+                    .build();
+        }
     }
 
     @Getter
