@@ -166,9 +166,9 @@ public class BoothCacheService {
         return boothRepository.findAll().stream()
                 .filter(booth -> booth.getSettings().stream()
                         .anyMatch(setting ->
-                                setting.getDate().equals(today) &&
+                                setting.getDate().equals(today) /*&&
                                         !nowTime.isBefore(setting.getStartAt()) &&
-                                        !nowTime.isAfter(setting.getEndAt())
+                                        !nowTime.isAfter(setting.getEndAt())*/
                         )
                 )
                 .sorted(Comparator.comparing(Booth::getLikeCount).reversed())
