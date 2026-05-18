@@ -81,9 +81,9 @@ public class FoodTruckCacheService {
         return foodTruckRepository.findAll().stream()
                 .filter(ft -> ft.getSettings().stream()
                         .anyMatch(setting ->
-                                setting.getDate().equals(today) &&
+                                setting.getDate().equals(today) /*&&
                                         !nowTime.isBefore(setting.getStartAt()) &&
-                                        !nowTime.isAfter(setting.getEndAt())
+                                        !nowTime.isAfter(setting.getEndAt())*/
                         )
                 )
                 .sorted(Comparator.comparing(FoodTruck::getLikeCount).reversed())
