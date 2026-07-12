@@ -61,7 +61,7 @@
 
 ---
 
-![아키텍처](<img width="3124" height="1726" alt="아키텍처최종 drawio" src="https://github.com/user-attachments/assets/476b082b-8b06-4f75-ac08-66274c7508cd" />
+![아키텍처](https://github.com/user-attachments/assets/476b082b-8b06-4f75-ac08-66274c7508cd
 )
 
 ### 아키텍처 설명
@@ -151,17 +151,13 @@ BackEnd/
 
 ---
 
-![부스&도장판 ERD](<img width="1187" height="806" alt="푸드트럭도장 erd" src="https://github.com/user-attachments/assets/e7ff91e6-472e-4120-9cfa-98106c9f9465" />
-)
+![부스&도장판 ERD](https://github.com/user-attachments/assets/e7ff91e6-472e-4120-9cfa-98106c9f9465)
 
-![공연 ERD](<img width="671" height="382" alt="공연" src="https://github.com/user-attachments/assets/54fefe61-a35a-4fe6-b41e-e14966a03633" />
-)
+![공연 ERD](https://github.com/user-attachments/assets/54fefe61-a35a-4fe6-b41e-e14966a03633)
 
-![편의 ERD](<img width="607" height="361" alt="편의" src="https://github.com/user-attachments/assets/0a3a9b79-bfbc-4f54-b9c0-acc480cdbb4f" />
-)
+![편의 ERD](https://github.com/user-attachments/assets/0a3a9b79-bfbc-4f54-b9c0-acc480cdbb4f)
 
-![푸드트럭 ERD](<img width="1207" height="685" alt="푸드트" src="https://github.com/user-attachments/assets/76659864-2fe6-4c3f-bf85-9cc28b685f8e" />
-)
+![푸드트럭 ERD](https://github.com/user-attachments/assets/76659864-2fe6-4c3f-bf85-9cc28b685f8e)
 
 ### Tech Stack
 
