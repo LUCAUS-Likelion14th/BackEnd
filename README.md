@@ -1,6 +1,8 @@
 ## LUCAUS 26th BackEnd
 
 ---
+<img width="680" height="330" alt="image" src="https://github.com/user-attachments/assets/3ddab94c-b9a2-4aa2-a5b0-95fc79e4b9e8" />
+
 
 ### Summary
 
