@@ -63,7 +63,7 @@
 
 ---
 
-![아키텍처](<img width="3124" height="1726" alt="아키텍처수정1 drawio" src="https://github.com/user-attachments/assets/d0816774-64a9-421a-8126-06cba509f352" />
+![아키텍처](https://github.com/user-attachments/assets/d0816774-64a9-421a-8126-06cba509f352
 )
 
 ### 아키텍처 설명
