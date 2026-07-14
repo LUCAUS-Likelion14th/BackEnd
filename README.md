@@ -63,7 +63,8 @@
 
 ---
 
-![아키텍처](https://github.com/user-attachments/assets/f08c936d-bd21-4a13-be45-bc8cb9b5d8d1)
+![아키텍처](https://github.com/user-attachments/assets/3b760e00-989e-4016-9e71-38c3cfb08161
+)
 
 ### 아키텍처 설명
 
