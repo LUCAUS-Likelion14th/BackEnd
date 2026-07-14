@@ -63,7 +63,7 @@
 
 ---
 
-![아키텍처](https://github.com/user-attachments/assets/d0816774-64a9-421a-8126-06cba509f352
+![아키텍처](https://github.com/user-attachments/assets/3b760e00-989e-4016-9e71-38c3cfb08161
 )
 
 ### 아키텍처 설명
@@ -74,19 +74,19 @@
 
 `Clients → Route 53 → ACM → WAF → ALB`
 
-클라이언트 요청은 Route 53을 통해 도메인으로 라우팅되며, ACM에서 발급된 인증서를 통해 HTTPS 통신이 적용됩니다. WAF가 SQL Injection, XSS 등 웹 공격을 사전에 차단한 뒤, 정상 트래픽만 ALB로 전달되어 백엔드로 분산됩니다. 이를 통해 보안성과 안정적인 트래픽 분산을 동시에 확보했습니다.
+클라이언트 요청은 Route 53을 통해 도메인으로 라우팅되며, ACM에서 발급된 인증서를 통해 HTTPS 통신이 적용됩니다. WAF가 SQL Injection, XSS 등 웹 공격을 사전에 차단한 뒤, 정상 트래픽만 ELB로 전달되어 백엔드로 분산됩니다. 이를 통해 보안성과 안정적인 트래픽 분산을 동시에 확보했습니다.
 
 **CI/CD Pipeline**
 
-`Developer → GitHub → GitHub Actions → CodeDeploy → S3 (deployment)`
+`Developer → GitHub → GitHub Actions → S3 (deployment) → CodeDeploy`
 
 GitHub Actions로 빌드된 애플리케이션은 S3에 업로드된 후, CodeDeploy를 통해 Auto Scaling Group에 Blue/Green 방식으로 배포됩니다. 새로운 버전(Green)이 기존 버전(Blue)과 함께 배포된 후 트래픽이 전환되며, 문제 발생 시 기존 ASG로 즉시 롤백이 가능합니다. 이를 통해 무중단 배포와 안전한 배포 전략을 동시에 확보했습니다.
 
 **Compute & Application**
 
-`ALB → ASG (EC2 + Spring Boot + Redis, Blue/Green)`
+`ELB → ASG (EC2 + Spring Boot + Redis, Blue/Green)`
 
-ALB로부터 전달받은 트래픽은 Auto Scaling Group 내 EC2 인스턴스에서 처리되며, 각 인스턴스는 Spring Boot 애플리케이션과 Redis를 함께 구성해 캐싱을 통한 응답 속도 개선을 도모했습니다. Blue/Green 배포 구조를 위해 ASG는 최대 2개까지 확장 가능하도록 구성했습니다.
+ELB로부터 전달받은 트래픽은 Auto Scaling Group 내 EC2 인스턴스에서 처리되며, 각 인스턴스는 Spring Boot 애플리케이션과 Redis를 함께 구성해 캐싱을 통한 응답 속도 개선을 도모했습니다. Blue/Green 배포 구조를 위해 ASG는 최대 2개까지 확장 가능하도록 구성했습니다.
 
 **Data Storage**
 
@@ -161,7 +161,7 @@ BackEnd/
 
 ![푸드트럭 ERD](https://github.com/user-attachments/assets/76659864-2fe6-4c3f-bf85-9cc28b685f8e)
 
-### Tech Stack
+### Teck Stack
 
 ![Java](https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/SPRING%20BOOT-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
@@ -174,7 +174,7 @@ BackEnd/
 ![S3](https://img.shields.io/badge/S3-569A31?style=for-the-badge&logo=amazons3&logoColor=white)
 ![CodeDeploy](https://img.shields.io/badge/CODEDEPLOY-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![Auto Scaling](https://img.shields.io/badge/AUTO%20SCALING-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
-![ALB](https://img.shields.io/badge/ALB-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
+![ELB](https://img.shields.io/badge/ELB-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![WAF](https://img.shields.io/badge/WAF-DD344C?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![ACM](https://img.shields.io/badge/ACM-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![Route 53](https://img.shields.io/badge/ROUTE%2053-8C4FFF?style=for-the-badge&logo=amazonroute53&logoColor=white)
@@ -205,7 +205,7 @@ BackEnd/
 | EC2 | Application Hosting |
 | --- | --- |
 | Auto Scaling Group | Instance Scaling (max 2) |
-| Application Load Balancer | Traffic Distribution |
+| Elastic Load Balancer | Traffic Distribution |
 | RDS | Relational Database |
 | S3 | Deployment Artifacts & Image storage & Logs |
 | CodeDeploy | Blue/Green Deployment |
