@@ -72,7 +72,7 @@
 
 **Client Request Flow (Traffic & Networking)**
 
-`Clients → Route 53 → ACM → WAF → ALB`
+`Clients → Route 53 → ACM → WAF → ELB`
 
 클라이언트 요청은 Route 53을 통해 도메인으로 라우팅되며, ACM에서 발급된 인증서를 통해 HTTPS 통신이 적용됩니다. WAF가 SQL Injection, XSS 등 웹 공격을 사전에 차단한 뒤, 정상 트래픽만 ELB로 전달되어 백엔드로 분산됩니다. 이를 통해 보안성과 안정적인 트래픽 분산을 동시에 확보했습니다.
 
